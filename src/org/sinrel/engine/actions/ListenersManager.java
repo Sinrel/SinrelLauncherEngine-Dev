@@ -11,5 +11,5 @@ public final class ListenersManager {
 	public static void addDownloadListener( DownloadListener dl ) {
 		Download.listeners.add( dl );
 	}
-	
+		
 }

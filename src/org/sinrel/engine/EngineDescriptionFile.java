@@ -1,4 +1,4 @@
-package org.sinrel.engine.launcher;
+package org.sinrel.engine;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -6,7 +6,7 @@ import java.util.Properties;
 import org.sinrel.engine.exception.InvalidLauncherDescriptionFile;
 import org.sinrel.engine.exception.LauncherDescriptionNotFoundException;
 
-public final class LauncherDescriptionFile {
+class EngineDescriptionFile {
 	
 	/** Заголовок приложения */
 	private String title;
@@ -17,22 +17,17 @@ public final class LauncherDescriptionFile {
 	/** Версия приложения*/
 	private String version;
 	
-	private String domain;
-	
-	private String folder;
-	
 	/** Код версии для проверки обновлений */
 	private int code;
-
 	
 	private static Properties prop = new Properties();
 	
-	public LauncherDescriptionFile() throws LauncherDescriptionNotFoundException, InvalidLauncherDescriptionFile {
+	public EngineDescriptionFile() throws LauncherDescriptionNotFoundException, InvalidLauncherDescriptionFile {
 		try {
 			
 			prop.load( getClass().getResourceAsStream("/launcher.properties") );
 			
-			String[] required = {"title","main", "code", "version", "domain", "folder"}; //обязательные пункты
+			String[] required = {"title","main", "code", "version"};
 			
 			for(String s : required){
 				if(prop.getProperty(s) == null){
@@ -44,8 +39,6 @@ public final class LauncherDescriptionFile {
 			main = get("main");
 			version = get("version");
 			code = Integer.parseInt( get("code") );
-			domain = get("domain");
-			folder = get("folder");
 			
 		} catch (IOException e) {
 			throw new LauncherDescriptionNotFoundException();
@@ -88,11 +81,4 @@ public final class LauncherDescriptionFile {
 		return code;
 	}
 	
-	public String getDomain() {
-		return domain;
-	}
-	
-	public String getFolder() {
-		return folder;
-	}
 }

@@ -2,7 +2,7 @@ package org.sinrel.engine.exception;
 
 /**
  * Класс исключения вызываемого при обнаружении отсутствия обязательного файла launcher.properties
- * @see LauncherDescriptionFile
+ * @see EngineDescriptionFile
  */
 public class LauncherDescriptionNotFoundException extends Exception{
 

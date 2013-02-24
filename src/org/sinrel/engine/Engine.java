@@ -14,7 +14,7 @@ public final class Engine {
 	
 	/** Обьект основного класса лаунчера */
 	private static JavaLauncher launcher;
-	
+	 
 	/**
 	 * Точка входа при запуске
 	 */
@@ -23,7 +23,7 @@ public final class Engine {
 			desc = new LauncherDescriptionFile();
 			
 			launcher = loadLauncher( desc.getMain() );
-			
+						
 			Intent.Do( Action.ENABLE );
 		}catch(Exception e) {
 			e.printStackTrace();
