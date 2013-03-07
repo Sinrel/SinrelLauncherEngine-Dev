@@ -89,4 +89,11 @@ public abstract class Intent {
 	     return Auth.BAD_CONNECTION;
 	}
 	
+	public static final Client DoCheckClient( String applicationName , String serverName ) {
+		return new Checker( applicationName , serverName ).getClientStatus();
+	}
+	
+	public static final Client DoCheckClient( String applicationName ) {
+		return new Checker( applicationName ).getClientStatus();
+	}
 }

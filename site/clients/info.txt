@@ -1,0 +1,3 @@
+Если вы работаете в одноклиентном режиме, то положите в эту папку вместе с этим файлом ещё:
+jinput.jar, minecraft.jar, lwjgl.jar, lwjgl_util.jar
+Так же по необходимости можно добавить natives (windows.lzma - linux.lzma и т.д)

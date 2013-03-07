@@ -10,12 +10,39 @@
 		die( "NULL" );
 	}
 
-	if( $action == 'auth' ) {
+	if( $action == 'check'  ) {
 		
-		$login = $_POST['login'];
-		$pass = $_POST['pass'];
+		if( $_POST['client'] == 'standart' ) {	
+			if( !file_exists( 'client/jinput.jar' ) || 
+				!file_exists( 'client/lwjgl.jar' ) || 
+			    !file_exists( 'client/lwjgl_util.jar' ) || 
+			    !file_exists( 'client/minecraft.jar' )
+			) die ( "CLIENT_NOT_EXIST_ON_SERVER" );
 		
-		if( !isset( $login ) || !isset( $pass ) ) {
+			$md5jinput		= md5_file("client/jinput.jar");
+			$md5lwjql		= md5_file("client/lwjgl.jar");
+			$md5lwjql_util	= md5_file("client/lwjgl_util.jar");
+			$md5jar			= md5_file("client/minecraft.jar");
+			
+			$result  = $md5jinput;
+			$result .= $md5lwjql;
+			$result .= $md5lwjql_util;
+			$result .= $md5jar;
+
+			if( strcmp( $result , $_POST['hash'] ) == 0 ) {	
+				die( 'OK' );
+			}else{
+				die( 'CLIENT_DOES_NOT_MATCH' );
+			}
+		
+		}else{
+			//Do multiclient checking
+		}
+	}
+
+	if( $action == 'auth' ) {		
+
+		if( !isset( $_POST['login'] ) || !isset( $_POST['pass'] ) ) {
 			die( "LOGIN_OR_PASS_NOT_EXIST" );
 		}
 		
@@ -45,17 +72,11 @@
 
 		    if( strcmp( $realPass,$checkPass ) == 0 ) {
 		    	
-				$sess = rand(1000000000, 2147483647).rand(1000000000, 2147483647).rand(0,9);
+				$session = rand(1000000000, 2147483647).rand(0,9);
 				
-				die ( 'OK<:>'.base64_encode( base64_encode( $sess ) ) );	
-		    	
-				/*
-		        mysql_query("UPDATE $db_table SET $db_columnSesId='$session' WHERE $db_columnUser = '$login'") or die ("BAD_CONNECTION");
-		    	
-		    	$dlticket = md5($login);
-		    	echo $gamebuild.':'.$dlticket.':'.$login.':'.$sessid.':';
-				 
-				 */
+				mysql_query("UPDATE $db_table SET $db_columnSesId='$session' WHERE $db_columnUser = '$login'") or die ("BAD_CONNECTION");
+				
+				die ( 'OK<:>'.base64_encode( base64_encode( $session ) ) );	
 				
 			} else {
 				echo "BAD_LOGIN_OR_PASSWORD";

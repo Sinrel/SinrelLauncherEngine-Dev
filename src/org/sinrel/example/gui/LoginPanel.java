@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import org.sinrel.engine.actions.Intent;
+
 class LoginPanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = -5742208666546302146L;
@@ -46,6 +48,7 @@ class LoginPanel extends JPanel implements ActionListener {
 		if( e.getSource() == pc )
 			System.out.println("Personal");
 		else {
+			System.out.println( Intent.DoAuth( login.getText() , login.getText() ) );
 			System.out.println("Auth action is detected!");
 		}
 	}

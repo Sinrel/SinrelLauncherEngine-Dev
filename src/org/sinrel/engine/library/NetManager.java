@@ -1,5 +1,7 @@
 package org.sinrel.engine.library;
 
+import java.awt.Desktop;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -12,17 +14,9 @@ public abstract class NetManager {
 	 */
 	public static void openLink( URI uri ) {
 		try {
-			Object o = Class.forName( "java.awt.Desktop" )		
-					.getMethod("getDesktop", new Class[0])
-					.invoke(null, new Object[0]);
-			
-			o.getClass()
-				.getMethod("browse", new Class[] { URI.class })
-			    .invoke(o, new Object[] { uri });
-			
-		} catch (Throwable e) {
+			Desktop.getDesktop().browse( uri );	
+		} catch ( IOException e ) {
 			System.err.println("Не удалось открыть ссылку " + uri.toString());
-			e.printStackTrace();
 		}
 	}
 	

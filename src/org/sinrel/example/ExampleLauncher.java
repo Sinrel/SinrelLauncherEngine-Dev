@@ -20,5 +20,5 @@ public class ExampleLauncher extends JavaLauncher {
 		
 		main.dispose();
 	}
-
+	
 }
