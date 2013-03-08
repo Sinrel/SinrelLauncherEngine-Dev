@@ -16,7 +16,8 @@
 			if( !file_exists( 'client/jinput.jar' ) || 
 				!file_exists( 'client/lwjgl.jar' ) || 
 			    !file_exists( 'client/lwjgl_util.jar' ) || 
-			    !file_exists( 'client/minecraft.jar' )
+			    !file_exists( 'client/minecraft.jar' ) ||
+			    !file_exists( 'client/natives/'.$_POST['system'].'.zip' )
 			) die ( "CLIENT_NOT_EXIST_ON_SERVER" );
 		
 			$md5jinput		= md5_file("client/jinput.jar");
@@ -24,12 +25,12 @@
 			$md5lwjql_util	= md5_file("client/lwjgl_util.jar");
 			$md5jar			= md5_file("client/minecraft.jar");
 			
-			$result  = $md5jinput;
+			$result = $md5jinput;
 			$result .= $md5lwjql;
 			$result .= $md5lwjql_util;
 			$result .= $md5jar;
-
-			if( strcmp( $result , $_POST['hash'] ) == 0 ) {	
+		
+			if( strcmp( $result, $_POST['hash'] ) == 0 ) {	
 				die( 'OK' );
 			}else{
 				die( 'CLIENT_DOES_NOT_MATCH' );

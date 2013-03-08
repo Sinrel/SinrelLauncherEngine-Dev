@@ -18,6 +18,7 @@ import org.sinrel.engine.listeners.CheckerListener;
 
 final class Checker {
 	
+	//Проверяемые файлы. Так же проверяется наличие natives под систему клиента
 	static String[] files = { "jinput.jar" , "lwjgl.jar" , "lwjgl_util.jar" , "minecraft.jar" };
 	//static ArrayList<File> additionalFiles = new ArrayList<File>();
 	
@@ -62,9 +63,7 @@ final class Checker {
 			sb.append( s );
 		}
 		
-		
-		
-		switch ( send( "standart", sb.toString() ) ) {
+		switch ( send( "standart", sb.toString() , OSManager.getPlatform() ) ) {
 			case BAD_CONNECTION:
 				onFinish();
 				clientStatus = Client.BAD_CONNECTION;
@@ -101,11 +100,13 @@ final class Checker {
 		return clientStatus;
 	}
 	
-	private static Client send( String client, String hash ) {
+	private static Client send( String client, String hash , OSManager.OS system ) {
 	     try {	    	 
 	    	  StringBuilder data = new StringBuilder( URLEncoder.encode("action", "UTF-8") + "=" + URLEncoder.encode("check", "UTF-8") );
-	 		  data.append( "&" + URLEncoder.encode("client", "UTF-8") + "=" + URLEncoder.encode( client , "UTF-8" ) );
+	 		  
+	    	  data.append( "&" + URLEncoder.encode("client", "UTF-8") + "=" + URLEncoder.encode( client , "UTF-8" ) );
 	 		  data.append( "&" + URLEncoder.encode("hash", "UTF-8") + "=" + URLEncoder.encode( hash , "UTF-8") );
+	 		  data.append( "&" + URLEncoder.encode("system", "UTF-8") + "=" + URLEncoder.encode( system.toString() , "UTF-8") );
 	 		 
 	          URL url; 
 	          
@@ -137,7 +138,7 @@ final class Checker {
 	          reader.close();
 	          
 	          String answer = s.toString();	  
-	          
+	          	          
 	          switch ( answer ) {
 	          	case "BAD_CONNECTION" :
 	          		return Client.BAD_CONNECTION;
@@ -164,7 +165,7 @@ final class Checker {
 	     return Client.BAD_CONNECTION;
 	}
 	
-	private void onFinish() {
+	private static void onFinish() {
 		for( CheckerListener cl : listeners  ) {
 			cl.onFinishChecking();
 		}

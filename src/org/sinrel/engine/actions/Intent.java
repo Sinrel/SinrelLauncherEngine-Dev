@@ -9,10 +9,12 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 
 import org.sinrel.engine.Engine;
-import org.sinrel.engine.library.SecurityManager;
 import org.sinrel.engine.library.cryption.Base64;
 
 public abstract class Intent {
+	
+	@SuppressWarnings("unused")
+	private static String session;
 	
 	public final static void Do( Action a ) {
 		switch ( a ) {
@@ -22,11 +24,17 @@ public abstract class Intent {
 			case DISABLE :
 				Engine.getLauncher().onDisable();
 				break;
-			case DOWNLOAD :
-				Download.init();
-				Download.t.start();
-				break;
 		}
+	}
+	
+	/**
+	 * Старт скачивания клиента "standart"
+	 * @param loadZip Загружать ли client.zip
+	 * @param dir Имя папки в которой находится клиент ( пример: minecraft )
+	 * @return Возвращает одно из значений Download
+	 */
+	public static final Download DoDownload( String dir  , boolean loadZip ) {
+		return new Downloader( dir , loadZip ).getAnswer();
 	}
 	
 	public static final Auth DoAuth( String login , String pass ) {
@@ -67,7 +75,7 @@ public abstract class Intent {
 	          String answer = s.toString();	  
 	          
 	          if( answer.contains("OK") ) {
-	        	  SecurityManager.session = answer.split("<:>")[1];
+	        	  session = answer.split("<:>")[1];
 	        	  
 	        	  return Auth.OK;
 	          }

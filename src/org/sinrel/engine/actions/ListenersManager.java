@@ -10,7 +10,7 @@ public final class ListenersManager {
 	 * @see DownloadListener
 	 */
 	public static void addDownloadListener( DownloadListener dl ) {
-		Download.listeners.add( dl );
+		Downloader.listeners.add( dl );
 	}
 	
 	/**

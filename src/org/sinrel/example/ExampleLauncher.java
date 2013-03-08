@@ -11,7 +11,7 @@ public class ExampleLauncher extends JavaLauncher {
 	public void onEnable() {		
 		main = new MainWindow();
 		
-		main.setVisible(true);
+		main.setVisible(true);	
 	}
 
 	@Override

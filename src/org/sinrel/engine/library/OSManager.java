@@ -72,7 +72,7 @@ public abstract class OSManager {
 		return OS.unknown;
 	}
 	
-	private static enum OS {
+	public static enum OS {
 		linux, solaris, windows, macos, unknown;
 	}
 	

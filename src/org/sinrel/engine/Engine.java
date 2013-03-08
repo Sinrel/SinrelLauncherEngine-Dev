@@ -23,8 +23,12 @@ public final class Engine {
 			desc = new LauncherDescriptionFile();
 			
 			launcher = loadLauncher( desc.getMain() );
-						
-			Intent.Do( Action.ENABLE );
+			
+			new Thread( new Runnable() {
+				public void run() {
+					Intent.Do( Action.ENABLE );
+				}
+			}).start();
 		}catch(Exception e) {
 			e.printStackTrace();
 			new FatalError( e.getClass(), e.getStackTrace(), e.getMessage() );
@@ -45,8 +49,7 @@ public final class Engine {
 			
 			jl = (JavaLauncher) cl.newInstance();
 			
-		}catch ( Exception e ) {
-			//TODO
+		}catch( Exception e ) {
 			throw new MainLauncherClassNotFoundException( pathToMain );
 		}
 

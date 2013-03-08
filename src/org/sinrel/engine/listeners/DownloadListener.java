@@ -10,16 +10,11 @@ public interface DownloadListener {
 	/**
 	 * При смене загружаемого файла
 	 */
-	public void onFileChange();
-	
-	/**
-	 * При смене статуса загрузки
-	 */
-	public void onStatusChange();
+	public void onFileChange( String now, String next  );
 	
 	/**
 	 * При подсчёте загруженного
 	 */
-	public void onPercentChange();
+	public void onPercentChange( long total , int count );
 	
 }

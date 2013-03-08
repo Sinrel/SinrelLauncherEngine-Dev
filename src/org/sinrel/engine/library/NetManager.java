@@ -1,10 +1,14 @@
 package org.sinrel.engine.library;
 
 import java.awt.Desktop;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 
 public abstract class NetManager {
 	
@@ -45,6 +49,41 @@ public abstract class NetManager {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * @param data Строка с данными
+	 * @param requestURL Ссылка на получателя
+	 * @return Возвращает строку содержащую ответ сервера. Если отправить запрос или получить ответ не удалось, возвращается строка BAD_CONNECTION 
+	 */
+	public static final String sendPostRequest( String data, String requestURL ) {
+	     try {	    	 	 		 
+	          URL url; 
+	          
+	          url = new URL( requestURL );
+	          	          	
+	          URLConnection conn = url.openConnection();
+	          conn.setDoOutput(true);
+	          OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+	          writer.write( data.toString() );
+	          writer.flush();
+	          
+	          StringBuffer s = new StringBuffer();
+	          BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	          String line;
+	          
+	          while ((line = reader.readLine()) != null) {
+	              s.append(line);
+	          }
+	          writer.close();
+	          reader.close();
+	          
+	          return s.toString();	  
+	          
+	     }catch ( IOException e ) {
+	    	 return "BAD_CONNECTION";
+	     }
 	}
 	
 }
