@@ -81,7 +81,7 @@ public abstract class Intent {
                 return Auth.OK;
             }
 
-            if (Auth.valueOf(answer) != null) {
+            if (Auth.isMember(answer)) {
                 return Auth.valueOf(answer);
             } else {
                 return Auth.BAD_CONNECTION;

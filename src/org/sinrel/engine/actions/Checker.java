@@ -135,7 +135,7 @@ final class Checker {
 
             String answer = s.toString();
 
-            if (Client.valueOf(answer) != null) {
+            if (Client.isMember(answer)) {
                 return Client.valueOf(answer);
             } else {
                 return Client.BAD_CONNECTION;
