@@ -21,7 +21,7 @@ public final class Downloader {
 	static Download status;
 	static String[] files = { "jinput.jar" , "lwjgl.jar" , "lwjgl_util.jar" , "minecraft.jar" , "natives/"+OSManager.getPlatform().toString()+".zip" };
 	
-	
+	//чувак что за бред почему загрузка начинается в конструкторе?? конструктор нужен для обьявление экземпляра класса а не для загрузки!!!
 	Downloader( final String directory , boolean loadZip ) {
 		try{
 	 		for( DownloadListener dl : listeners ) {
