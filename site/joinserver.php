@@ -14,4 +14,3 @@
 		if(mysql_affected_rows() == 1) echo "OK";
 		else echo "Bad login";
 	}
-?>

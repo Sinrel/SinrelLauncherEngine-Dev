@@ -1,4 +1,4 @@
-<?
+<?php
 
 	if(!defined('INCLUDE_CHECK')) die("У вас нет прав на выполнение данного файла!");
 	
@@ -32,4 +32,3 @@
 
 	mysql_select_db($db_database,$link);
 	mysql_query("SET names UTF8");
-?>

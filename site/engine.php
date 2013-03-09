@@ -1,4 +1,4 @@
-<?
+<?php
 	define( 'INCLUDE_CHECK', true );
 	
 	include 'config.php';
@@ -87,5 +87,3 @@
 		}
 		
 	}
- 
-?>

@@ -8,4 +8,3 @@
 	
 	if(mysql_num_rows($result) == 1) echo "YES";
 		else echo "NO";
-?>

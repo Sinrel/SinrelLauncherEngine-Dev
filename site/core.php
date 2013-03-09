@@ -1,4 +1,4 @@
-<? 
+<?php
 	if(!defined('INCLUDE_CHECK')) die('У вас нет прав на выполнение данного файла!');
 
 	function joomla() {
