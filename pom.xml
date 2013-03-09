@@ -17,6 +17,14 @@
         <buildNumber>0</buildNumber>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>20041127.091804</version>
+        </dependency>
+    </dependencies>
+
     <!-- Build configuration -->
     <build>
         <defaultGoal>clean install</defaultGoal>
