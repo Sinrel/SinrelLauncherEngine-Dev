@@ -1,10 +1,10 @@
 package org.sinrel.engine.launcher;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import org.sinrel.engine.exception.InvalidLauncherDescriptionFile;
 import org.sinrel.engine.exception.LauncherDescriptionNotFoundException;
+
+import java.io.IOException;
+import java.util.Properties;
 
 public final class LauncherDescriptionFile {
 	

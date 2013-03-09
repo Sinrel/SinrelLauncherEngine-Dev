@@ -1,15 +1,11 @@
 package org.sinrel.example.gui;
 
-import java.awt.Graphics;
+import org.sinrel.engine.actions.Intent;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-
-import org.sinrel.engine.actions.Intent;
 
 class LoginPanel extends JPanel implements ActionListener {
 

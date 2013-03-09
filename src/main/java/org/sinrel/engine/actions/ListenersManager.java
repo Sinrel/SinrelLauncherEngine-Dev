@@ -2,6 +2,7 @@ package org.sinrel.engine.actions;
 
 import org.sinrel.engine.listeners.CheckerListener;
 import org.sinrel.engine.listeners.DownloadListener;
+import org.sinrel.engine.actions.Downloader;
 
 public final class ListenersManager {
 	

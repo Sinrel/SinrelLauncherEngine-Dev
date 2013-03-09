@@ -1,9 +1,9 @@
 package org.sinrel.engine.library.cryption;
 
-import java.io.IOException;
-
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
+
+import java.io.IOException;
 
 public abstract class Base64 {
 

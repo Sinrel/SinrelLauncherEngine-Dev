@@ -19,7 +19,7 @@ public abstract class OSManager {
 	}
 	
 	public static File getClientFolder( String name ) {
-		return new File( getWorkingDirectory( name ).getPath() , "bin" + File.separator );
+		return new File( getWorkingDirectory(name).getPath() , "bin" + File.separator );
 	}
 	
 	public static File getWorkingDirectory(String applicationName) {

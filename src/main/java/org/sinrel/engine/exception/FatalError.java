@@ -1,22 +1,14 @@
 package org.sinrel.engine.exception;
 
-import java.awt.Font;
-import java.awt.Image;
+import org.sinrel.engine.util.Logger;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.UIManager;
-
-import org.sinrel.engine.util.Logger;
 
 public class FatalError extends JFrame {
 
@@ -42,7 +34,7 @@ public class FatalError extends JFrame {
 		setResizable( false );
 		
 		try {
-			BufferedImage img = ImageIO.read(getClass().getResource("sinrel.png"));
+			BufferedImage img = ImageIO.read(getClass().getResource("/sinrel.png"));
 			Image icon = img.getSubimage(0, 0, 53, 60);
 			ImageIcon logo = new ImageIcon(img);
 			
@@ -91,7 +83,6 @@ public class FatalError extends JFrame {
 			b.addActionListener( 
 					 new ActionListener() {
 
-							@Override
 							public void actionPerformed(ActionEvent e) {
 								setSize( 785, 300 );
 								b.removeActionListener( this );
@@ -102,7 +93,6 @@ public class FatalError extends JFrame {
 								
 								b.addActionListener( new ActionListener() {
 
-									@Override
 									public void actionPerformed(ActionEvent e) {
 										System.exit(0);
 									}
