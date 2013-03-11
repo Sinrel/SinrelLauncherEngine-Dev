@@ -50,7 +50,7 @@ public final class Engine {
 			jl = (JavaLauncher) cl.newInstance();
 			
 		}catch( Exception e ) {
-			throw new MainLauncherClassNotFoundException( pathToMain );
+			throw new MainLauncherClassNotFoundException( pathToMain);
 		}
 
 		return jl;
