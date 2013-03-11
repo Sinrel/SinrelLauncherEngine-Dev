@@ -16,6 +16,8 @@ import org.sinrel.engine.library.OSManager;
 import org.sinrel.engine.library.cryption.MD5;
 import org.sinrel.engine.listeners.CheckerListener;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 final class Checker {
 	
 	//Проверяемые файлы. Так же проверяется наличие natives под систему клиента
@@ -24,25 +26,25 @@ final class Checker {
 	
 	static ArrayList<CheckerListener> listeners = new ArrayList<CheckerListener>();
 	
-	private Client clientStatus;
+	private static ClientStatus clientStatus;
 	
-	Checker( String applicationName , String serverName  ) {
-		//FIXME Now do nothing :C
+	public static ClientStatus checkClient(String applicationName, String serverName){
+		throw new NotImplementedException();
 	}
 	
-	Checker( String applicationName  ) {
+	public static ClientStatus checkClient(String applicationName) {
 		for( CheckerListener cl : listeners  ) {
 			cl.onStartChecking();
 		}
 		
 		if( !NetManager.isOnline() ) {
-			clientStatus = Client.BAD_CONNECTION; 
-			return;
+			clientStatus = ClientStatus.BAD_CONNECTION; 
+			return clientStatus;
 		}
 		
 		if( !OSManager.getWorkingDirectory( applicationName ).exists() | !OSManager.getClientFolder( applicationName ).exists() ) {
-			clientStatus = Client.CLIENT_NOT_EXIST;
-			return;
+			clientStatus = ClientStatus.CLIENT_NOT_EXIST;
+			return clientStatus;
 		}
 		
 		ArrayList<String> hash = new ArrayList<String>();
@@ -51,8 +53,8 @@ final class Checker {
 		for ( String name : files ) {
 			f = new File( OSManager.getClientFolder( applicationName ) , name );
 			if( !f.exists() ) {
-				clientStatus = Client.WRONG_CLIENT;
-				return;
+				clientStatus = ClientStatus.WRONG_CLIENT;
+				return clientStatus;
 			}
 			
 			hash.add( MD5.getMD5( f ) );
@@ -63,44 +65,13 @@ final class Checker {
 			sb.append( s );
 		}
 		
-		switch ( send( "standart", sb.toString() , OSManager.getPlatform() ) ) {
-			case BAD_CONNECTION:
-				onFinish();
-				clientStatus = Client.BAD_CONNECTION;
-				return;
-			
-			case CLIENT_DOES_NOT_MATCH:
-				onFinish();
-				clientStatus = Client.CLIENT_DOES_NOT_MATCH;
-				return;
-			
-			case CLIENT_NOT_EXIST:
-				onFinish();
-				clientStatus = Client.CLIENT_NOT_EXIST;
-				return;
-			
-			case CLIENT_NOT_EXIST_ON_SERVER:
-				onFinish();
-				clientStatus = Client.CLIENT_NOT_EXIST_ON_SERVER;
-				return;
-			
-			case OK:
-				onFinish();
-				clientStatus = Client.OK;
-				return;
-			
-			case WRONG_CLIENT:
-				onFinish();
-				clientStatus = Client.WRONG_CLIENT;
-				return;		
-		}
-	}
-	
-	Client getClientStatus() {
+		onFinish();
+		clientStatus = send( "standart", sb.toString() , OSManager.getPlatform() );
 		return clientStatus;
 	}
 	
-	private static Client send( String client, String hash , OSManager.OS system ) {
+	
+	private static ClientStatus send( String client, String hash , OSManager.OS system ) {
 	     try {	    	 
 	    	  StringBuilder data = new StringBuilder( URLEncoder.encode("action", "UTF-8") + "=" + URLEncoder.encode("check", "UTF-8") );
 	 		  
@@ -141,28 +112,28 @@ final class Checker {
 	          	          
 	          switch ( answer ) {
 	          	case "BAD_CONNECTION" :
-	          		return Client.BAD_CONNECTION;
+	          		return ClientStatus.BAD_CONNECTION;
 	          	case "CLIENT_DOES_NOT_MATCH":
-	          		return Client.CLIENT_DOES_NOT_MATCH;
+	          		return ClientStatus.CLIENT_DOES_NOT_MATCH;
 	          	
 	          	case "CLIENT_NOT_EXITST":
-	          		return Client.CLIENT_NOT_EXIST;
+	          		return ClientStatus.CLIENT_NOT_EXIST;
 	          	
 	          	case "CLIENT_NOT_EXIST_ON_SERVER":
-	          		return Client.CLIENT_NOT_EXIST_ON_SERVER;
+	          		return ClientStatus.CLIENT_NOT_EXIST_ON_SERVER;
 	          	
 	          	case "WRONG_CLIENT":
-	          		return Client.WRONG_CLIENT;
+	          		return ClientStatus.WRONG_CLIENT;
 	          	
 	          	case "OK":
-	          		return Client.OK;
+	          		return ClientStatus.OK;
 	          }
 	          
 	     }catch (IOException e) {
-	 		return Client.BAD_CONNECTION;
+	 		return ClientStatus.BAD_CONNECTION;
 	     }
 	     
-	     return Client.BAD_CONNECTION;
+	     return ClientStatus.BAD_CONNECTION;
 	}
 	
 	private static void onFinish() {

@@ -31,13 +31,13 @@ public abstract class Intent {
 	 * Старт скачивания клиента "standart"
 	 * @param loadZip Загружать ли client.zip
 	 * @param dir Имя папки в которой находится клиент ( пример: minecraft )
-	 * @return Возвращает одно из значений Download
+	 * @return Возвращает одно из значений DownloadResult
 	 */
-	public static final Download DoDownload( String dir  , boolean loadZip ) {
-		return new Downloader( dir , loadZip ).getAnswer();
+	public static final DownloadResult DoDownload( String dir  , boolean loadZip ) {
+		return Downloader.downloadClient(dir, loadZip);
 	}
 	
-	public static final Auth DoAuth( String login , String pass ) {
+	public static final AuthResult DoAuth( String login , String pass ) {
 	     try {	    	 
 	    	  StringBuilder data = new StringBuilder( URLEncoder.encode("action", "UTF-8") + "=" + URLEncoder.encode("auth", "UTF-8") );
 	 		  data.append( "&" + URLEncoder.encode("login", "UTF-8") + "=" + URLEncoder.encode( Base64.encode( Base64.encode( login ) ) , "UTF-8") );
@@ -77,31 +77,31 @@ public abstract class Intent {
 	          if( answer.contains("OK") ) {
 	        	  session = answer.split("<:>")[1];
 	        	  
-	        	  return Auth.OK;
+	        	  return AuthResult.OK;
 	          }
 	          
 	          switch ( answer ) {
 	           case "BAD_CONNECTION":
-	        	   return Auth.BAD_CONNECTION;
+	        	   return AuthResult.BAD_CONNECTION;
 	        	   
 	           case "LOGIN_OR_PASS_NOT_EXIST":
-	        	   return Auth.LOGIN_OR_PASS_NOT_EXIST;
+	        	   return AuthResult.LOGIN_OR_PASS_NOT_EXIST;
 	        	   
 	           case "BAD_LOGIN_OR_PASSWORD":
-	        	   return Auth.BAD_LOGIN_OR_PASSWORD;
+	        	   return AuthResult.BAD_LOGIN_OR_PASSWORD;
 	          }
 	     }catch (IOException e) {
-	 		return Auth.BAD_CONNECTION;
+	 		return AuthResult.BAD_CONNECTION;
 	     }
 	     
-	     return Auth.BAD_CONNECTION;
+	     return AuthResult.BAD_CONNECTION;
 	}
 	
-	public static final Client DoCheckClient( String applicationName , String serverName ) {
-		return new Checker( applicationName , serverName ).getClientStatus();
+	public static final ClientStatus DoCheckClient( String applicationName , String serverName ) {
+		return Checker.checkClient(applicationName, serverName);
 	}
 	
-	public static final Client DoCheckClient( String applicationName ) {
-		return new Checker( applicationName ).getClientStatus();
+	public static final ClientStatus DoCheckClient( String applicationName ) {
+		return Checker.checkClient(applicationName);
 	}
 }

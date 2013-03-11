@@ -18,12 +18,10 @@ import org.sinrel.engine.listeners.DownloadListener;
 public final class Downloader {
 	
 	static ArrayList<DownloadListener> listeners = new ArrayList<DownloadListener>();
-	static Download status;
 	static String[] files = { "jinput.jar" , "lwjgl.jar" , "lwjgl_util.jar" , "minecraft.jar" , "natives/"+OSManager.getPlatform().toString()+".zip" };
-	
-	//чувак что за бред почему загрузка начинается в конструкторе?? конструктор нужен для обьявление экземпляра класса а не для загрузки!!!
-	//еще паттерн Observer реализован не совсем. непонятно как подписаться на событие а как одпипасаться.
-	Downloader( final String directory , boolean loadZip ) {
+
+	public static DownloadResult downloadClient(final String directory, boolean loadZip) {
+		DownloadResult status = null;
 		try{
 	 		for( DownloadListener dl : listeners ) {
 				dl.onStartDownload();
@@ -62,8 +60,8 @@ public final class Downloader {
 						dl.onFileChange( now , next );
 					}
 	        	}catch( IOException e ) {
-	        		status = Download.FILE_NOT_EXIST;
-	        		return;
+	        		status = DownloadResult.FILE_NOT_EXIST;
+	        		return status;
 	        	}
 	        }
 	        
@@ -81,23 +79,23 @@ public final class Downloader {
 	    	        ZipManager.unzip( new File( OSManager.getWorkingDirectory( directory ) , "client.zip" ) , new File( OSManager.getWorkingDirectory( directory ), "") );
 	    	        ZipManager.removeAllZipFiles( new File( OSManager.getWorkingDirectory( directory ).toString() ) );
 	        	}catch( IOException e ) {
-	        		status = Download.FILE_NOT_EXIST;
-	        		return;
+	        		status = DownloadResult.FILE_NOT_EXIST;
+	        		return status;
 	        	}
 	        }
 	        
 	        ZipManager.unzip( new File( OSManager.getClientFolder( directory ), files[ files.length - 1 ] ) , new File( OSManager.getClientFolder( directory ) + File.separator + "natives" ) );
 	        ZipManager.removeAllZipFiles( new File( OSManager.getClientFolder( directory ) + File.separator + "natives" ) );
 	        
-	        status = Download.OK;
-	        
+	        status = DownloadResult.OK;
 		}catch( MalformedURLException e ) {
 			e.printStackTrace();
 		}
+        return status;
 	}
 	
 	
-	private void download( URL url, File f ) throws IOException {
+	private static void download( URL url, File f ) throws IOException {
 		f.mkdirs();
 
 		f.delete();
@@ -136,11 +134,7 @@ public final class Downloader {
 		}
 	}
 	
-	public Download getAnswer() {
-		return status;
-	}
-	
-	private void delete( File file ) {
+	private static void delete( File file ) {
 	    if( !file.exists() ) return;
 	    
 	    if( file.isDirectory() ) {

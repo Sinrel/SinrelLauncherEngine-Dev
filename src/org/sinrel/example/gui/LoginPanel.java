@@ -49,7 +49,7 @@ class LoginPanel extends JPanel implements ActionListener {
 			System.out.println("Personal");
 		else {
 			System.out.println( Intent.DoAuth( login.getText() , login.getText() ) );
-			System.out.println("Auth action is detected!");
+			System.out.println("AuthResult action is detected!");
 		}
 	}
 	
