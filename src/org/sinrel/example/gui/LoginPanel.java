@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import org.sinrel.engine.actions.Intent;
+import org.sinrel.engine.Engine;
 
 class LoginPanel extends JPanel implements ActionListener {
 
@@ -48,7 +48,7 @@ class LoginPanel extends JPanel implements ActionListener {
 		if( e.getSource() == pc )
 			System.out.println("Personal");
 		else {
-			System.out.println( Intent.DoAuth( login.getText() , login.getText() ) );
+			System.out.println( MainWindow.engine.getIntent().auth( login.getText() , login.getText() ) );
 			System.out.println("AuthResult action is detected!");
 		}
 	}

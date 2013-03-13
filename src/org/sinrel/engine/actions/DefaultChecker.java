@@ -18,7 +18,7 @@ import org.sinrel.engine.listeners.CheckerListener;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-final class Checker {
+final class DefaultChecker {
 	
 	//Проверяемые файлы. Так же проверяется наличие natives под систему клиента
 	static String[] files = { "jinput.jar" , "lwjgl.jar" , "lwjgl_util.jar" , "minecraft.jar" };

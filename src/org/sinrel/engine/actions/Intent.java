@@ -11,33 +11,27 @@ import java.net.URLEncoder;
 import org.sinrel.engine.Engine;
 import org.sinrel.engine.library.cryption.Base64;
 
-public abstract class Intent {
+public class Intent {
 	
 	@SuppressWarnings("unused")
-	private static String session;
-	
-	public final static void Do( Action a ) {
-		switch ( a ) {
-			case ENABLE : 
-				Engine.getLauncher().onEnable();
-				break;
-			case DISABLE :
-				Engine.getLauncher().onDisable();
-				break;
-		}
+	private String session;
+	private Engine engine;
+		
+	public Intent(Engine engine) {
+		this.engine = engine;
 	}
-	
+
 	/**
 	 * Старт скачивания клиента "standart"
 	 * @param loadZip Загружать ли client.zip
 	 * @param dir Имя папки в которой находится клиент ( пример: minecraft )
 	 * @return Возвращает одно из значений DownloadResult
 	 */
-	public static final DownloadResult DoDownload( String dir  , boolean loadZip ) {
-		return Downloader.downloadClient(dir, loadZip);
+	public DownloadResult downloadClient( String dir  , boolean loadZip ) {
+		return DefaultDownloader.downloadClient(dir, loadZip);
 	}
 	
-	public static final AuthResult DoAuth( String login , String pass ) {
+	public AuthResult auth( String login , String pass ) {
 	     try {	    	 
 	    	  StringBuilder data = new StringBuilder( URLEncoder.encode("action", "UTF-8") + "=" + URLEncoder.encode("auth", "UTF-8") );
 	 		  data.append( "&" + URLEncoder.encode("login", "UTF-8") + "=" + URLEncoder.encode( Base64.encode( Base64.encode( login ) ) , "UTF-8") );
@@ -45,13 +39,13 @@ public abstract class Intent {
 	 		  
 	          URL url; 
 	          
-	          if( !Engine.getDescriptionFile().get("folder").equalsIgnoreCase("") ) {
+	          if( !engine.getSettings().getFolder().equalsIgnoreCase("") ) {
 	        	  url =	new URL( 
-	        			  "http://" + Engine.getDescriptionFile().get("domain") + "/" +  Engine.getDescriptionFile().get("folder") + "/" + "engine.php" 
+	        			  "http://" + engine.getSettings().getDomain() + "/" +  engine.getSettings().getFolder() + "/" + "engine.php" 
 	        	  );
 	          }else {
 	        	  url =	new URL( 
-	        			  "http://" + Engine.getDescriptionFile().get("domain") + "/" + "engine.php" 
+	        			  "http://" + engine.getSettings().getDomain() + "/" + "engine.php" 
 	        	  );
 	          }
 	          	          
@@ -73,6 +67,10 @@ public abstract class Intent {
 	          reader.close();
 	          
 	          String answer = s.toString();	  
+	          
+	          if(engine.isDebug()){
+	        	  System.out.println(answer);
+	          }
 	          
 	          if( answer.contains("OK") ) {
 	        	  session = answer.split("<:>")[1];
@@ -97,12 +95,12 @@ public abstract class Intent {
 	     return AuthResult.BAD_CONNECTION;
 	}
 	
-	public static final ClientStatus DoCheckClient( String applicationName , String serverName ) {
-		return Checker.checkClient(applicationName, serverName);
+	public ClientStatus checkClient( String applicationName , String serverName ) {
+		return DefaultChecker.checkClient(applicationName, serverName);
 	}
 	
-	public static final ClientStatus DoCheckClient( String applicationName ) {
-		return Checker.checkClient(applicationName);
+	public ClientStatus checkClient( String applicationName ) {
+		return DefaultChecker.checkClient(applicationName);
 	}
 	
 }

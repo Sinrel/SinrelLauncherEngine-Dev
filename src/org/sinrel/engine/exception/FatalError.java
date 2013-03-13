@@ -22,12 +22,20 @@ public class FatalError extends JFrame {
 
 	private static final long serialVersionUID = -7839456828040805832L;
 
+	public static void showErrorWindow(Exception e){
+		showErrorWindow(e.getClass(), e.getStackTrace(), e.getMessage());
+	}
+	
+	public static void showErrorWindow(Class<?> cl ,StackTraceElement[] trace, String message){
+		new FatalError(cl, trace, message);
+	}
+	
 	/**
 	 * @param cl класс исключения
 	 * @param trace трассировка стека
 	 * @param message сообщение исключения
 	 */
-	public FatalError(Class<?> cl ,StackTraceElement[] trace, String message){
+	private FatalError(Class<?> cl ,StackTraceElement[] trace, String message){
 		super("SLE Fatal Error");
 		
 		try {
