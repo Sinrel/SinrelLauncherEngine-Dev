@@ -104,4 +104,5 @@ public abstract class Intent {
 	public static final ClientStatus DoCheckClient( String applicationName ) {
 		return Checker.checkClient(applicationName);
 	}
+	
 }
