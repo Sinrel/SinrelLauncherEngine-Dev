@@ -18,7 +18,7 @@ import org.sinrel.engine.listeners.CheckerListener;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-final class DefaultChecker extends ClientChecker{
+public class DefaultChecker extends ClientChecker{
 	
 	public DefaultChecker(Engine e) {
 		super(e);

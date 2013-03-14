@@ -5,11 +5,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.sinrel.engine.Engine;
+import org.sinrel.engine.actions.AuthData;
+import org.sinrel.engine.actions.AuthResult;
+import org.sinrel.engine.actions.ClientStatus;
+import org.sinrel.engine.actions.DownloadResult;
+import org.sinrel.engine.actions.Intent;
+import org.sinrel.engine.listeners.DownloadCompleteListener;
 
 class LoginPanel extends JPanel implements ActionListener {
 
@@ -48,11 +55,46 @@ class LoginPanel extends JPanel implements ActionListener {
 		if( e.getSource() == pc )
 			System.out.println("Personal");
 		else {
-			System.out.println( MainWindow.engine.getIntent().auth( login.getText() , login.getText() ) );
+			
+			Intent i = MainWindow.engine.getIntent();
+			//авторизация
+			AuthData data = i.auth( login.getText() , login.getText() );
+			
+			if(data.getResult() == AuthResult.OK){
+				JOptionPane.showMessageDialog(this, "you are logined!! your session: " + data.getSession());
+				
+				//проверка клиента
+				ClientStatus status = i.checkClient("minecraft");
+				
+				if(status == ClientStatus.WRONG_CLIENT){
+					
+					//асинхронная загрузка клиента
+					i.downloadClientAsync("minecraft", true, new DownloadCompleteListener() {
+						public void onDownloadComplete(DownloadResult result) {
+							System.out.println("client is downloaded i'm need to launch minecraft");
+							launchMinecraft();
+						}
+					});
+				}
+				else if(status == ClientStatus.OK)
+					launchMinecraft();
+
+			}
+			else if(data.getResult() == AuthResult.BAD_CONNECTION){
+				JOptionPane.showMessageDialog(this, "ошибка");
+			}
+			else if(data.getResult() == AuthResult.BAD_LOGIN_OR_PASSWORD){
+				JOptionPane.showMessageDialog(this, "неверный логин или пароль");
+			}
+			
 			System.out.println("AuthResult action is detected!");
 		}
 	}
 	
+	protected void launchMinecraft() {
+		// TODO create launch minecraft logic
+	}
+
 	public void paint(Graphics g){
 		super.paint(g);
 		

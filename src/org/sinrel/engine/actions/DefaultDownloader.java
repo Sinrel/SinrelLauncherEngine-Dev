@@ -15,7 +15,7 @@ import org.sinrel.engine.library.OSManager;
 import org.sinrel.engine.library.ZipManager;
 import org.sinrel.engine.listeners.DownloadListener;
 
-public final class DefaultDownloader extends Downloader{
+public class DefaultDownloader extends Downloader{
 	
 	public DefaultDownloader(Engine eng) {
 		super(eng);

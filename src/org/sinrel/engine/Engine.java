@@ -1,5 +1,11 @@
 package org.sinrel.engine;
 
+import org.sinrel.engine.actions.AuthBehavior;
+import org.sinrel.engine.actions.ClientChecker;
+import org.sinrel.engine.actions.DefaultAuthBehavior;
+import org.sinrel.engine.actions.DefaultChecker;
+import org.sinrel.engine.actions.DefaultDownloader;
+import org.sinrel.engine.actions.Downloader;
 import org.sinrel.engine.actions.Intent;
 import org.sinrel.engine.exception.FatalError;
 
@@ -9,11 +15,18 @@ public class Engine {
 	private EngineSettings settings;
 	
 	private Intent intent;
+	
+	private Downloader downloader;	
+	private ClientChecker checker;
+	private AuthBehavior auth;
 	 
 	public Engine(EngineSettings settings) {
 		try {
 			intent = new Intent(this);
 			setSettings(settings);
+			downloader = new DefaultDownloader(this);
+			checker = new DefaultChecker(this);
+			auth = new DefaultAuthBehavior();
 		}catch(Exception e) {
 			e.printStackTrace();
 			FatalError.showErrorWindow(e);
@@ -26,12 +39,36 @@ public class Engine {
 		return settings;
 	}
 	
-	public void setSettings(EngineSettings settings){
-		this.settings = settings;
+	public Downloader getDownloader() {
+		return downloader;
+	}
+	
+	public ClientChecker getChecker() {
+		return checker;
+	}
+	
+	public AuthBehavior getAuth() {
+		return auth;
 	}
 	
 	public Intent getIntent(){
 		return intent;
+	}
+	
+	public void setSettings(EngineSettings settings){
+		this.settings = settings;
+	}
+	
+	public void setDownloader(Downloader downloader) {
+		this.downloader = downloader;
+	}
+	
+	public void setChecker(ClientChecker checker) {
+		this.checker = checker;
+	}
+	
+	public void setAuth(AuthBehavior auth) {
+		this.auth = auth;
 	}
 	
 	public boolean isDebug(){
