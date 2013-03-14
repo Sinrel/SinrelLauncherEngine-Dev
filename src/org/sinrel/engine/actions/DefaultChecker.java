@@ -18,33 +18,30 @@ import org.sinrel.engine.listeners.CheckerListener;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-final class DefaultChecker {
+final class DefaultChecker extends ClientChecker{
 	
+	public DefaultChecker(Engine e) {
+		super(e);
+	}
+
+
 	//Проверяемые файлы. Так же проверяется наличие natives под систему клиента
 	static String[] files = { "jinput.jar" , "lwjgl.jar" , "lwjgl_util.jar" , "minecraft.jar" };
-	//static ArrayList<File> additionalFiles = new ArrayList<File>();
 	
-	static ArrayList<CheckerListener> listeners = new ArrayList<CheckerListener>();
-	
-	private static ClientStatus clientStatus;
-	
-	public static ClientStatus checkClient(String applicationName, String serverName){
+	public ClientStatus checkClient(String applicationName, String serverName){
 		throw new NotImplementedException();
 	}
 	
-	public static ClientStatus checkClient(String applicationName) {
-		for( CheckerListener cl : listeners  ) {
-			cl.onStartChecking();
-		}
+	public ClientStatus checkClient(String applicationName) {
+		
+		this.onStartChecking();
 		
 		if( !NetManager.isOnline() ) {
-			clientStatus = ClientStatus.BAD_CONNECTION; 
-			return clientStatus;
+			return ClientStatus.BAD_CONNECTION;
 		}
 		
 		if( !OSManager.getWorkingDirectory( applicationName ).exists() | !OSManager.getClientFolder( applicationName ).exists() ) {
-			clientStatus = ClientStatus.CLIENT_NOT_EXIST;
-			return clientStatus;
+			return ClientStatus.CLIENT_NOT_EXIST;
 		}
 		
 		ArrayList<String> hash = new ArrayList<String>();
@@ -53,8 +50,7 @@ final class DefaultChecker {
 		for ( String name : files ) {
 			f = new File( OSManager.getClientFolder( applicationName ) , name );
 			if( !f.exists() ) {
-				clientStatus = ClientStatus.WRONG_CLIENT;
-				return clientStatus;
+				return ClientStatus.WRONG_CLIENT;
 			}
 			
 			hash.add( MD5.getMD5( f ) );
@@ -65,13 +61,12 @@ final class DefaultChecker {
 			sb.append( s );
 		}
 		
-		onFinish();
-		clientStatus = send( "standart", sb.toString() , OSManager.getPlatform() );
-		return clientStatus;
+		this.onFinishChecking();
+		return send( "standart", sb.toString() , OSManager.getPlatform() );
 	}
 	
 	
-	private static ClientStatus send( String client, String hash , OSManager.OS system ) {
+	private ClientStatus send( String client, String hash , OSManager.OS system ) {
 	     try {	    	 
 	    	  StringBuilder data = new StringBuilder( URLEncoder.encode("action", "UTF-8") + "=" + URLEncoder.encode("check", "UTF-8") );
 	 		  
@@ -81,13 +76,13 @@ final class DefaultChecker {
 	 		 
 	          URL url; 
 	          
-	          if( !Engine.getDescriptionFile().get("folder").equalsIgnoreCase("") ) {
+	          if( !getEngine().getSettings().getFolder().equalsIgnoreCase("") ) {
 	        	  url =	new URL( 
-	        			  "http://" + Engine.getDescriptionFile().get("domain") + "/" +  Engine.getDescriptionFile().get("folder") + "/" + "engine.php" 
+	        			  "http://" + getEngine().getSettings().getDomain() + "/" +  getEngine().getSettings().getFolder() + "/" + "engine.php" 
 	        	  );
 	          }else {
 	        	  url =	new URL( 
-	        			  "http://" + Engine.getDescriptionFile().get("domain") + "/" + "engine.php" 
+	        			  "http://" + getEngine().getSettings().getDomain() + "/" + "engine.php" 
 	        	  );
 	          }
 	          	
@@ -136,10 +131,5 @@ final class DefaultChecker {
 	     return ClientStatus.BAD_CONNECTION;
 	}
 	
-	private static void onFinish() {
-		for( CheckerListener cl : listeners  ) {
-			cl.onFinishChecking();
-		}
-	}
 	
 }

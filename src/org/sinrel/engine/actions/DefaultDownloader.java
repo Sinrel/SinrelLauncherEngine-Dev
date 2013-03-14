@@ -17,26 +17,28 @@ import org.sinrel.engine.listeners.DownloadListener;
 
 public final class DefaultDownloader extends Downloader{
 	
+	public DefaultDownloader(Engine eng) {
+		super(eng);
+	}
+	
 	static final String[] files = { "jinput.jar" , "lwjgl.jar" , "lwjgl_util.jar" , "minecraft.jar" , "natives/"+OSManager.getPlatform().toString()+".zip" };
 
 	public DownloadResult downloadClient(final String directory, boolean loadZip) {
 		DownloadResult status = null;
 		try{
-	 		for( DownloadListener dl : listeners ) {
-				dl.onStartDownload();
-			}
+			this.onStartDownload();
 			
 			delete( new File( OSManager.getWorkingDirectory( directory ).toString() ) );
 			
 	        URL url; 
 	        
-	        if( !Engine.getDescriptionFile().get("folder").equalsIgnoreCase("") ) {
+	        if( !getEngine().getSettings().getFolder().equalsIgnoreCase("") ) {
 	      	  url =	new URL( 
-	      			  "http://" + Engine.getDescriptionFile().get("domain") + "/" +  Engine.getDescriptionFile().get("folder") + "/" + "client" + "/" 
+	      			  "http://" + getEngine().getSettings().getDomain() + "/" +  getEngine().getSettings().getFolder() + "/" + "client" + "/" 
 	      	  );
 	        }else{
 	      	  url =	new URL( 
-	      			  "http://" + Engine.getDescriptionFile().get("domain") + "/" + "client/"
+	      			  "http://" + getEngine().getSettings().getDomain()  + "/" + "client/"
 	      	  );
 	        }
 	        
@@ -70,9 +72,7 @@ public final class DefaultDownloader extends Downloader{
 	        	
 	        		download( new URL( url + "client.zip" ) , new File( OSManager.getWorkingDirectory( directory ) , "client.zip" ) );
 	        		
-	        		for( DownloadListener dl : listeners ) {
-						dl.onFileChange( now , next );
-					}
+	        		onFileChange(now, next);
 	        	
 	    	        ZipManager.unzip( new File( OSManager.getWorkingDirectory( directory ) , "client.zip" ) , new File( OSManager.getWorkingDirectory( directory ), "") );
 	    	        ZipManager.removeAllZipFiles( new File( OSManager.getWorkingDirectory( directory ).toString() ) );
@@ -93,7 +93,7 @@ public final class DefaultDownloader extends Downloader{
 	}
 	
 	
-	private static void download( URL url, File f ) throws IOException {
+	private void download( URL url, File f ) throws IOException {
 		f.mkdirs();
 
 		f.delete();
@@ -121,10 +121,7 @@ public final class DefaultDownloader extends Downloader{
 			while ((count = bis.read(b)) != -1) {
 				total += count;
 				fw.write(b, 0, count);
-				
-				for( DownloadListener dl : listeners ) {
-					dl.onPercentChange( total , count );
-				}
+				onPercentChange(total, count);	
 			}
 			fw.close();
 		}else{

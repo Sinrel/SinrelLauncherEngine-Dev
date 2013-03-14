@@ -13,12 +13,14 @@ import org.sinrel.engine.library.cryption.Base64;
 
 public class Intent {
 	
-	@SuppressWarnings("unused")
-	private String session;
 	private Engine engine;
-		
+	private Downloader downloader;	
+	private ClientChecker checker;
+	
 	public Intent(Engine engine) {
 		this.engine = engine;
+		downloader = new DefaultDownloader(engine);
+		checker = new DefaultChecker(engine);
 	}
 
 	/**
@@ -28,16 +30,19 @@ public class Intent {
 	 * @return Возвращает одно из значений DownloadResult
 	 */
 	public DownloadResult downloadClient( String dir  , boolean loadZip ) {
-		return DefaultDownloader.downloadClient(dir, loadZip);
+		return downloader.downloadClient(dir, loadZip);
 	}
 	
-	public AuthResult auth( String login , String pass ) {
-	     try {	    	 
+	public AuthData auth( String login , String pass ) {
+		AuthData ret = new AuthData(login, null, AuthResult.BAD_CONNECTION); 
+	     try {	    	
 	    	  StringBuilder data = new StringBuilder( URLEncoder.encode("action", "UTF-8") + "=" + URLEncoder.encode("auth", "UTF-8") );
 	 		  data.append( "&" + URLEncoder.encode("login", "UTF-8") + "=" + URLEncoder.encode( Base64.encode( Base64.encode( login ) ) , "UTF-8") );
 	 		  data.append( "&" + URLEncoder.encode("pass", "UTF-8") + "=" + URLEncoder.encode( Base64.encode( Base64.encode( pass ) ), "UTF-8") );
 	 		  
 	          URL url; 
+	          
+	          System.out.println(engine == null);
 	          
 	          if( !engine.getSettings().getFolder().equalsIgnoreCase("") ) {
 	        	  url =	new URL( 
@@ -73,34 +78,31 @@ public class Intent {
 	          }
 	          
 	          if( answer.contains("OK") ) {
-	        	  session = answer.split("<:>")[1];
+	        	  ret.setSession(answer.split("<:>")[1]);
 	        	  
-	        	  return AuthResult.OK;
+	        	  ret.setResult(AuthResult.OK);
+	        	  return ret;
 	          }
 	          
 	          switch ( answer ) {
 	           case "BAD_CONNECTION":
-	        	   return AuthResult.BAD_CONNECTION;
+	        	   ret.setResult(AuthResult.BAD_CONNECTION);
 	        	   
 	           case "LOGIN_OR_PASS_NOT_EXIST":
-	        	   return AuthResult.LOGIN_OR_PASS_NOT_EXIST;
+	        	   ret.setResult(AuthResult.LOGIN_OR_PASS_NOT_EXIST);
 	        	   
 	           case "BAD_LOGIN_OR_PASSWORD":
-	        	   return AuthResult.BAD_LOGIN_OR_PASSWORD;
+	        	   ret.setResult(AuthResult.BAD_LOGIN_OR_PASSWORD);
 	          }
 	     }catch (IOException e) {
-	 		return AuthResult.BAD_CONNECTION;
+	 		ret.setResult(AuthResult.BAD_CONNECTION);
 	     }
 	     
-	     return AuthResult.BAD_CONNECTION;
+	     return ret;
 	}
-	
-	public ClientStatus checkClient( String applicationName , String serverName ) {
-		return DefaultChecker.checkClient(applicationName, serverName);
-	}
-	
+		
 	public ClientStatus checkClient( String applicationName ) {
-		return DefaultChecker.checkClient(applicationName);
+		return checker.checkClient(applicationName);
 	}
 	
 }

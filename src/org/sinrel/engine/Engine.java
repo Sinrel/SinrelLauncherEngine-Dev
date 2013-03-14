@@ -13,6 +13,7 @@ public class Engine {
 	public Engine(EngineSettings settings) {
 		try {
 			intent = new Intent(this);
+			setSettings(settings);
 		}catch(Exception e) {
 			e.printStackTrace();
 			FatalError.showErrorWindow(e);

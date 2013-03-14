@@ -32,7 +32,7 @@ public class MainWindow extends JFrame{
 		} catch ( Exception e ) {}
 		
 		setSize( width , height );
-		setDefaultCloseOperation( JFrame.DO_NOTHING_ON_CLOSE );
+		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		setLayout(null);
 		setTitle("Example launcher on SLE");
 		setResizable(false);

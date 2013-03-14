@@ -2,11 +2,21 @@ package org.sinrel.engine.actions;
 
 import java.util.ArrayList;
 
+import org.sinrel.engine.Engine;
 import org.sinrel.engine.listeners.DownloadListener;
 
 public abstract class Downloader {
-	
+		
 	private ArrayList<DownloadListener> listeners = new ArrayList<DownloadListener>();
+	private Engine engine;
+	
+	public Downloader(Engine e) {
+		this.engine = e;
+	}
+	
+	protected Engine getEngine(){
+		return engine;
+	}
 	
 	public void AddDownloadListener(DownloadListener listener){
 		listeners.add(listener);
