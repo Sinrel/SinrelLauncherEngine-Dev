@@ -8,6 +8,8 @@ import javax.swing.UIManager;
 
 import org.sinrel.engine.Engine;
 import org.sinrel.engine.EngineSettings;
+import org.sinrel.engine.actions.ClientChecker;
+import org.sinrel.engine.actions.ClientStatus;
 
 public class MainWindow extends JFrame{
 

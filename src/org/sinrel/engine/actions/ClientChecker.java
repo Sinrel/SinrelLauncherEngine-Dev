@@ -9,15 +9,6 @@ import org.sinrel.engine.listeners.DownloadListener;
 public abstract class ClientChecker {
 	
 	private ArrayList<CheckerListener> listeners = new ArrayList<CheckerListener>();
-	private Engine engine;
-	
-	public ClientChecker(Engine e) {
-		this.engine = e;
-	}
-	
-	protected Engine getEngine(){
-		return engine;
-	}
 	
 	public void AddCheckerListener(CheckerListener listener){
 		listeners.add(listener);
@@ -39,5 +30,5 @@ public abstract class ClientChecker {
 		}
 	}
 	
-	public abstract ClientStatus checkClient(String applicationName);
+	public abstract ClientStatus checkClient(Engine engine, String applicationName);
 }

@@ -20,19 +20,18 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class DefaultChecker extends ClientChecker{
 	
-	public DefaultChecker(Engine e) {
-		super(e);
-	}
-
-
 	//Проверяемые файлы. Так же проверяется наличие natives под систему клиента
 	static String[] files = { "jinput.jar" , "lwjgl.jar" , "lwjgl_util.jar" , "minecraft.jar" };
+	
+	private Engine engine;
 	
 	public ClientStatus checkClient(String applicationName, String serverName){
 		throw new NotImplementedException();
 	}
 	
-	public ClientStatus checkClient(String applicationName) {
+	public ClientStatus checkClient(Engine e, String applicationName) {
+		
+		this.engine = e;
 		
 		this.onStartChecking();
 		
@@ -76,13 +75,13 @@ public class DefaultChecker extends ClientChecker{
 	 		 
 	          URL url; 
 	          
-	          if( !getEngine().getSettings().getFolder().equalsIgnoreCase("") ) {
+	          if( !engine.getSettings().getFolder().equalsIgnoreCase("") ) {
 	        	  url =	new URL( 
-	        			  "http://" + getEngine().getSettings().getDomain() + "/" +  getEngine().getSettings().getFolder() + "/" + "engine.php" 
+	        			  "http://" + engine.getSettings().getDomain() + "/" +  engine.getSettings().getFolder() + "/" + "engine.php" 
 	        	  );
 	          }else {
 	        	  url =	new URL( 
-	        			  "http://" + getEngine().getSettings().getDomain() + "/" + "engine.php" 
+	        			  "http://" + engine.getSettings().getDomain() + "/" + "engine.php" 
 	        	  );
 	          }
 	          	

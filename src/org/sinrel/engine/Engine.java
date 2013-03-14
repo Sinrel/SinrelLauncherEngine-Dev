@@ -24,8 +24,8 @@ public class Engine {
 		try {
 			intent = new Intent(this);
 			setSettings(settings);
-			downloader = new DefaultDownloader(this);
-			checker = new DefaultChecker(this);
+			downloader = new DefaultDownloader();
+			checker = new DefaultChecker();
 			auth = new DefaultAuthBehavior();
 		}catch(Exception e) {
 			e.printStackTrace();

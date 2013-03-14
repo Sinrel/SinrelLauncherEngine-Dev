@@ -16,14 +16,10 @@ import org.sinrel.engine.library.ZipManager;
 import org.sinrel.engine.listeners.DownloadListener;
 
 public class DefaultDownloader extends Downloader{
-	
-	public DefaultDownloader(Engine eng) {
-		super(eng);
-	}
-	
+		
 	static final String[] files = { "jinput.jar" , "lwjgl.jar" , "lwjgl_util.jar" , "minecraft.jar" , "natives/"+OSManager.getPlatform().toString()+".zip" };
 
-	public DownloadResult downloadClient(final String directory, boolean loadZip) {
+	public DownloadResult downloadClient(Engine e, final String directory, boolean loadZip) {
 		DownloadResult status = null;
 		try{
 			this.onStartDownload();
@@ -32,13 +28,13 @@ public class DefaultDownloader extends Downloader{
 			
 	        URL url; 
 	        
-	        if( !getEngine().getSettings().getFolder().equalsIgnoreCase("") ) {
+	        if( !e.getSettings().getFolder().equalsIgnoreCase("") ) {
 	      	  url =	new URL( 
-	      			  "http://" + getEngine().getSettings().getDomain() + "/" +  getEngine().getSettings().getFolder() + "/" + "client" + "/" 
+	      			  "http://" + e.getSettings().getDomain() + "/" +  e.getSettings().getFolder() + "/" + "client" + "/" 
 	      	  );
 	        }else{
 	      	  url =	new URL( 
-	      			  "http://" + getEngine().getSettings().getDomain()  + "/" + "client/"
+	      			  "http://" + e.getSettings().getDomain()  + "/" + "client/"
 	      	  );
 	        }
 	        
@@ -59,7 +55,7 @@ public class DefaultDownloader extends Downloader{
 	        		
 	        		onFileChange( now , next );
 	        		
-	        	}catch( IOException e ) {
+	        	}catch( IOException ex ) {
 	        		status = DownloadResult.FILE_NOT_EXIST;
 	        		return status;
 	        	}
@@ -76,7 +72,7 @@ public class DefaultDownloader extends Downloader{
 	        	
 	    	        ZipManager.unzip( new File( OSManager.getWorkingDirectory( directory ) , "client.zip" ) , new File( OSManager.getWorkingDirectory( directory ), "") );
 	    	        ZipManager.removeAllZipFiles( new File( OSManager.getWorkingDirectory( directory ).toString() ) );
-	        	}catch( IOException e ) {
+	        	}catch( IOException ex ) {
 	        		status = DownloadResult.FILE_NOT_EXIST;
 	        		return status;
 	        	}
@@ -86,8 +82,8 @@ public class DefaultDownloader extends Downloader{
 	        ZipManager.removeAllZipFiles( new File( OSManager.getClientFolder( directory ) + File.separator + "natives" ) );
 	        
 	        status = DownloadResult.OK;
-		}catch( MalformedURLException e ) {
-			e.printStackTrace();
+		}catch( MalformedURLException ex) {
+			ex.printStackTrace();
 		}
         return status;
 	}

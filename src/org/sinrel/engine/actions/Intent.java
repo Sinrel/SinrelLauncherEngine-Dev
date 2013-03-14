@@ -1,16 +1,9 @@
 package org.sinrel.engine.actions;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-
 import org.sinrel.engine.Engine;
-import org.sinrel.engine.library.cryption.Base64;
+import org.sinrel.engine.listeners.DownloadAdapter;
 import org.sinrel.engine.listeners.DownloadCompleteListener;
+import org.sinrel.engine.listeners.DownloadListener;
 
 public class Intent {
 	
@@ -27,7 +20,21 @@ public class Intent {
 	 * @return Возвращает одно из значений DownloadResult
 	 */
 	public DownloadResult downloadClient( String dir, boolean loadZip ) {
-		return engine.getDownloader().downloadClient(dir, loadZip);
+		return downloadClient(dir, loadZip, null);
+	}
+	
+	/**
+	 * Старт скачивания клиента "standart"
+	 * @param loadZip Загружать ли client.zip
+	 * @param dir Имя папки в которой находится клиент ( пример: minecraft )
+	 * @param listener реализация интерфейса DownloadListener, необходима для отслеживания прогресса 
+	 * @return Возвращает одно из значений DownloadResult
+	 */
+	public DownloadResult downloadClient( String dir, boolean loadZip, DownloadListener listener){
+		if(listener != null)
+			engine.getDownloader().AddDownloadListener(listener);
+		return engine.getDownloader().downloadClient(engine, dir, loadZip);
+		
 	}
 	
 	/**
@@ -37,9 +44,20 @@ public class Intent {
 	 * @param listener класс реализующий интерфейс DownloadCompleteListner, нужно для оповещение об окончании загрузки
 	 */
 	public void downloadClientAsync(final String dir, final boolean loadZip, final DownloadCompleteListener listener){
+		downloadClientAsync(dir, loadZip, listener, null);
+	}
+	
+	/**
+	 * Старт асинхронного скачивания клиента "standart"
+	 * @param loadZip Загружать ли client.zip
+	 * @param dir Имя папки в которой находится клиент ( пример: minecraft )
+	 * @param listener класс реализующий интерфейс DownloadCompleteListner, нужно для оповещение об окончании загрузки
+	 * @param dl реализация интерфейса DownloadListener, необходима для отслеживания прогресса 
+	 */
+	public void downloadClientAsync(final String dir, final boolean loadZip, final DownloadCompleteListener listener, final DownloadListener dl){
 		Thread thread = new Thread(new Runnable() {
 			public void run() {
-				DownloadResult result = downloadClient(dir, loadZip);
+				DownloadResult result = downloadClient(dir, loadZip, dl);
 				listener.onDownloadComplete(result);
 			}
 		});
@@ -63,7 +81,7 @@ public class Intent {
 	 * @return статус клиента
 	 */
 	public ClientStatus checkClient( String applicationName ) {
-		return engine.getChecker().checkClient(applicationName);
+		return engine.getChecker().checkClient(engine, applicationName);
 	}
 	
 }

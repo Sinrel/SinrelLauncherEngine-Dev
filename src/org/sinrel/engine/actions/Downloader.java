@@ -8,15 +8,6 @@ import org.sinrel.engine.listeners.DownloadListener;
 public abstract class Downloader {
 		
 	private ArrayList<DownloadListener> listeners = new ArrayList<DownloadListener>();
-	private Engine engine;
-	
-	public Downloader(Engine e) {
-		this.engine = e;
-	}
-	
-	protected Engine getEngine(){
-		return engine;
-	}
 	
 	public void AddDownloadListener(DownloadListener listener){
 		listeners.add(listener);
@@ -42,5 +33,5 @@ public abstract class Downloader {
 			dl.onPercentChange(total, count);
 	}
 	
-	public abstract DownloadResult downloadClient(String directory, boolean loadZip);
+	public abstract DownloadResult downloadClient(Engine e, String directory, boolean loadZip);
 }
