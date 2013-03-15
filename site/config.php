@@ -35,6 +35,5 @@ $db_columnRetriesLeft	= 'retriesLeft'; //Колонка с количество�
 $pdo = new PDO("mysql:host=$db_host;port=$db_port;dbname=$db_database", $db_user, $db_pass, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 if($pdo === false)
 	die('BAD_CONNECTION');
-}
 
 ?>

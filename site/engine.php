@@ -12,7 +12,7 @@ $action = $_POST['action'];
 if($action === 'check') {
 	if(!isset($_POST['system'], $_POST['client']))
 		die('NULL');
-	
+
 	$os = $_POST['system'];
 	$client = $_POST['client'];
 
@@ -22,13 +22,13 @@ if($action === 'check') {
 				'lwjgl_util.jar',
 				'minecraft.jar',
 				'natives/'. $os .'.zip');
-		
+
 		foreach($files as $file) {
-			if(!file_exists('client/'. $file) {
+			if(!file_exists('client/'. $file)) {
 				die("CLIENT_NOT_EXIST_ON_SERVER");
 			}
 		}
-		
+
 		// Poor, Poor SLE...
 
 		$md5jinput		= md5_file("client/jinput.jar");
@@ -58,8 +58,31 @@ if($action === 'check') {
 
 	$login = $_POST['login']; // It's already decoded
 	$pass = $_POST['pass'];
-	
-	global $realPass, 
+
+	$stmt = DB::prepare('SELECT `'. DB_L_BLOCKUNTIL .'` FROM `'. DB_L_TABLE .'` WHERE `'. DB_L_USERNAME .'` = ?');
+	$stmt -> bind_param('s', $user);
+	stmtexec($stmt);
+	$stmt -> bind_result($blockuntil);
+	$stmt -> fetch();
+	$stmt -> close();
+
+	if(!is_null($blockuntil)) {
+		$blockUntilDate = new DateTime($blockuntil);
+		if($blockUntilDate < new DateTime()) {
+			$stmt = DB::prepare('UPDATE `'. DB_L_TABLE .'` SET '.
+					'`'. DB_L_RETRIESLEFT .'` = '. L_LOGIN_FAIL_MAX_RETRIES .', `'. DB_L_BLOCKUNTIL .'` = NULL WHERE `'. DB_L_USERNAME .'` = ?');
+			$stmt -> bind_param('s', $user);
+			stmtexec($stmt);
+			$stmt -> fetch();
+			$stmt -> close();
+			$blockuntil = null;
+		}
+	}
+
+	if(!is_null($blockuntil))
+		die('TOO_MANY_REQUESTS');
+
+	global $realPass;
 
 	if ( $integration === 'joomla' || $integration === 'wordpress' || $integration === 'dle' ) {
 		$stmt = $pdo -> prepare("SELECT `$db_columnPass` FROM `$db_table` WHERE `$db_columnUser` = ?");
@@ -70,12 +93,12 @@ if($action === 'check') {
 	}
 
 	if($integration === 'xenforo') {
-		$stmt = $pdo -> prepare("SELECT `$db_tableOther`.`$db_columnPass` FROM `$db_tableOther` WHERE `$db_table`.`$db_columnId` = `$db_tableOther`.`$db_columnId` AND `$db_table`.`$db_columnUser` = ?");		
+		$stmt = $pdo -> prepare("SELECT `$db_tableOther`.`$db_columnPass` FROM `$db_tableOther` WHERE `$db_table`.`$db_columnId` = `$db_tableOther`.`$db_columnId` AND `$db_table`.`$db_columnUser` = ?");
 		$stmt -> bindValue(1, $login);
 		$stmt -> execute() or die(print_r($stmt -> errorInfo(), true));
 		$stmt -> bindColumn(1, $resultPass);
 		$stmt -> fetch();
-		
+
 		$realPass = substr($resultPass, 22, 64);
 		$salt = substr($resultPass, 105, 64);
 	}
@@ -87,7 +110,7 @@ if($action === 'check') {
 		if($realPass === $checkPass) {
 			$len = rand(28, 32);
 			$session = substr(str_shuffle(str_repeat("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-", 5)), 0, $len);
-			
+
 			$stmt = $pdo -> prepare("UPDATE `$db_table` SET `$db_columnSesId` = :session WHERE `$db_columnUser` = :login");
 			$stmt -> bindValue(':session', $session);
 			$stmt -> bindValue(':login', $login);
