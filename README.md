@@ -31,13 +31,15 @@ SLE в данный момент находится в стадии разраб
 При разработке на движке SLE разработчику фактически остаётся писать только графический интерфейс (GUI), что весьма значительно сокращает сроки разработки лаунчера.
 
 для инициализации SLE используйте такую конструкцию:
-        EngineSettings settings = new EngineSettings("домен", "директории с игрой minecraft", "версия");
-        Engine engine = new Engine(settings)
-
+```Csharp
+EngineSettings settings = new EngineSettings("домен", "директории с игрой minecraft", "версия");
+Engine engine = new Engine(settings)
+```
 Для работы с SLE используйте объект класса Intent пример:
-        Intent i = engine.getIntent();
-        i.startMinecraft("minecraft", data.getLogin(), data.getSession(), getFrame()); 
-
+```Csharp
+Intent i = engine.getIntent();
+i.startMinecraft("minecraft", data.getLogin(), data.getSession(), getFrame()); 
+```
 Лицензия
 --------
 Только ознакомление (будет изменено после релиза)
