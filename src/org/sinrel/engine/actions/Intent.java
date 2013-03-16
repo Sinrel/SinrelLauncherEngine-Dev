@@ -1,5 +1,7 @@
 package org.sinrel.engine.actions;
 
+import java.awt.Frame;
+
 import org.sinrel.engine.Engine;
 import org.sinrel.engine.listeners.DownloadAdapter;
 import org.sinrel.engine.listeners.DownloadCompleteListener;
@@ -84,4 +86,38 @@ public class Intent {
 		return engine.getChecker().checkClient(engine, applicationName);
 	}
 	
+	/**
+	 * запуск minecraft во фрейме
+	 * @param dir Имя папки в которой находится клиент ( пример: minecraft )
+	 * @param login логин
+	 * @param frame фрейм для запуска
+	 */
+	public void startMinecraft(String dir, String login, Frame frame){
+		engine.getStarter().startMinecraft(dir, login, "12345", false, null, null, frame);
+	}
+	
+	/**
+	 * запуск minecraft во фрейме
+	 * @param dir Имя папки в которой находится клиент ( пример: minecraft )
+	 * @param login логин
+	 * @param frame фрейм для запуска
+	 * @param session сессия пользователя
+	 */
+	public void startMinecraft(String dir, String login, String session, Frame frame){
+		engine.getStarter().startMinecraft(dir, login, session, false, null, null, frame);
+	}
+
+	/**
+	 * запуск minecraft в фрейме
+	 * @param dir Имя папки в которой находится клиент ( пример: minecraft )
+	 * @param login логин
+	 * @param frame фрейм для запуска
+	 * @param session сессия пользователя
+	 * @param server сервер для автозапуска
+	 * @param port порт для автозапуска
+	 */
+	public void startMinecraft(String dir, String login, String session, Frame frame, String server, String port){
+		engine.getStarter().startMinecraft(dir, login, session, true, server, port, frame);
+	}
+
 }

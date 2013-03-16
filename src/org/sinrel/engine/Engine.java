@@ -7,6 +7,7 @@ import org.sinrel.engine.actions.DefaultChecker;
 import org.sinrel.engine.actions.DefaultDownloader;
 import org.sinrel.engine.actions.Downloader;
 import org.sinrel.engine.actions.Intent;
+import org.sinrel.engine.actions.MinecraftStarter;
 import org.sinrel.engine.exception.FatalError;
 
 public class Engine {
@@ -19,7 +20,8 @@ public class Engine {
 	private Downloader downloader;	
 	private ClientChecker checker;
 	private AuthBehavior auth;
-	 
+	private MinecraftStarter starter; 
+	
 	public Engine(EngineSettings settings) {
 		try {
 			intent = new Intent(this);
@@ -55,6 +57,10 @@ public class Engine {
 		return intent;
 	}
 	
+	public MinecraftStarter getStarter(){
+		return starter;
+	}
+	
 	public void setSettings(EngineSettings settings){
 		this.settings = settings;
 	}
@@ -69,6 +75,10 @@ public class Engine {
 	
 	public void setAuth(AuthBehavior auth) {
 		this.auth = auth;
+	}
+	
+	public void setMinecraftStarter(MinecraftStarter starter){
+		this.starter = starter;
 	}
 	
 	public boolean isDebug(){
