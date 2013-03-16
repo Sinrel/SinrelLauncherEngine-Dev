@@ -35,10 +35,10 @@ SLE в данный момент находится в стадии разраб
 EngineSettings settings = new EngineSettings("домен", "директории с игрой minecraft", "версия");
 Engine engine = new Engine(settings)
 ```
-Для работы с SLE используйте объект класса Intent пример:
+Для работы с SLE используйте объект класса Intent пример запуска minecraft:
 ```Csharp
 Intent i = engine.getIntent();
-i.startMinecraft("minecraft", data.getLogin(), data.getSession(), getFrame()); 
+i.startMinecraft("minecraft", data.getLogin(), data.getSession(), new Frame()); 
 ```
 Лицензия
 --------
