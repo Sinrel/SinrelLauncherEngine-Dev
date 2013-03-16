@@ -1,5 +1,6 @@
 package org.sinrel.example.gui;
 
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,9 +57,9 @@ class LoginPanel extends JPanel implements ActionListener {
 			System.out.println("Personal");
 		else {
 			
-			Intent i = MainWindow.engine.getIntent();
+			final Intent i = MainWindow.engine.getIntent();
 			//авторизация
-			AuthData data = i.auth( login.getText() , login.getText() );
+			final AuthData data = i.auth( login.getText() , login.getText() );
 			
 			if(data.getResult() == AuthResult.OK){
 				JOptionPane.showMessageDialog(this, "you are logined!! your session: " + data.getSession());
@@ -72,12 +73,12 @@ class LoginPanel extends JPanel implements ActionListener {
 					i.downloadClientAsync("minecraft", true, new DownloadCompleteListener() {
 						public void onDownloadComplete(DownloadResult result) {
 							System.out.println("client is downloaded i'm need to launch minecraft");
-							launchMinecraft();
+							i.startMinecraft("minecraft", data.getLogin(), data.getSession(), getFrame());
 						}
 					});
 				}
 				else if(status == ClientStatus.OK)
-					launchMinecraft();
+					i.startMinecraft("minecraft", data.getLogin(), data.getSession(), getFrame());
 
 			}
 			else if(data.getResult() == AuthResult.BAD_CONNECTION){
@@ -90,10 +91,6 @@ class LoginPanel extends JPanel implements ActionListener {
 			System.out.println("AuthResult action is detected!");
 		}
 	}
-	
-	protected void launchMinecraft() {
-		// TODO create launch minecraft logic
-	}
 
 	public void paint(Graphics g){
 		super.paint(g);
@@ -102,4 +99,7 @@ class LoginPanel extends JPanel implements ActionListener {
 		g.drawString("Пароль:", 100, 65);
 	}
 	
+	private Frame getFrame(){
+		return (Frame) this.getParent();
+	}
 }
