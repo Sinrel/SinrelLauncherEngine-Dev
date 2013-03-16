@@ -38,12 +38,7 @@ public class Launcher extends Applet implements AppletStub {
 	
 	public void init(int i)
 	{
-		//TODO ����������� ��� ������� ���� ���
-	
-		
-		//
-		
-		@SuppressWarnings("resource")//���� ��� �������, minecraft �� ����������
+		@SuppressWarnings("resource")
 		URLClassLoader cl = new URLClassLoader(urls);
 		System.setProperty("org.lwjgl.librarypath", bin + "natives");
 		System.setProperty("net.java.games.input.librarypath", bin + "natives");
