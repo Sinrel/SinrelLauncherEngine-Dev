@@ -9,7 +9,7 @@ public abstract class Downloader {
 		
 	private ArrayList<DownloadListener> listeners = new ArrayList<DownloadListener>();
 	
-	public void AddDownloadListener(DownloadListener listener){
+	public void addDownloadListener(DownloadListener listener){
 		listeners.add(listener);
 	}
 	
@@ -25,7 +25,6 @@ public abstract class Downloader {
 	protected void onFileChange(String now, String next){
 		for(DownloadListener dl : listeners)
 			dl.onFileChange(now, next);
-		
 	}
 	
 	protected void onPercentChange(long total, int count){
