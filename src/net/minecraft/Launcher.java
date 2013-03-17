@@ -3,9 +3,6 @@ package net.minecraft;
 import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
-import java.io.File;
-import java.lang.reflect.Field;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
@@ -19,7 +16,7 @@ public class Launcher extends Applet implements AppletStub {
 	private boolean active = false;
 	private URL[] urls;
 	private String bin;
-	
+
 	public Launcher(String bin, URL[] urls)
 	{
 		this.bin = bin;
@@ -35,17 +32,16 @@ public class Launcher extends Applet implements AppletStub {
 		}
 		init(0);
 	}
-	
+
 	public void init(int i)
 	{
-		@SuppressWarnings("resource")
 		URLClassLoader cl = new URLClassLoader(urls);
 		System.setProperty("org.lwjgl.librarypath", bin + "natives");
 		System.setProperty("net.java.games.input.librarypath", bin + "natives");
 		try
 		{
-			Class <?> Mine = cl.loadClass("net.minecraft.client.MinecraftApplet");
-			Applet applet = (Applet)Mine.newInstance();
+			Class<?> Mine = cl.loadClass("net.minecraft.client.MinecraftApplet");
+			Applet applet = (Applet) Mine.newInstance();
 			mcApplet = applet;
 			applet.setStub(this);
 			applet.setSize(getWidth(), getHeight());
@@ -54,43 +50,44 @@ public class Launcher extends Applet implements AppletStub {
 			applet.init();
 			active = true;
 			validate();
-		} catch(Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
-	  public void replace(Applet applet) {
-		  this.mcApplet = applet;
-		  
-		  applet.setStub(this);
-		  applet.setSize(getWidth(), getHeight());
 
-		  setLayout(new BorderLayout());
-		  add(applet, "Center");
+	public void replace(Applet applet) {
+		this.mcApplet = applet;
 
-		  applet.init();
-		  
-		  this.active = true;
-		  
-		  applet.start();
-		  validate();
-	  }
-	
+		applet.setStub(this);
+		applet.setSize(getWidth(), getHeight());
+
+		setLayout(new BorderLayout());
+		add(applet, "Center");
+
+		applet.init();
+
+		this.active = true;
+
+		applet.start();
+		validate();
+	}
+
 	public String getParameter(String name)
 	{
-		String custom = (String)customParameters.get(name);
-		if (custom != null) return custom;
+		String custom = (String) customParameters.get(name);
+		if (custom != null)
+			return custom;
 		try
 		{
 			return super.getParameter(name);
-		} catch(Exception e)
+		} catch (Exception e)
 		{
 			customParameters.put(name, null);
 		}
 		return null;
 	}
-	
+
 	public void start()
 	{
 		if (mcApplet != null)
@@ -99,7 +96,7 @@ public class Launcher extends Applet implements AppletStub {
 			return;
 		}
 	}
-	
+
 	public boolean isActive()
 	{
 		if (context == 0)
@@ -109,23 +106,12 @@ public class Launcher extends Applet implements AppletStub {
 			{
 				if (getAppletContext() != null)
 					context = 1;
-			} catch(Exception e){}
+			} catch (Exception e) {
+			}
 		}
 		if (context == -1)
 			return active;
 		return super.isActive();
-	}
-	
-	public URL getDocumentBase()
-	{
-		try
-		{
-			return new URL("http://www.minecraft.net/game/");			
-		} catch(MalformedURLException e)
-		{
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	public void stop()
@@ -146,6 +132,7 @@ public class Launcher extends Applet implements AppletStub {
 			return;
 		}
 	}
-	
-	public void appletResize(int w, int h){}
+
+	public void appletResize(int w, int h) {
+	}
 }

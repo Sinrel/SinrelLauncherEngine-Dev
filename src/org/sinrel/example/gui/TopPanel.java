@@ -11,34 +11,34 @@ import javax.swing.JPanel;
 class TopPanel extends JPanel implements ActionListener {
 
 	private JButton left, right;
-	
+
 	private static final long serialVersionUID = -2675943654799714669L;
-	
+
 	TopPanel() {
-		setLayout( new BorderLayout() );
+		setLayout(new BorderLayout());
 		setBounds(0, 0, 394, 50);
-		
+
 		left = new JButton();
-		left.setPreferredSize( new Dimension(200, 50) );
-		left.setText( "Новости" );
+		left.setPreferredSize(new Dimension(200, 50));
+		left.setText("Новости");
 		left.addActionListener(this);
 		left.setFocusable(false);
-		
+
 		right = new JButton();
-		right.setPreferredSize( new Dimension(200, 50) );
-		right.setText( "Настройки" );
+		right.setPreferredSize(new Dimension(200, 50));
+		right.setText("Настройки");
 		right.setFocusable(false);
 		right.addActionListener(this);
-		
-		add( left , "West" );
-		add( right, "Center" );
+
+		add(left, "West");
+		add(right, "Center");
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if( e.getSource() == left )
+		if (e.getSource() == left)
 			System.out.println("left");
-		else 
+		else
 			System.out.println("right");
 	}
-	
+
 }

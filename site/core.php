@@ -1,8 +1,8 @@
-<? 
+<?php
 	if(!defined('INCLUDE_CHECK')) die('У вас нет прав на выполнение данного файла!');
 
-	function joomla() {
-		global $realPass, $pass;
+	function hash_joomla($pass) {
+		global $realPass;
 
 		$cryptPass = false;
 		$parts = explode( ':', $realPass);
@@ -12,8 +12,8 @@
 		return $cryptPass;
 	}
 
-	function xenforo() {
-		global $pass, $salt;
+	function hash_xenforo($pass) {
+		global $salt;
 
 		$cryptPass = false;
 		$cryptPass = hash('sha256', hash('sha256', $pass) . $salt);
@@ -21,8 +21,8 @@
 		return $cryptPass;
 	}
 
-	function wordpress() {
-		global $realPass, $pass;
+	function hash_wordpress($pass) {
+		global $realPass;
 
 		$cryptPass = false;
 		$itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -64,9 +64,7 @@
 		return $cryptPass;
 	}
 
-	function dle() {
-		global $pass;
-
+	function hash_dle($pass) {
 		$cryptPass = false;
 		$cryptPass = md5(md5($pass));
 

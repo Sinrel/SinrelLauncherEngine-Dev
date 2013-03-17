@@ -1,53 +1,53 @@
 package org.sinrel.example.gui;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.BorderLayout;
+import java.awt.Container;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
 import org.sinrel.engine.Engine;
 import org.sinrel.engine.EngineSettings;
-import org.sinrel.engine.actions.ClientChecker;
-import org.sinrel.engine.actions.ClientStatus;
 
-public class MainWindow extends JFrame{
+public class MainWindow extends JFrame {
+	private static final long serialVersionUID = 1L;
 
 	static Engine engine;
-	
-	private static final long serialVersionUID = -5258815870427404620L;
-	
-	public static final int width = 400, height = 300;
-	
+	final static int width = 500, height = 300;
+
 	public static void main(String[] args) {
-		
+
 		// инициализация двигла
 		EngineSettings settings = new EngineSettings("example.com", "minecraft", "0.1");
 		engine = new Engine(settings);
-		
+
 		MainWindow main = new MainWindow();
 		main.setVisible(true);
 	}
-	
-	public MainWindow () {
-		super();
-		
+
+	public MainWindow() {
+		// Заголовок окна
+		setTitle("SLE Example launcher");
+		setSize(width, height);
+
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+		// Установим системный Look-and-feel
 		try {
-			UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
-		} catch ( Exception e ) {}
-		
-		setSize( width , height );
-		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		setLayout(null);
-		setTitle("Example launcher on SLE");
-		setResizable(false);
-		
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {}
-		});
-		
-		add( new TopPanel() );
-		add( new LoginPanel() );
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+		}
+
+		// Установим контент-панели менеджер слоев BorderLayout
+		Container cp = getContentPane();
+		cp.setLayout(new BorderLayout());
+
+		// Добавим панельки на главный контейнер
+		add(new TopPanel(), BorderLayout.NORTH);
+		add(SwingTools.center(new LoginPanel()));
+
+		// Разместим окно по центру экрана
+		setLocationRelativeTo(null);
+
 	}
-	
 }
