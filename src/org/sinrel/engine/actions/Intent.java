@@ -1,107 +1,164 @@
 package org.sinrel.engine.actions;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
+import java.awt.Frame;
 
 import org.sinrel.engine.Engine;
-import org.sinrel.engine.library.cryption.Base64;
+import org.sinrel.engine.listeners.DownloadCompleteListener;
+import org.sinrel.engine.listeners.DownloadListener;
 
-public abstract class Intent {
-	
-	@SuppressWarnings("unused")
-	private static String session;
-	
-	public final static void Do( Action a ) {
-		switch ( a ) {
-			case ENABLE : 
-				Engine.getLauncher().onEnable();
-				break;
-			case DISABLE :
-				Engine.getLauncher().onDisable();
-				break;
-		}
+public class Intent {
+
+	private Engine engine;
+
+	public Intent(Engine engine) {
+		this.engine = engine;
 	}
-	
+
 	/**
 	 * Старт скачивания клиента "standart"
-	 * @param loadZip Загружать ли client.zip
-	 * @param dir Имя папки в которой находится клиент ( пример: minecraft )
-	 * @return Возвращает одно из значений Download
+	 * 
+	 * @param loadZip
+	 *            Загружать ли client.zip
+	 * @param dir
+	 *            Имя папки в которой находится клиент ( пример: minecraft )
+	 * @return Возвращает одно из значений DownloadResult
 	 */
-	public static final Download DoDownload( String dir  , boolean loadZip ) {
-		return new Downloader( dir , loadZip ).getAnswer();
+	public DownloadResult downloadClient(String dir, boolean loadZip) {
+		return downloadClient(dir, loadZip, null);
 	}
-	
-	public static final Auth DoAuth( String login , String pass ) {
-	     try {	    	 
-	    	  StringBuilder data = new StringBuilder( URLEncoder.encode("action", "UTF-8") + "=" + URLEncoder.encode("auth", "UTF-8") );
-	 		  data.append( "&" + URLEncoder.encode("login", "UTF-8") + "=" + URLEncoder.encode( Base64.encode( Base64.encode( login ) ) , "UTF-8") );
-	 		  data.append( "&" + URLEncoder.encode("pass", "UTF-8") + "=" + URLEncoder.encode( Base64.encode( Base64.encode( pass ) ), "UTF-8") );
-	 		  
-	          URL url; 
-	          
-	          if( !Engine.getDescriptionFile().get("folder").equalsIgnoreCase("") ) {
-	        	  url =	new URL( 
-	        			  "http://" + Engine.getDescriptionFile().get("domain") + "/" +  Engine.getDescriptionFile().get("folder") + "/" + "engine.php" 
-	        	  );
-	          }else {
-	        	  url =	new URL( 
-	        			  "http://" + Engine.getDescriptionFile().get("domain") + "/" + "engine.php" 
-	        	  );
-	          }
-	          	          
-	          URLConnection conn = url.openConnection();
-	          conn.setDoOutput(true);
-	          OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
 
-	          writer.write( data.toString() );
-	          writer.flush();
-	          
-	          StringBuffer s = new StringBuffer();
-	          BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-	          String line;
-	          
-	          while ((line = reader.readLine()) != null) {
-	              s.append(line);
-	          }
-	          writer.close();
-	          reader.close();
-	          
-	          String answer = s.toString();	  
-	          
-	          if( answer.contains("OK") ) {
-	        	  session = answer.split("<:>")[1];
-	        	  
-	        	  return Auth.OK;
-	          }
-	          
-	          switch ( answer ) {
-	           case "BAD_CONNECTION":
-	        	   return Auth.BAD_CONNECTION;
-	        	   
-	           case "LOGIN_OR_PASS_NOT_EXIST":
-	        	   return Auth.LOGIN_OR_PASS_NOT_EXIST;
-	        	   
-	           case "BAD_LOGIN_OR_PASSWORD":
-	        	   return Auth.BAD_LOGIN_OR_PASSWORD;
-	          }
-	     }catch (IOException e) {
-	 		return Auth.BAD_CONNECTION;
-	     }
-	     
-	     return Auth.BAD_CONNECTION;
+	/**
+	 * Старт скачивания клиента "standart"
+	 * 
+	 * @param loadZip
+	 *            Загружать ли client.zip
+	 * @param dir
+	 *            Имя папки в которой находится клиент ( пример: minecraft )
+	 * @param listener
+	 *            реализация интерфейса DownloadListener, необходима для
+	 *            отслеживания прогресса
+	 * @return Возвращает одно из значений DownloadResult
+	 */
+	public DownloadResult downloadClient(String dir, boolean loadZip, DownloadListener listener) {
+		if (listener != null)
+			engine.getDownloader().addDownloadListener(listener);
+		return engine.getDownloader().downloadClient(engine, dir, loadZip);
+
 	}
-	
-	public static final Client DoCheckClient( String applicationName , String serverName ) {
-		return new Checker( applicationName , serverName ).getClientStatus();
+
+	/**
+	 * Старт асинхронного скачивания клиента "standart"
+	 * 
+	 * @param loadZip
+	 *            Загружать ли client.zip
+	 * @param dir
+	 *            Имя папки в которой находится клиент ( пример: minecraft )
+	 * @param listener
+	 *            класс реализующий интерфейс DownloadCompleteListner, нужно для
+	 *            оповещение об окончании загрузки
+	 */
+	public void downloadClientAsync(final String dir, final boolean loadZip, final DownloadCompleteListener listener) {
+		downloadClientAsync(dir, loadZip, listener, null);
 	}
-	
-	public static final Client DoCheckClient( String applicationName ) {
-		return new Checker( applicationName ).getClientStatus();
+
+	/**
+	 * Старт асинхронного скачивания клиента "standart"
+	 * 
+	 * @param loadZip
+	 *            Загружать ли client.zip
+	 * @param dir
+	 *            Имя папки в которой находится клиент ( пример: minecraft )
+	 * @param listener
+	 *            класс реализующий интерфейс DownloadCompleteListner, нужно для
+	 *            оповещение об окончании загрузки
+	 * @param dl
+	 *            реализация интерфейса DownloadListener, необходима для
+	 *            отслеживания прогресса
+	 */
+	public void downloadClientAsync(final String dir, final boolean loadZip, final DownloadCompleteListener listener, final DownloadListener dl) {
+		Thread thread = new Thread(new Runnable() {
+			public void run() {
+				DownloadResult result = downloadClient(dir, loadZip, dl);
+				listener.onDownloadComplete(result);
+			}
+		});
+		thread.setDaemon(true);
+		thread.start();
 	}
+
+	/**
+	 * авторизации пользователя
+	 * 
+	 * @param login
+	 *            логин
+	 * @param pass
+	 *            пароль
+	 * @return обьект AuthData с содержимом и сессии логине и результате
+	 *         авторизации
+	 */
+	public AuthData auth(String login, String pass) {
+		return engine.getAuth().auth(engine, login, pass);
+	}
+
+	/**
+	 * проверка клиента
+	 * 
+	 * @param applicationName
+	 *            имя приложения
+	 * @return статус клиента
+	 */
+	public ClientStatus checkClient(String applicationName) {
+		return engine.getChecker().checkClient(engine, applicationName);
+	}
+
+	/**
+	 * запуск minecraft во фрейме
+	 * 
+	 * @param dir
+	 *            Имя папки в которой находится клиент ( пример: minecraft )
+	 * @param login
+	 *            логин
+	 * @param frame
+	 *            фрейм для запуска
+	 */
+	public void startMinecraft(String dir, String login, Frame frame) {
+		engine.getStarter().startMinecraft(dir, login, "12345", false, null, null, frame);
+	}
+
+	/**
+	 * запуск minecraft во фрейме
+	 * 
+	 * @param dir
+	 *            Имя папки в которой находится клиент ( пример: minecraft )
+	 * @param login
+	 *            логин
+	 * @param frame
+	 *            фрейм для запуска
+	 * @param session
+	 *            сессия пользователя
+	 */
+	public void startMinecraft(String dir, String login, String session, Frame frame) {
+		engine.getStarter().startMinecraft(dir, login, session, false, null, null, frame);
+	}
+
+	/**
+	 * запуск minecraft в фрейме
+	 * 
+	 * @param dir
+	 *            Имя папки в которой находится клиент ( пример: minecraft )
+	 * @param login
+	 *            логин
+	 * @param frame
+	 *            фрейм для запуска
+	 * @param session
+	 *            сессия пользователя
+	 * @param server
+	 *            сервер для автозапуска
+	 * @param port
+	 *            порт для автозапуска
+	 */
+	public void startMinecraft(String dir, String login, String session, Frame frame, String server, String port) {
+		engine.getStarter().startMinecraft(dir, login, session, true, server, port, frame);
+	}
+
 }

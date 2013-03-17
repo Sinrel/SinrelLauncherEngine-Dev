@@ -8,7 +8,7 @@ public abstract class OSManager {
 	 * @param name Имя рабочей папки
  	 * @param serverName Имя сервера, к которому принадлежит клиент
 	 * @return Возвращает директорию в которой содержатся файлы клиента
-	 * 
+	 * <br/>
 	 * Пример:
 	 *  name = sinrel
 	 *  serverName = simple
