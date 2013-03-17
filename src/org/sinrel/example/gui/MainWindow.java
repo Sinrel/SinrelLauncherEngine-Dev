@@ -30,6 +30,8 @@ public class MainWindow extends JFrame {
 		setTitle("SLE Example launcher");
 		setSize(width, height);
 
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
 		// Установим системный Look-and-feel
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
