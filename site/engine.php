@@ -9,119 +9,118 @@ if(!isset($_POST['action']))
 
 $action = $_POST['action'];
 
-if($action === 'check') {
-	if(!isset($_POST['system'], $_POST['client']))
-		die('NULL');
+try {
+	if($action === 'check') {
+		if(!isset($_POST['system'], $_POST['client']))
+			die('NULL');
 
-	$os = $_POST['system'];
-	$client = $_POST['client'];
+		$os = $_POST['system'];
+		$client = $_POST['client'];
 
-	if($client === 'standart') {
-		$files = array(
-				'jinput.jar',
-				'lwjgl_util.jar',
-				'minecraft.jar',
-				'natives/'. $os .'.zip');
+		if($client === 'standart') {
+			$files = array(
+					'jinput.jar',
+					'lwjgl_util.jar',
+					'minecraft.jar',
+					'natives/'. $os .'.zip');
 
-		foreach($files as $file) {
-			if(!file_exists('client/'. $file)) {
-				die("CLIENT_NOT_EXIST_ON_SERVER");
+			foreach($files as $file) {
+				if(!file_exists('client/'. $file)) {
+					die("CLIENT_NOT_EXIST_ON_SERVER");
+				}
+			}
+
+			// Poor, Poor SLE...
+
+			$md5jinput		= md5_file("client/jinput.jar");
+			$md5lwjql		= md5_file("client/lwjgl.jar");
+			$md5lwjql_util	= md5_file("client/lwjgl_util.jar");
+			$md5jar			= md5_file("client/minecraft.jar");
+
+			$result = $md5jinput;
+			$result .= $md5lwjql;
+			$result .= $md5lwjql_util;
+			$result .= $md5jar;
+
+			if( strcmp( $result, $_POST['hash'] ) == 0 ) {
+				die('OK');
+			}else{
+				die('CLIENT_DOES_NOT_MATCH');
+			}
+
+		} else {
+			//Do multiclient checking
+		}
+	} else if($action === 'auth') {
+
+		if(!isset($_POST['login'], $_POST['pass'])) {
+			die('LOGIN_OR_PASS_NOT_EXIST');
+		}
+
+		$login = $_POST['login']; // It's already decoded
+		$pass = $_POST['pass'];
+
+		$stmt = $pdo -> prepare("SELECT `$db_columnBlockUntil` FROM `$db_table` WHERE `$db_columnUser` = ?");
+		$stmt -> execute(array($login));
+		$stmt -> bindColumn(1, $blockuntil);
+		$stmt -> fetch(PDO::FETCH_BOUND);
+
+		if(!is_null($blockuntil)) {
+			$blockUntilDate = new DateTime($blockuntil);
+			if($blockUntilDate < new DateTime()) {
+				$stmt = $pso -> prepare("UPDATE `$db_table` SET '.
+						'`$db_columnRetriesLeft` = :retries, `$db_columnBlockUntil` = NULL WHERE `$db_columnUser` = :login");
+				$stmt -> bindValue(':retries', $cfg_maxRetries, PDO::PARAM_INT);
+				$stmt -> bindValue(':login', $login);
+				$stmt -> execute();
+				$blockuntil = null;
 			}
 		}
 
-		// Poor, Poor SLE...
+		if(!is_null($blockuntil))
+			throw new Exception('TOO_MANY_REQUESTS');
 
-		$md5jinput		= md5_file("client/jinput.jar");
-		$md5lwjql		= md5_file("client/lwjgl.jar");
-		$md5lwjql_util	= md5_file("client/lwjgl_util.jar");
-		$md5jar			= md5_file("client/minecraft.jar");
-			
-		$result = $md5jinput;
-		$result .= $md5lwjql;
-		$result .= $md5lwjql_util;
-		$result .= $md5jar;
+		global $realPass;
 
-		if( strcmp( $result, $_POST['hash'] ) == 0 ) {
-			die('OK');
-		}else{
-			die('CLIENT_DOES_NOT_MATCH');
+		if ( $integration === 'joomla' || $integration === 'wordpress' || $integration === 'dle' ) {
+			$stmt = $pdo -> prepare("SELECT `$db_columnPass` FROM `$db_table` WHERE `$db_columnUser` = ?");
+			$stmt -> execute(array($login));
+			$stmt -> bindColumn(1, $realPass);
+			$stmt -> fetch(PDO::FETCH_BOUND);
 		}
 
-	} else {
-		//Do multiclient checking
-	}
-} else if($action === 'auth') {
+		if($integration === 'xenforo') {
+			$stmt = $pdo -> prepare("SELECT `$db_tableOther`.`$db_columnPass` FROM `$db_tableOther` WHERE `$db_table`.`$db_columnId` = `$db_tableOther`.`$db_columnId` AND `$db_table`.`$db_columnUser` = ?");
+			$stmt -> execute(array($login));
+			$stmt -> bindColumn(1, $resultPass);
+			$stmt -> fetch(PDO::FETCH_BOUND);
 
-	if(!isset($_POST['login'], $_POST['pass'])) {
-		die('LOGIN_OR_PASS_NOT_EXIST');
-	}
-
-	$login = $_POST['login']; // It's already decoded
-	$pass = $_POST['pass'];
-
-	$stmt = DB::prepare('SELECT `'. DB_L_BLOCKUNTIL .'` FROM `'. DB_L_TABLE .'` WHERE `'. DB_L_USERNAME .'` = ?');
-	$stmt -> bind_param('s', $user);
-	stmtexec($stmt);
-	$stmt -> bind_result($blockuntil);
-	$stmt -> fetch();
-	$stmt -> close();
-
-	if(!is_null($blockuntil)) {
-		$blockUntilDate = new DateTime($blockuntil);
-		if($blockUntilDate < new DateTime()) {
-			$stmt = DB::prepare('UPDATE `'. DB_L_TABLE .'` SET '.
-					'`'. DB_L_RETRIESLEFT .'` = '. L_LOGIN_FAIL_MAX_RETRIES .', `'. DB_L_BLOCKUNTIL .'` = NULL WHERE `'. DB_L_USERNAME .'` = ?');
-			$stmt -> bind_param('s', $user);
-			stmtexec($stmt);
-			$stmt -> fetch();
-			$stmt -> close();
-			$blockuntil = null;
+			$realPass = substr($resultPass, 22, 64);
+			$salt = substr($resultPass, 105, 64);
 		}
-	}
 
-	if(!is_null($blockuntil))
-		die('TOO_MANY_REQUESTS');
-
-	global $realPass;
-
-	if ( $integration === 'joomla' || $integration === 'wordpress' || $integration === 'dle' ) {
-		$stmt = $pdo -> prepare("SELECT `$db_columnPass` FROM `$db_table` WHERE `$db_columnUser` = ?");
-		$stmt -> bindValue(1, $login);
-		$stmt -> execute() or die(print_r($stmt -> errorInfo(), true));
-		$stmt -> bindColumn(1, $realPass);
-		$stmt -> fetch();
-	}
-
-	if($integration === 'xenforo') {
-		$stmt = $pdo -> prepare("SELECT `$db_tableOther`.`$db_columnPass` FROM `$db_tableOther` WHERE `$db_table`.`$db_columnId` = `$db_tableOther`.`$db_columnId` AND `$db_table`.`$db_columnUser` = ?");
-		$stmt -> bindValue(1, $login);
-		$stmt -> execute() or die(print_r($stmt -> errorInfo(), true));
-		$stmt -> bindColumn(1, $resultPass);
-		$stmt -> fetch();
-
-		$realPass = substr($resultPass, 22, 64);
-		$salt = substr($resultPass, 105, 64);
-	}
-
-	if ($realPass) {
+		if (!$realPass)
+			throw new Exception('BAD_LOGIN_OR_PASSWORD');
+		
 		$crypt = 'hash_'. $integration;
 		$checkPass = $crypt($pass);
 
-		if($realPass === $checkPass) {
-			$len = rand(28, 32);
-			$session = substr(str_shuffle(str_repeat("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-", 5)), 0, $len);
+		if($realPass !== $checkPass)
+			throw new Exception('BAD_LOGIN_OR_PASSWORD');
 
-			$stmt = $pdo -> prepare("UPDATE `$db_table` SET `$db_columnSesId` = :session WHERE `$db_columnUser` = :login");
-			$stmt -> bindValue(':session', $session);
-			$stmt -> bindValue(':login', $login);
-			$stmt -> execute() or die(print_r($stmt -> errorInfo(), true));
+		// Randomize length
+		$len = rand(28, 32);
+		$session = substr(str_shuffle(str_repeat("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-", 5)), 0, $len);
 
-			die('OK<:>'. $session);
-		} else {
-			echo 'BAD_LOGIN_OR_PASSWORD';
-		}
-	} else {
-		echo 'BAD_LOGIN_OR_PASSWORD';
+		// Update session
+		$stmt = $pdo -> prepare("UPDATE `$db_table` SET `$db_columnSesId` = :session WHERE `$db_columnUser` = :login");
+		$stmt -> execute(array(':session' => $session, ':login' => $login));
+
+		echo 'OK<:>'. $session;
 	}
-
+} catch(PDOException $e) {
+	die('PDO error: '. $e -> getMessage() . PHP_EOL);
+} catch(Exception $e) {
+	//die('Exception: '. $e -> getMessage() . PHP_EOL);
+	echo $e -> getMessage();
 }
