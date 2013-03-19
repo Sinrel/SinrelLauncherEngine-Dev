@@ -9,8 +9,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 public abstract class MD5 {
 
 	/**
-	 * @param s
-	 *            обрабатываемая строка
+	 * @param s обрабатываемая строка
 	 * @return MD5 строки, если вызвано исключение возвращает пустую строку
 	 */
 	public static String getMD5(String s) {
@@ -18,8 +17,7 @@ public abstract class MD5 {
 	}
 
 	/**
-	 * @param f
-	 *            обрабатываемый файл
+	 * @param f обрабатываемый файл
 	 * @return MD5 файла, если вызвано исключение возвращает пустую строку
 	 * @throws IOException
 	 */

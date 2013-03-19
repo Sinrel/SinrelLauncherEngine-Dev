@@ -3,6 +3,7 @@ package net.minecraft;
 import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
@@ -35,9 +36,14 @@ public class Launcher extends Applet implements AppletStub {
 
 	public void init(int i)
 	{
+		@SuppressWarnings("resource")
 		URLClassLoader cl = new URLClassLoader(urls);
 		System.setProperty("org.lwjgl.librarypath", bin + "natives");
 		System.setProperty("net.java.games.input.librarypath", bin + "natives");
+		
+        // set minecraft.applet.WrapperClass to support newer FML builds
+        // FML seems to restart the whole game which causes some problems in custom launchers like this one
+        System.setProperty("minecraft.applet.WrapperClass", "net.minecraft.Launcher");
 		try
 		{
 			Class<?> Mine = cl.loadClass("net.minecraft.client.MinecraftApplet");
@@ -133,6 +139,14 @@ public class Launcher extends Applet implements AppletStub {
 		}
 	}
 
-	public void appletResize(int w, int h) {
+	public void appletResize(int w, int h) {}
+	
+	public URL getDocumentBase() {
+		try {
+			return new URL("http://www.minecraft.net/game/");			
+		} catch(MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

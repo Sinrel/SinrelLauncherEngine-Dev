@@ -101,7 +101,7 @@ public class Intent {
 	}
 
 	/**
-	 * проверка клиента
+	 * Проверка клиента
 	 * 
 	 * @param applicationName
 	 *            имя приложения
@@ -109,6 +109,17 @@ public class Intent {
 	 */
 	public ClientStatus checkClient(String applicationName) {
 		return engine.getChecker().checkClient(engine, applicationName);
+	}
+	
+	/**
+	 * Проверка клиента
+	 * 
+	 * @param applicationName имя приложения
+	 * @param clientName имя клиента
+	 * @return статус клиента
+	 */
+	public ClientStatus checkClient( String applicationName , String clientName ) {
+		return engine.getChecker().checkClient( engine, applicationName, clientName );
 	}
 
 	/**

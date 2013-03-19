@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.sinrel.engine.Engine;
 import org.sinrel.engine.listeners.CheckerListener;
-import org.sinrel.engine.listeners.DownloadListener;
 
 public abstract class ClientChecker {
 	
@@ -30,5 +29,7 @@ public abstract class ClientChecker {
 		}
 	}
 	
-	public abstract ClientStatus checkClient(Engine engine, String applicationName);
+	public abstract ClientStatus checkClient( Engine engine, String applicationName );
+	
+	public abstract ClientStatus checkClient( Engine engine, String applicationName, String clientName );
 }

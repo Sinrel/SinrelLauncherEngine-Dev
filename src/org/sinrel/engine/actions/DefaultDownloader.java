@@ -8,12 +8,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 
 import org.sinrel.engine.Engine;
 import org.sinrel.engine.library.OSManager;
 import org.sinrel.engine.library.ZipManager;
-import org.sinrel.engine.listeners.DownloadListener;
 
 public class DefaultDownloader extends Downloader{
 		

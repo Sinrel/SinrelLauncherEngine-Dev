@@ -7,6 +7,7 @@ import org.sinrel.engine.actions.DefaultChecker;
 import org.sinrel.engine.actions.DefaultDownloader;
 import org.sinrel.engine.actions.Downloader;
 import org.sinrel.engine.actions.Intent;
+import org.sinrel.engine.actions.MinecraftAppletStarter;
 import org.sinrel.engine.actions.MinecraftStarter;
 import org.sinrel.engine.exception.FatalError;
 
@@ -29,6 +30,7 @@ public class Engine {
 			downloader = new DefaultDownloader();
 			checker = new DefaultChecker();
 			auth = new DefaultAuthBehavior();
+			starter = new MinecraftAppletStarter();
 		}catch(Exception e) {
 			e.printStackTrace();
 			FatalError.showErrorWindow(e);

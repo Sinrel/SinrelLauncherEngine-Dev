@@ -16,21 +16,19 @@ try {
 
 		$os = $_POST['system'];
 		$client = $_POST['client'];
-
-		if($client === 'standart') {
-			$files = array(
+		
+		$files = array(
 					'jinput.jar',
 					'lwjgl_util.jar',
 					'minecraft.jar',
 					'natives/'. $os .'.zip');
 
+		if($client === 'standart') {
 			foreach($files as $file) {
 				if(!file_exists('client/'. $file)) {
 					die("CLIENT_NOT_EXIST_ON_SERVER");
 				}
 			}
-
-			// Poor, Poor SLE...
 
 			$md5jinput		= md5_file("client/jinput.jar");
 			$md5lwjql		= md5_file("client/lwjgl.jar");
@@ -49,7 +47,27 @@ try {
 			}
 
 		} else {
-			//Do multiclient checking
+			foreach($files as $file) {
+				if(!file_exists('clients/'.$client.'/'. $file)) {
+					die("CLIENT_NOT_EXIST_ON_SERVER");
+				}
+			}
+		
+			$md5jinput		= md5_file("clients/".$client."/jinput.jar");
+			$md5lwjql		= md5_file("clients/".$client."/lwjgl.jar");
+			$md5lwjql_util	= md5_file("clients/".$client."/lwjgl_util.jar");
+			$md5jar			= md5_file("clients/".$client."/minecraft.jar");
+			
+			$result = $md5jinput;
+			$result .= $md5lwjql;
+			$result .= $md5lwjql_util;
+			$result .= $md5jar;
+
+			if( strcmp( $result, $_POST['hash'] ) == 0 ) {
+				die('OK');
+			}else{
+				die('CLIENT_DOES_NOT_MATCH');
+			}
 		}
 	} else if($action === 'auth') {
 

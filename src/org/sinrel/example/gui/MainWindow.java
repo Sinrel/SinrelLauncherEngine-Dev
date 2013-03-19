@@ -18,11 +18,15 @@ public class MainWindow extends JFrame {
 	public static void main(String[] args) {
 
 		// инициализация двигла
-		EngineSettings settings = new EngineSettings("example.com", "minecraft", "0.1");
+		EngineSettings settings = new EngineSettings("example.com", "launcher", "1");
 		engine = new Engine(settings);
-
+	
+		
+		/*
 		MainWindow main = new MainWindow();
 		main.setVisible(true);
+		*/
+		
 	}
 
 	public MainWindow() {
