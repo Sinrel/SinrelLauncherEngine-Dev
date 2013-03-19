@@ -68,8 +68,8 @@ try {
 		if(!is_null($blockuntil)) {
 			$blockUntilDate = new DateTime($blockuntil);
 			if($blockUntilDate < new DateTime()) {
-				$stmt = $pso -> prepare("UPDATE `$db_table` SET '.
-						'`$db_columnRetriesLeft` = :retries, `$db_columnBlockUntil` = NULL WHERE `$db_columnUser` = :login");
+				$stmt = $pdo -> prepare("UPDATE `$db_table` SET ".
+						"`$db_columnRetriesLeft` = :retries, `$db_columnBlockUntil` = NULL WHERE `$db_columnUser` = :login");
 				$stmt -> bindValue(':retries', $cfg_maxRetries, PDO::PARAM_INT);
 				$stmt -> bindValue(':login', $login);
 				$stmt -> execute();
@@ -80,43 +80,56 @@ try {
 		if(!is_null($blockuntil))
 			throw new Exception('TOO_MANY_REQUESTS');
 
-		global $realPass;
+		$loggedIn = false;
+		{
+			global $realPass;
 
-		if ( $integration === 'joomla' || $integration === 'wordpress' || $integration === 'dle' ) {
-			$stmt = $pdo -> prepare("SELECT `$db_columnPass` FROM `$db_table` WHERE `$db_columnUser` = ?");
-			$stmt -> execute(array($login));
-			$stmt -> bindColumn(1, $realPass);
-			$stmt -> fetch(PDO::FETCH_BOUND);
+			if ( $integration === 'joomla' || $integration === 'wordpress' || $integration === 'dle' ) {
+				$stmt = $pdo -> prepare("SELECT `$db_columnPass` FROM `$db_table` WHERE `$db_columnUser` = ?");
+				$stmt -> execute(array($login));
+				$stmt -> bindColumn(1, $realPass);
+				$stmt -> fetch(PDO::FETCH_BOUND);
+			}
+
+			if($integration === 'xenforo') {
+				$stmt = $pdo -> prepare("SELECT `$db_tableOther`.`$db_columnPass` FROM `$db_tableOther` WHERE `$db_table`.`$db_columnId` = `$db_tableOther`.`$db_columnId` AND `$db_table`.`$db_columnUser` = ?");
+				$stmt -> execute(array($login));
+				$stmt -> bindColumn(1, $resultPass);
+				$stmt -> fetch(PDO::FETCH_BOUND);
+
+				$realPass = substr($resultPass, 22, 64);
+				$salt = substr($resultPass, 105, 64);
+			}
+
+			if ($realPass) {
+				$crypt = 'hash_'. $integration;
+				$checkPass = $crypt($pass);
+
+				$loggedIn = ($realPass === $checkPass);
+			}
 		}
+			
+		if(!$loggedIn) {
+			$date = new DateTime($cfg_loginCooldown);
+			$mysqldate = $date -> format('Y-m-d H:i:s');
 
-		if($integration === 'xenforo') {
-			$stmt = $pdo -> prepare("SELECT `$db_tableOther`.`$db_columnPass` FROM `$db_tableOther` WHERE `$db_table`.`$db_columnId` = `$db_tableOther`.`$db_columnId` AND `$db_table`.`$db_columnUser` = ?");
-			$stmt -> execute(array($login));
-			$stmt -> bindColumn(1, $resultPass);
-			$stmt -> fetch(PDO::FETCH_BOUND);
+			$stmt = $pdo -> prepare("UPDATE `$db_table` SET ".
+					"`$db_columnRetriesLeft` = IF (`$db_columnRetriesLeft` > 0, `$db_columnRetriesLeft` - 1, 0), ".
+					"`$db_columnBlockUntil` = IF (`$db_columnRetriesLeft` = 0, :date, NULL) WHERE `$db_columnUser` = :user");
+			$stmt -> execute(array(':date' => $mysqldate, ':user' => $login));
+			throw new Exception('BAD_LOGIN_OR_PASSWORD');
+		} else {
 
-			$realPass = substr($resultPass, 22, 64);
-			$salt = substr($resultPass, 105, 64);
+			// Randomize length
+			$len = rand(28, 32);
+			$session = substr(str_shuffle(str_repeat("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-", 5)), 0, $len);
+
+			// Update session
+			$stmt = $pdo -> prepare("UPDATE `$db_table` SET `$db_columnSesId` = :session WHERE `$db_columnUser` = :login");
+			$stmt -> execute(array(':session' => $session, ':login' => $login));
+
+			echo 'OK<:>'. $session;
 		}
-
-		if (!$realPass)
-			throw new Exception('BAD_LOGIN_OR_PASSWORD');
-		
-		$crypt = 'hash_'. $integration;
-		$checkPass = $crypt($pass);
-
-		if($realPass !== $checkPass)
-			throw new Exception('BAD_LOGIN_OR_PASSWORD');
-
-		// Randomize length
-		$len = rand(28, 32);
-		$session = substr(str_shuffle(str_repeat("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-", 5)), 0, $len);
-
-		// Update session
-		$stmt = $pdo -> prepare("UPDATE `$db_table` SET `$db_columnSesId` = :session WHERE `$db_columnUser` = :login");
-		$stmt -> execute(array(':session' => $session, ':login' => $login));
-
-		echo 'OK<:>'. $session;
 	}
 } catch(PDOException $e) {
 	die('PDO error: '. $e -> getMessage() . PHP_EOL);
@@ -124,3 +137,4 @@ try {
 	//die('Exception: '. $e -> getMessage() . PHP_EOL);
 	echo $e -> getMessage();
 }
+
