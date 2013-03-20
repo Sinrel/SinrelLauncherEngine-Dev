@@ -64,7 +64,7 @@ class LoginPanel extends JPanel implements ActionListener {
 		else {
 			final Intent i = MainWindow.engine.getIntent();
 			// аутентификация
-			final AuthData data = i.auth(login.getText(), login.getText());
+			final AuthData data = i.auth(login.getText(), String.valueOf(pass.getPassword()));
 
 			if (data.getResult() == AuthResult.OK) {
 				JOptionPane.showMessageDialog(this, "you are logined!! your session: " + data.getSession());
@@ -78,12 +78,12 @@ class LoginPanel extends JPanel implements ActionListener {
 					i.downloadClientAsync("minecraft", true, new DownloadCompleteListener() {
 						public void onDownloadComplete(DownloadResult result) {
 							System.out.println("client is downloaded i'm need to launch minecraft");
-							i.startMinecraft("minecraft", data.getLogin(), data.getSession(), (Frame) getParent());
+							i.startMinecraft("minecraft", data.getLogin(), data.getSession(), MainWindow.frame);
 						}
 					});
 				}
 				else if (status == ClientStatus.OK)
-					i.startMinecraft("minecraft", data.getLogin(), data.getSession(), (Frame) getParent());
+					i.startMinecraft("minecraft", data.getLogin(), data.getSession(), MainWindow.frame);
 
 			}
 			else if (data.getResult() == AuthResult.BAD_CONNECTION) {

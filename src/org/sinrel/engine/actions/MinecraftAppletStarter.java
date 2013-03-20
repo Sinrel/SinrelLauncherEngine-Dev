@@ -1,102 +1,78 @@
 package org.sinrel.engine.actions;
 
+import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintStream;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
+
+import javax.swing.JFrame;
 
 import net.minecraft.Launcher;
 
-import org.sinrel.engine.library.OSManager;
+import org.sinrel.engine.exception.SLException;
 
 public class MinecraftAppletStarter implements MinecraftStarter {
 
-	public void startMinecraft(String dir, String login, String session, boolean useAutoConnect, String server, String port, Frame frame) {
+	public void startMinecraft(File clientRoot, String login, String session, String server, int port, JFrame frame) {
 		if (frame == null)
 			throw new NullPointerException("frame не может быть null (frame could't be null)");
-		
-		String bin = OSManager.getClientFolder(dir) + File.separator + "bin" + File.separator;
 
-		URL[] urls = new URL[4];
 		try {
-			urls[0] = new File(bin, "minecraft.jar").toURI().toURL();
-			urls[1] = new File(bin, "lwjgl.jar").toURI().toURL();
-			urls[2] = new File(bin, "jinput.jar").toURI().toURL();
-			urls[3] = new File(bin, "lwjgl_util.jar").toURI().toURL();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+			File binDir = new File(clientRoot, "bin");
 
-		final Launcher mcapplet = new Launcher(bin, urls);
-		mcapplet.customParameters.put("username", login);
-		mcapplet.customParameters.put("sessionid", session);
-		if (useAutoConnect) {
-			mcapplet.customParameters.put("server", server);
-			mcapplet.customParameters.put("port", port);
-		}
+			URL[] urls = new URL[4];
+			urls[0] = new File(binDir, "minecraft.jar").toURI().toURL();
+			urls[1] = new File(binDir, "lwjgl.jar").toURI().toURL();
+			urls[2] = new File(binDir, "jinput.jar").toURI().toURL();
+			urls[3] = new File(binDir, "lwjgl_util.jar").toURI().toURL();
 
-		frame.setSize(850, 480);
-		mcapplet.setForeground(Color.BLACK);
-		mcapplet.setBackground(Color.BLACK);
-		frame.setLayout(new BorderLayout());
-		frame.add(mcapplet, BorderLayout.CENTER);
-		frame.validate();
-		frame.setVisible(true);
-		
-		System.setErr(new PrintStream(new NulledStream()));
-		System.setOut(new PrintStream(new NulledStream()));
-		
-		mcapplet.init();
-		mcapplet.start();
+			final Launcher launcher = new Launcher();
+			launcher.customParameters.put("username", login);
+			launcher.customParameters.put("sessionid", session);
+			if (server != null) {
+				launcher.customParameters.put("server", server);
+				launcher.customParameters.put("port", String.valueOf(port));
+			}
+
+			frame.setSize(850, 480);
+			launcher.setForeground(Color.BLACK);
+			launcher.setBackground(Color.BLACK);
+
+			frame.getRootPane().removeAll();
+			frame.getRootPane().setLayout(new BorderLayout());
+			frame.getRootPane().add(launcher, BorderLayout.CENTER);
+			frame.getRootPane().validate();
+			frame.setLocationRelativeTo(null);
+			frame.setVisible(true);
+
+			// System.setErr(new PrintStream(new NulledStream()));
+			// System.setOut(new PrintStream(new NulledStream()));
+
+			String nativesPath = new File(binDir, "natives").getAbsolutePath();
+			System.setProperty("org.lwjgl.librarypath", nativesPath);
+			System.setProperty("net.java.games.input.librarypath", nativesPath);
+
+			// set minecraft.applet.WrapperClass to support newer FML builds
+			// FML seems to restart the whole game which causes some problems in
+			// custom launchers like this one
+			System.setProperty("minecraft.applet.WrapperClass", "net.minecraft.Launcher");
+
+			URLClassLoader cl = new URLClassLoader(urls);
+			Class<?> appletClass = cl.loadClass("net.minecraft.client.MinecraftApplet");
+			Applet applet = (Applet) appletClass.newInstance();
+
+			launcher.replace(applet);
+		} catch (Exception e) {
+			throw new SLException(e);
+		}
 	}
-	
-	public void startMinecraft(String dir, String clientName, String login, String session, boolean useAutoConnect, String server, String port, Frame frame) {
-		if (frame == null)
-			throw new NullPointerException("frame не может быть null (frame could't be null)");
-		
-		System.out.println(  OSManager.getClientFolder(dir, clientName) );
-		String bin = OSManager.getClientFolder(dir, clientName) + File.separator;
 
-		URL[] urls = new URL[4];
-		try {
-			urls[0] = new File(bin, "minecraft.jar").toURI().toURL();
-			urls[1] = new File(bin, "lwjgl.jar").toURI().toURL();
-			urls[2] = new File(bin, "jinput.jar").toURI().toURL();
-			urls[3] = new File(bin, "lwjgl_util.jar").toURI().toURL();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-
-		final Launcher mcapplet = new Launcher(bin, urls);
-		mcapplet.customParameters.put("username", login);
-		mcapplet.customParameters.put("sessionid", session);
-		if (useAutoConnect) {
-			mcapplet.customParameters.put("server", server);
-			mcapplet.customParameters.put("port", port);
-		}
-
-		frame.setSize(850, 480);
-		mcapplet.setForeground(Color.BLACK);
-		mcapplet.setBackground(Color.BLACK);
-		frame.setLayout(new BorderLayout());
-		frame.add(mcapplet, BorderLayout.CENTER);
-		frame.validate();
-		frame.setVisible(true);
-		
-		//System.setErr(new PrintStream(new NulledStream()));
-		//System.setOut(new PrintStream(new NulledStream()));
-		
-		mcapplet.init();
-		mcapplet.start();
-	}
-	
 	private class NulledStream extends OutputStream {
 		public void write(int b) throws IOException {}
 	}
-	
+
 }

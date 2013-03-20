@@ -1,9 +1,9 @@
 package org.sinrel.engine.actions;
 
-import java.awt.Frame;
+import java.io.File;
+
+import javax.swing.JFrame;
 
 public interface MinecraftStarter {
-	void startMinecraft(String dir, String login, String session, boolean useAutoConnect, String server, String port, Frame frame);
-	
-	void startMinecraft(String dir, String clientName , String login, String session, boolean useAutoConnect, String server, String port, Frame frame);
+	void startMinecraft(File clientRoot, String login, String session, String server, int port, JFrame frame);
 }

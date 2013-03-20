@@ -21,6 +21,10 @@ public class DefaultChecker extends ClientChecker {
 	public ClientStatus checkClient(String applicationName, String serverName) {
 		throw new RuntimeException("Not implemented");
 	}
+	
+	public ClientStatus checkClient(Engine e, String applicationName) {
+		return checkClient(e, applicationName, "standart");
+	}
 
 	public ClientStatus checkClient(Engine e, String applicationName, String clientName) {
 		try {
@@ -56,39 +60,6 @@ public class DefaultChecker extends ClientChecker {
 		}
 	}
 	
-	public ClientStatus checkClient(Engine e, String applicationName) {
-		try {
-			this.engine = e;
-
-			this.onStartChecking();
-
-			if (!NetManager.isOnline()) {
-				return ClientStatus.BAD_CONNECTION;
-			}
-
-			if (!OSManager.getWorkingDirectory(applicationName).exists() | !OSManager.getClientFolder(applicationName).exists()) {
-				return ClientStatus.CLIENT_NOT_EXIST;
-			}
-
-			StringBuffer hash = new StringBuffer();
-			File f = null;
-
-			for (String name : files) {
-				f = new File(OSManager.getClientFolder(applicationName), name);
-				if (!f.exists()) {
-					return ClientStatus.WRONG_CLIENT;
-				}
-
-				hash.append(MD5.getMD5(f));
-			}
-
-			this.onFinishChecking();
-			return send("standart", hash.toString(), OSManager.getPlatform());
-		} catch (IOException ex) {
-			return ClientStatus.CLIENT_DOES_NOT_MATCH;
-		}
-	}
-
 	private ClientStatus send(String client, String hash, OS system) {
 		try {
 			String data = "action=" + URLEncoder.encode("check", "UTF-8");
@@ -109,7 +80,7 @@ public class DefaultChecker extends ClientChecker {
 			}
 
 			String s = NetManager.sendPostRequest(url, data);
-			System.out.println( s );
+
 			return ClientStatus.valueOf(s.trim());
 
 		} catch (IOException e) {

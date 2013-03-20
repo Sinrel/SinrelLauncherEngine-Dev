@@ -1,8 +1,12 @@
 package org.sinrel.engine.actions;
 
 import java.awt.Frame;
+import java.io.File;
+
+import javax.swing.JFrame;
 
 import org.sinrel.engine.Engine;
+import org.sinrel.engine.library.OSManager;
 import org.sinrel.engine.listeners.DownloadCompleteListener;
 import org.sinrel.engine.listeners.DownloadListener;
 
@@ -110,55 +114,62 @@ public class Intent {
 	public ClientStatus checkClient(String applicationName) {
 		return engine.getChecker().checkClient(engine, applicationName);
 	}
-	
+
 	/**
 	 * Проверка клиента
 	 * 
-	 * @param applicationName имя приложения
-	 * @param clientName имя клиента
+	 * @param applicationName
+	 *            имя приложения
+	 * @param clientName
+	 *            имя клиента
 	 * @return статус клиента
 	 */
-	public ClientStatus checkClient( String applicationName , String clientName ) {
-		return engine.getChecker().checkClient( engine, applicationName, clientName );
+	public ClientStatus checkClient(String applicationName, String clientName) {
+		return engine.getChecker().checkClient(engine, applicationName, clientName);
 	}
 
 	/**
 	 * запуск minecraft во фрейме
 	 * 
-	 * @param dir
-	 *            Имя папки в которой находится клиент ( пример: minecraft )
+	 * @param serverName
+	 *            Название клиента
 	 * @param login
-	 *            логин
-	 * @param frame
-	 *            фрейм для запуска
-	 */
-	public void startMinecraft(String dir, String login, Frame frame) {
-		engine.getStarter().startMinecraft(dir, login, "12345", false, null, null, frame);
-	}
-
-	/**
-	 * запуск minecraft во фрейме
-	 * 
-	 * @param dir
-	 *            Имя папки в которой находится клиент ( пример: minecraft )
-	 * @param login
-	 *            логин
-	 * @param frame
-	 *            фрейм для запуска
+	 *            Логин
 	 * @param session
-	 *            сессия пользователя
+	 *            Сессия пользователя
+	 * @param frame
+	 *            Фрейм для запуска
 	 */
-	public void startMinecraft(String dir, String login, String session, Frame frame) {
-		engine.getStarter().startMinecraft(dir, login, session, false, null, null, frame);
+	public void startMinecraft(String serverName, String login, String session, JFrame frame) {
+		startMinecraft(serverName, login, session, frame, null, 0);
 	}
 
 	/**
 	 * запуск minecraft в фрейме
 	 * 
-	 * @param dir
-	 *            Имя папки в которой находится клиент ( пример: minecraft )
+	 * @param serverName
+	 *            Название клиента
 	 * @param login
-	 *            логин
+	 *            Логин
+	 * @param session
+	 *            сессия пользователя
+	 * @param frame
+	 *            фрейм для запуска
+	 * @param server
+	 *            сервер для автозахода
+	 * @param port
+	 *            порт для автозахода
+	 */
+	public void startMinecraft(String serverName, String login, String session, JFrame frame, String server, int port) {
+		File clientFolder = OSManager.getClientFolder(engine.getSettings().getWorkDir(), serverName);
+		engine.getStarter().startMinecraft(clientFolder, login, session, server, port, frame);
+	}
+
+	/**
+	 * запуск minecraft в фрейме
+	 * 
+	 * @param login
+	 *            Логин
 	 * @param frame
 	 *            фрейм для запуска
 	 * @param session
@@ -168,8 +179,22 @@ public class Intent {
 	 * @param port
 	 *            порт для автозапуска
 	 */
-	public void startMinecraft(String dir, String login, String session, Frame frame, String server, String port) {
-		engine.getStarter().startMinecraft(dir, login, session, true, server, port, frame);
+	public void startMinecraft(String login, String session, JFrame frame, String server, int port) {
+		startMinecraft("", login, session, frame, server, port);
+	}
+
+	/**
+	 * запуск minecraft в фрейме
+	 * 
+	 * @param login
+	 *            Логин
+	 * @param frame
+	 *            фрейм для запуска
+	 * @param session
+	 *            сессия пользователя
+	 */
+	public void startMinecraft(String login, String session, JFrame frame) {
+		startMinecraft(login, session, frame, null, 0);
 	}
 
 }

@@ -15,11 +15,11 @@ public abstract class OSManager {
 	 *  Будет возвращена директория - C:\Users\%USERNAME%\AppData\Roaming\.sinrel\simple\bin (Для Windows)
 	 */
 	public static File getClientFolder( String name, String serverName ) {
-		return new File( getWorkingDirectory( name ).toPath().toString() , serverName + File.separator + "bin" + File.separator );		
+		return new File( getWorkingDirectory( name ), serverName );
 	}
 	
 	public static File getClientFolder( String name ) {
-		return new File( getWorkingDirectory( name ).toPath().toString() , "bin" + File.separator );		
+		return getWorkingDirectory( name );		
 	}
 	
 	public static File getWorkingDirectory(String applicationName) {

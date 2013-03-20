@@ -13,86 +13,98 @@ import org.sinrel.engine.Engine;
 import org.sinrel.engine.library.OSManager;
 import org.sinrel.engine.library.ZipManager;
 
-public class DefaultDownloader extends Downloader{
-		
-	static final String[] files = { "jinput.jar" , "lwjgl.jar" , "lwjgl_util.jar" , "minecraft.jar" , "natives/"+OSManager.getPlatform().toString()+".zip" };
+public class DefaultDownloader extends Downloader {
 
-	public DownloadResult downloadClient(Engine e, final String directory, boolean loadZip) {
+	static final String[] files = { "jinput.jar", "lwjgl.jar",
+			"lwjgl_util.jar", "minecraft.jar",
+			"natives/" + OSManager.getPlatform().toString() + ".zip" };
+
+	public DownloadResult downloadClient(Engine e, final String directory,
+			boolean loadZip) {
 		DownloadResult status = null;
-		try{
+		try {
 			this.onStartDownload();
-			
-			delete( new File( OSManager.getWorkingDirectory( directory ).toString() ) );
-			
-	        URL url; 
-	        
-	        if( !e.getSettings().getFolder().equalsIgnoreCase("") ) {
-	      	  url =	new URL( 
-	      			  "http://" + e.getSettings().getDomain() + "/" +  e.getSettings().getFolder() + "/" + "client" + "/" 
-	      	  );
-	        }else{
-	      	  url =	new URL( 
-	      			  "http://" + e.getSettings().getDomain()  + "/" + "client/"
-	      	  );
-	        }
-	        
-	        String now, next = null;
-	        
-	        for ( int num = 0; num < files.length ; num++ ) {
-	        	try{
-	        		now = files[num];
-	        		if( num != files.length - 1 )
-	        			next = files[num + 1];
-	        		else 
-	        			if( !loadZip ) 
-	        				next = "Finish";
-	        			else 
-	        				next = "client.zip";
-	        		
-	        		download( new URL( url + files[num] ) , new File( OSManager.getClientFolder( directory ) , files[num]) );
-	        		
-	        		onFileChange( now , next );
-	        		
-	        	}catch( IOException ex ) {
-	        		status = DownloadResult.FILE_NOT_EXIST;
-	        		return status;
-	        	}
-	        }
-	        
-	        if( loadZip ) {
-	        	try{
-	        		now = "client.zip";
-	        		next = "Finish";
-	        	
-	        		download( new URL( url + "client.zip" ) , new File( OSManager.getWorkingDirectory( directory ) , "client.zip" ) );
-	        		
-	        		onFileChange(now, next);
-	        	
-	    	        ZipManager.unzip( new File( OSManager.getWorkingDirectory( directory ) , "client.zip" ) , new File( OSManager.getWorkingDirectory( directory ), "") );
-	    	        ZipManager.removeAllZipFiles( new File( OSManager.getWorkingDirectory( directory ).toString() ) );
-	        	}catch( IOException ex ) {
-	        		status = DownloadResult.FILE_NOT_EXIST;
-	        		return status;
-	        	}
-	        }
-	        
-	        ZipManager.unzip( new File( OSManager.getClientFolder( directory ), files[ files.length - 1 ] ) , new File( OSManager.getClientFolder( directory ) + File.separator + "natives" ) );
-	        ZipManager.removeAllZipFiles( new File( OSManager.getClientFolder( directory ) + File.separator + "natives" ) );
-	        
-	        status = DownloadResult.OK;
-		}catch( MalformedURLException ex) {
+
+			delete(OSManager.getWorkingDirectory(directory));
+
+			URL url;
+
+			if (!e.getSettings().getFolder().equalsIgnoreCase("")) {
+				url = new URL("http://" + e.getSettings().getDomain() + "/"
+						+ e.getSettings().getFolder() + "/" + "client" + "/");
+			} else {
+				url = new URL("http://" + e.getSettings().getDomain() + "/"
+						+ "client/");
+			}
+
+			String now, next = null;
+
+			for (int num = 0; num < files.length; num++) {
+				try {
+					now = files[num];
+					if (num != files.length - 1)
+						next = files[num + 1];
+					else if (!loadZip)
+						next = "Finish";
+					else
+						next = "client.zip";
+
+					download(new URL(url + files[num]),
+							new File(OSManager.getClientFolder(directory),
+									files[num]));
+
+					onFileChange(now, next);
+
+				} catch (IOException ex) {
+					status = DownloadResult.FILE_NOT_EXIST;
+					return status;
+				}
+			}
+
+			if (loadZip) {
+				try {
+					now = "client.zip";
+					next = "Finish";
+
+					download(new URL(url + "client.zip"),
+							new File(OSManager.getWorkingDirectory(directory),
+									"client.zip"));
+
+					onFileChange(now, next);
+
+					ZipManager.unzip(
+							new File(OSManager.getWorkingDirectory(directory),
+									"client.zip"),
+							new File(OSManager.getWorkingDirectory(directory),
+									""));
+					ZipManager.removeAllZipFiles(OSManager
+							.getWorkingDirectory(directory));
+				} catch (IOException ex) {
+					status = DownloadResult.FILE_NOT_EXIST;
+					return status;
+				}
+			}
+
+			ZipManager.unzip(new File(OSManager.getClientFolder(directory),
+					files[files.length - 1]),
+					new File(OSManager.getClientFolder(directory)
+							+ File.separator + "natives"));
+			ZipManager.removeAllZipFiles(new File(OSManager
+					.getClientFolder(directory) + File.separator + "natives"));
+
+			status = DownloadResult.OK;
+		} catch (MalformedURLException ex) {
 			ex.printStackTrace();
 		}
-        return status;
+		return status;
 	}
-	
-	
-	private void download( URL url, File f ) throws IOException {
+
+	private void download(URL url, File f) throws IOException {
 		f.mkdirs();
 
 		f.delete();
 		f.createNewFile();
-		
+
 		URLConnection connection = url.openConnection();
 
 		long down = connection.getContentLength();
@@ -115,23 +127,24 @@ public class DefaultDownloader extends Downloader{
 			while ((count = bis.read(b)) != -1) {
 				total += count;
 				fw.write(b, 0, count);
-				onPercentChange(total, count);	
+				onPercentChange(total, count);
 			}
 			fw.close();
-		}else{
+		} else {
 			return;
 		}
 	}
-	
-	private static void delete( File file ) {
-	    if( !file.exists() ) return;
-	    
-	    if( file.isDirectory() ) {
-	    	for(File f : file.listFiles())
-	    		delete(f);
-	    		file.delete();
-	    	}else{
-	    		file.delete();
-	    	}
+
+	private static void delete(File file) {
+		if (!file.exists())
+			return;
+
+		if (file.isDirectory()) {
+			for (File f : file.listFiles())
+				delete(f);
+			file.delete();
+		} else {
+			file.delete();
 		}
 	}
+}

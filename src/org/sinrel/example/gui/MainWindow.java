@@ -12,20 +12,24 @@ import org.sinrel.engine.EngineSettings;
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 
+	static MainWindow frame;
 	static Engine engine;
 	final static int width = 500, height = 300;
 
 	public static void main(String[] args) {
 
 		// инициализация двигла
-		EngineSettings settings = new EngineSettings("example.com", "launcher", "1");
+		EngineSettings settings = new EngineSettings();
+		settings.setWorkDir("sle");
+		settings.setDomain("localhost");
+		settings.setVersion("1");
 		engine = new Engine(settings);
 	
 		
-		/*
-		MainWindow main = new MainWindow();
-		main.setVisible(true);
-		*/
+		frame = new MainWindow();
+		frame.setVisible(true);
+		
+		engine.getIntent().startMinecraft("D_ART", "123", frame );
 		
 	}
 

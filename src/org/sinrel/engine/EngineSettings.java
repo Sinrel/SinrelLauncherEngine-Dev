@@ -5,6 +5,7 @@ public class EngineSettings {
 	protected String domain;
 	protected String version;
 	protected String folder;
+	private String workDir;
 	
 	public String getDomain() {
 		return domain;
@@ -29,22 +30,12 @@ public class EngineSettings {
 	public void setFolder(String folder) {
 		this.folder = folder;
 	}
-	
-	public EngineSettings() {
-		this("", "", "");
+
+	public String getWorkDir() {
+		return workDir;
 	}
-	
-	public EngineSettings(String domain){
-		this(domain, "", "");
-	}
-	
-	public EngineSettings(String domain, String folder){
-		this(domain, folder, "");
-	}
-	
-	public EngineSettings(String domain, String folder, String version){
-		setDomain(domain);
-		setFolder(folder);
-		setVersion(version);
+
+	public void setWorkDir(String workDir) {
+		this.workDir = workDir;
 	}
 }
