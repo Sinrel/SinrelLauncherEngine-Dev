@@ -20,7 +20,7 @@ public class MinecraftAppletStarter implements MinecraftStarter {
 		if (frame == null)
 			throw new NullPointerException("frame не может быть null (frame could't be null)");
 		
-		String bin = OSManager.getClientFolder(dir) + File.separator + "bin" + File.separator;
+		String bin = OSManager.getClientFolder(dir).toString() + File.separator;
 
 		URL[] urls = new URL[4];
 		try {
