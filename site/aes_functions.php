@@ -2,7 +2,7 @@
 #=============#
 #   alex55i   #
 #=============#
-if(!defined('INCLUDE_CHECK')) die('Идите нахуй, сударь!');
+if(!defined('INCLUDE_CHECK')) die('Сюда нельзя!');
 
 function aes_encrypt_urlsafe($text, $key) {
 	$encrypted = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, md5($key, true), $text, MCRYPT_MODE_CBC, getIV());
