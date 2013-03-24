@@ -13,7 +13,14 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 
+/**
+ * Класс для шифрования строк алгоритмом AES-128
+ * 
+ * @author alex55i
+ * 
+ */
 public final class AESUtils {
 
 	private static byte[] key;
@@ -41,9 +48,7 @@ public final class AESUtils {
 	public static void setKey(byte[] key) {
 		if (key == null)
 			throw new InvalidParameterException("key cannot be null!");
-		if (key.length != 16)
-			throw new InvalidParameterException("key must have length of 16");
-		AESUtils.key = key;
+		AESUtils.key = makeKey(key);
 	}
 
 	/**
@@ -54,7 +59,7 @@ public final class AESUtils {
 	 * @return Зашифрованный в AES и закодированный в Base64 текст
 	 * @throws GeneralSecurityException
 	 */
-	public static String encryptAESBase64String(String text) throws GeneralSecurityException {
+	public static String encrypt(String text) throws GeneralSecurityException {
 		return encryptAESBase64String(text, key);
 	}
 
@@ -66,7 +71,7 @@ public final class AESUtils {
 	 * @return Дешифрованную строку
 	 * @throws GeneralSecurityException
 	 */
-	public static String decryptAESBase64String(String b64_encrypted) throws GeneralSecurityException {
+	public static String decrypt(String b64_encrypted) throws GeneralSecurityException {
 		return decryptAESBase64String(b64_encrypted, key);
 	}
 
@@ -80,8 +85,8 @@ public final class AESUtils {
 	 * @return Зашифрованный в AES и закодированный в Base64 текст
 	 * @throws GeneralSecurityException
 	 */
-	public static String encryptAESBase64String(String text, String key) throws GeneralSecurityException {
-		return encryptAESBase64String(text, StringUtils.getBytesUtf8(key));
+	public static String encrypt(String text, String key) throws GeneralSecurityException {
+		return encrypt(text, StringUtils.getBytesUtf8(key));
 	}
 
 	/**
@@ -94,8 +99,8 @@ public final class AESUtils {
 	 * @return Дешифрованную строку
 	 * @throws GeneralSecurityException
 	 */
-	public static String decryptAESBase64String(String b64_encrypted, String key) throws GeneralSecurityException {
-		return decryptAESBase64String(b64_encrypted, StringUtils.getBytesUtf8(key));
+	public static String decrypt(String b64_encrypted, String key) throws GeneralSecurityException {
+		return decrypt(b64_encrypted, StringUtils.getBytesUtf8(key));
 	}
 
 	/**
@@ -108,15 +113,8 @@ public final class AESUtils {
 	 * @return Зашифрованный в AES и закодированный в Base64 текст
 	 * @throws GeneralSecurityException
 	 */
-	public static String encryptAESBase64String(String text, byte[] key) throws GeneralSecurityException {
-		SecretKeySpec keyspec = new SecretKeySpec(key, "AES");
-
-		Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
-		cipher.init(Cipher.ENCRYPT_MODE, keyspec, getIVSpec());
-
-		byte[] padded = padByteArray(StringUtils.getBytesUtf8(text));
-		byte[] encrypted = cipher.doFinal(padded);
-		return Base64.encodeBase64URLSafeString(encrypted);
+	public static String encrypt(String text, byte[] key) throws GeneralSecurityException {
+		return encryptAESBase64String(text, makeKey(key));
 	}
 
 	/**
@@ -129,13 +127,8 @@ public final class AESUtils {
 	 * @return Дешифрованную строку
 	 * @throws GeneralSecurityException
 	 */
-	public static String decryptAESBase64String(String b64_encrypted, byte[] key) throws GeneralSecurityException {
-		SecretKeySpec keyspec = new SecretKeySpec(key, "AES");
-
-		Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
-		cipher.init(Cipher.DECRYPT_MODE, keyspec, getIVSpec());
-		byte[] decrypted = cipher.doFinal(Base64.decodeBase64(b64_encrypted));
-		return StringUtils.newStringUtf8(decrypted).replace("\0", "");
+	public static String decrypt(String b64_encrypted, byte[] key) throws GeneralSecurityException {
+		return decryptAESBase64String(b64_encrypted, makeKey(key));
 	}
 
 	/**
@@ -158,7 +151,27 @@ public final class AESUtils {
 	}
 
 	// Private methods
-	
+
+	public static String encryptAESBase64String(String text, byte[] key) throws GeneralSecurityException {
+		SecretKeySpec keyspec = new SecretKeySpec(key, "AES");
+
+		Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+		cipher.init(Cipher.ENCRYPT_MODE, keyspec, getIVSpec());
+
+		byte[] padded = padByteArray(StringUtils.getBytesUtf8(text));
+		byte[] encrypted = cipher.doFinal(padded);
+		return Base64.encodeBase64URLSafeString(encrypted);
+	}
+
+	public static String decryptAESBase64String(String b64_encrypted, byte[] key) throws GeneralSecurityException {
+		SecretKeySpec keyspec = new SecretKeySpec(key, "AES");
+
+		Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+		cipher.init(Cipher.DECRYPT_MODE, keyspec, getIVSpec());
+		byte[] decrypted = cipher.doFinal(Base64.decodeBase64(b64_encrypted));
+		return StringUtils.newStringUtf8(decrypted).replace("\0", "");
+	}
+
 	private static IvParameterSpec getIVSpec() {
 		return new IvParameterSpec(StringUtils.getBytesUtf8("%jUS*(Aol(-y)lC/"));
 	}
@@ -169,4 +182,7 @@ public final class AESUtils {
 		return Arrays.copyOf(source, size * x);
 	}
 
+	private static byte[] makeKey(byte[] bytes) {
+		return DigestUtils.md5(bytes);
+	}
 }

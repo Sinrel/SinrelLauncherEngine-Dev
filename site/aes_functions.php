@@ -2,29 +2,21 @@
 #=============#
 #   alex55i   #
 #=============#
-if(!defined('INCLUDE_CHECK')) die('Идите нахуй, сударь!');
+if(!defined('INCLUDE_CHECK')) die('Сюда нельзя!');
 
 function aes_encrypt_urlsafe($text, $key) {
-	$encrypted = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $text, MCRYPT_MODE_CBC, getIV());
+	$encrypted = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, md5($key, true), $text, MCRYPT_MODE_CBC, getIV());
 	return base64_url_encode($encrypted);
 }
 
 function aes_decrypt_urlsafe($b64_encrypted, $key) {
-	$data = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, base64_url_decode($b64_encrypted), MCRYPT_MODE_CBC, getIV());	
+	$data = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, md5($key, true), base64_url_decode($b64_encrypted), MCRYPT_MODE_CBC, getIV());	
 	return rtrim($data, $data[strlen($data) - 1]);
 }
 
 function getIV() {
 	$iv = "%jUS*(Aol(-y)lC/";
 	return $iv;
-}
-
-function implode_encrypt($key, $delim, $array){
-	$count = count($array);
-	for($i = 0 ; $i < $count ; $i++) {
-		$array[$i] = aes_encrypt_urlsafe($array[$i], $key);
-	}
-	return implode($delim, $array);
 }
 
 function aes_generate_key() {
