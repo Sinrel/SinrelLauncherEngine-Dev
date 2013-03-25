@@ -6,16 +6,15 @@ public abstract class OSManager {
 	
 	/**
 	 * @param name Имя рабочей папки
- 	 * @param serverName Имя сервера, к которому принадлежит клиент
+ 	 * @param clientName Имя сервера, к которому принадлежит клиент
 	 * @return Возвращает директорию в которой содержатся файлы клиента
-	 * <br/>
 	 * Пример:
 	 *  name = sinrel
-	 *  serverName = simple
+	 *  clientName = simple
 	 *  Будет возвращена директория - C:\Users\%USERNAME%\AppData\Roaming\.sinrel\simple\bin (Для Windows)
 	 */
-	public static File getClientFolder( String name, String serverName ) {
-		return new File( getWorkingDirectory( name ).toPath().toString() , serverName + File.separator + "bin" + File.separator );		
+	public static File getClientFolder( String workingDirectory, String clientName ) {
+		return new File( getWorkingDirectory( workingDirectory ).toPath().toString() , clientName + File.separator + "bin" + File.separator );		
 	}
 	
 	public static File getClientFolder( String name ) {

@@ -14,79 +14,64 @@ import org.sinrel.engine.library.OSManager;
 import org.sinrel.engine.library.ZipManager;
 
 public class DefaultDownloader extends Downloader{
-		
-	static final String[] files = { "jinput.jar" , "lwjgl.jar" , "lwjgl_util.jar" , "minecraft.jar" , "natives/"+OSManager.getPlatform().toString()+".zip" };
 
-	public DownloadResult downloadClient(Engine e, final String directory, boolean loadZip) {
+	static final String[] files = { "jinput.jar" , "lwjgl.jar" , "lwjgl_util.jar" , "minecraft.jar" , "client.zip" , "natives/"+OSManager.getPlatform().toString()+".zip"};
+
+	public DownloadResult downloadClient( Engine e , String clientName ) {
 		DownloadResult status = null;
+		
 		try{
 			this.onStartDownload();
+			URL url;
 			
-			delete( new File( OSManager.getWorkingDirectory( directory ).toString() ) );
+			delete( OSManager.getClientFolder( e.getSettings().getDirectory() , clientName ) );
 			
-	        URL url; 
-	        
 	        if( !e.getSettings().getFolder().equalsIgnoreCase("") ) {
-	      	  url =	new URL( 
-	      			  "http://" + e.getSettings().getDomain() + "/" +  e.getSettings().getFolder() + "/" + "client" + "/" 
-	      	  );
-	        }else{
-	      	  url =	new URL( 
-	      			  "http://" + e.getSettings().getDomain()  + "/" + "client/"
-	      	  );
-	        }
+		      	  url =	new URL( 
+		      			  "http://" + e.getSettings().getDomain() + "/" +  e.getSettings().getFolder() + "/" + "clients" + "/" + clientName + "/" 
+		      	  );
+		        }else{
+		      	  url =	new URL( 
+		      			  "http://" + e.getSettings().getDomain()  + "/clients/"+ clientName +"/"
+		      	  );
+		        }
 	        
-	        String now, next = null;
-	        
+	        String now, next = null;      
+	    
 	        for ( int num = 0; num < files.length ; num++ ) {
 	        	try{
 	        		now = files[num];
 	        		if( num != files.length - 1 )
 	        			next = files[num + 1];
 	        		else 
-	        			if( !loadZip ) 
-	        				next = "Finish";
-	        			else 
-	        				next = "client.zip";
-	        		
-	        		download( new URL( url + files[num] ) , new File( OSManager.getClientFolder( directory ) , files[num]) );
-	        		
+	        			next = "Finish";
+        			
+	        		download( new URL( url + files[num] ) , new File( OSManager.getClientFolder( e.getSettings().getDirectory() , clientName ) , files[num]) );
+
 	        		onFileChange( now , next );
-	        		
 	        	}catch( IOException ex ) {
 	        		status = DownloadResult.FILE_NOT_EXIST;
 	        		return status;
 	        	}
 	        }
 	        
-	        if( loadZip ) {
-	        	try{
-	        		now = "client.zip";
-	        		next = "Finish";
-	        	
-	        		download( new URL( url + "client.zip" ) , new File( OSManager.getWorkingDirectory( directory ) , "client.zip" ) );
-	        		
-	        		onFileChange(now, next);
-	        	
-	    	        ZipManager.unzip( new File( OSManager.getWorkingDirectory( directory ) , "client.zip" ) , new File( OSManager.getWorkingDirectory( directory ), "") );
-	    	        ZipManager.removeAllZipFiles( new File( OSManager.getWorkingDirectory( directory ).toString() ) );
-	        	}catch( IOException ex ) {
-	        		status = DownloadResult.FILE_NOT_EXIST;
-	        		return status;
-	        	}
-	        }
+	        File to = OSManager.getClientFolder( e.getSettings().getDirectory() ,  clientName );
+			String path = OSManager.getWorkingDirectory( e.getSettings().getDirectory() ).toPath().toString();
 	        
-	        ZipManager.unzip( new File( OSManager.getClientFolder( directory ), files[ files.length - 1 ] ) , new File( OSManager.getClientFolder( directory ) + File.separator + "natives" ) );
-	        ZipManager.removeAllZipFiles( new File( OSManager.getClientFolder( directory ) + File.separator + "natives" ) );
+			ZipManager.unzip( new File( to , "client.zip" ) , new File( path + File.separator + clientName + File.separator ) );
+	        ZipManager.removeAllZipFiles( to );
 	        
-	        status = DownloadResult.OK;
-		}catch( MalformedURLException ex) {
+	        ZipManager.unzip( new File( to  , files[ files.length - 1 ] ) , new File( to + File.separator + "natives" ) );
+	        ZipManager.removeAllZipFiles( new File( to.toString()  + File.separator + "natives" ) );
+	        
+	        status = DownloadResult.OK;    
+		}catch( MalformedURLException ex ) {
 			ex.printStackTrace();
 		}
-        return status;
+		
+		return status;
 	}
-	
-	
+
 	private void download( URL url, File f ) throws IOException {
 		f.mkdirs();
 
@@ -134,4 +119,4 @@ public class DefaultDownloader extends Downloader{
 	    		file.delete();
 	    	}
 		}
-	}
+}

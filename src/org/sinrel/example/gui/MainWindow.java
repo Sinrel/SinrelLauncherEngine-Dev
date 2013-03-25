@@ -9,23 +9,21 @@ import javax.swing.UIManager;
 import org.sinrel.engine.Engine;
 import org.sinrel.engine.EngineSettings;
 
+@Deprecated
 public class MainWindow extends JFrame {
+	
 	private static final long serialVersionUID = 1L;
 
 	static Engine engine;
 	final static int width = 500, height = 300;
 
 	public static void main(String[] args) {
-
 		// инициализация двигла
-		EngineSettings settings = new EngineSettings("example.com", "launcher", "1");
+		EngineSettings settings = new EngineSettings( "example.com", "launcher", "minecraft", "1" );
 		engine = new Engine(settings);
 	
-		
-		/*
 		MainWindow main = new MainWindow();
 		main.setVisible(true);
-		*/
 		
 	}
 

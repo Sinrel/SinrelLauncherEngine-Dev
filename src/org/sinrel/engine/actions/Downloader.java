@@ -31,6 +31,6 @@ public abstract class Downloader {
 		for(DownloadListener dl : listeners)
 			dl.onPercentChange(total, count);
 	}
-	
-	public abstract DownloadResult downloadClient(Engine e, String directory, boolean loadZip);
+
+	public abstract DownloadResult downloadClient( Engine e , String clientName );
 }

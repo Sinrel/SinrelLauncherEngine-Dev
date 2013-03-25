@@ -13,7 +13,6 @@ import org.sinrel.engine.exception.FatalError;
 
 public class Engine {
 	
-	/** Обьект с содержимым launcher.properties */
 	private EngineSettings settings;
 	
 	private Intent intent;
@@ -36,9 +35,7 @@ public class Engine {
 			FatalError.showErrorWindow(e);
 		}
 	}	
-	/**
-	 * @return обьект с содержимым launcher.properties
-	 */
+	
 	public EngineSettings getSettings() {
 		return settings;
 	}

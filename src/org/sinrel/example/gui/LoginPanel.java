@@ -1,25 +1,17 @@
 package org.sinrel.example.gui;
 
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import org.sinrel.engine.actions.AuthData;
-import org.sinrel.engine.actions.AuthResult;
-import org.sinrel.engine.actions.ClientStatus;
-import org.sinrel.engine.actions.DownloadResult;
-import org.sinrel.engine.actions.Intent;
-import org.sinrel.engine.listeners.DownloadCompleteListener;
-
+@Deprecated
 class LoginPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private final JButton auth, pc, update;
@@ -59,6 +51,7 @@ class LoginPanel extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		/*
 		if (e.getSource() == pc)
 			System.out.println("Personal");
 		else {
@@ -78,7 +71,7 @@ class LoginPanel extends JPanel implements ActionListener {
 					i.downloadClientAsync("minecraft", true, new DownloadCompleteListener() {
 						public void onDownloadComplete(DownloadResult result) {
 							System.out.println("client is downloaded i'm need to launch minecraft");
-							i.startMinecraft("minecraft", data.getLogin(), data.getSession(), (Frame) getParent());
+							//i.startMinecraft("minecraft", data.getLogin(), data.getSession(), (Frame) getParent());
 						}
 					});
 				}
@@ -95,6 +88,7 @@ class LoginPanel extends JPanel implements ActionListener {
 
 			System.out.println("AuthResult action is detected!");
 		}
+		*/
 	}
 
 }
