@@ -55,6 +55,15 @@ public abstract class ZipManager {
 			 e.printStackTrace();
 	     }  
      }  
+	  
+	 private static void cleanUp( InputStream in ) throws Exception {
+		 in.close();  
+	 }  
+	 
+	 private static void cleanUp( OutputStream out ) throws Exception {
+		 out.flush();  
+	     out.close();  
+	 }  
 	      
 	 public static void removeAllZipFiles( File folder ) {
 		 String[] files = folder.list();
@@ -73,13 +82,5 @@ public abstract class ZipManager {
 			 folder.mkdir();  
 	     }  
 	 }  
-	  
-	 private static void cleanUp( InputStream in ) throws Exception {
-		 in.close();  
-	 }  
 	 
-	 private static void cleanUp( OutputStream out ) throws Exception {
-		 out.flush();  
-	     out.close();  
-	 }  
 }

@@ -20,9 +20,9 @@ public class DefaultAuthBehavior implements AuthBehavior {
 
 			URL url;
 
-			if (!engine.getSettings().getFolder().equalsIgnoreCase("")) {
+			if (!engine.getSettings().getServerPath().equalsIgnoreCase("")) {
 				url = new URL("http://" + engine.getSettings().getDomain()
-						+ "/" + engine.getSettings().getFolder() + "/"
+						+ "/" + engine.getSettings().getServerPath() + "/"
 						+ "engine.php");
 			} else {
 				url = new URL("http://" + engine.getSettings().getDomain()

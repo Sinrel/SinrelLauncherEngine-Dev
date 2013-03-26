@@ -34,7 +34,8 @@ public final class AES {
 	 *            Строка с ключом
 	 */
 	public static void setKey( String key ) {
-		AES.key = DigestUtils.md5( StringUtils.getBytesUtf8( key ) );
+		if( key != null ) 
+			AES.key = DigestUtils.md5( StringUtils.getBytesUtf8( key ) );
 	}
 
 
@@ -75,7 +76,7 @@ public final class AES {
 	 * @throws GeneralSecurityException
 	 */
 	public static String encrypt( String text, String key ) throws GeneralSecurityException {
-		return encrypt( text, StringUtils.getBytesUtf8(key ) );
+		return encryptAESBase64String( text, MD5.md5( StringUtils.getBytesUtf8( key ) ) );
 	}
 
 	/**

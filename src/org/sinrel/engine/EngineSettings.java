@@ -4,7 +4,7 @@ public class EngineSettings {
 	
 	protected String domain; //адрес сервера
 	protected String version;//версия лаунчера
-	protected String folder;//путь на сервере
+	protected String serverPath;//путь на сервере
 	protected String directory;//рабочая папка
 	
 	public String getDomain() {
@@ -23,12 +23,12 @@ public class EngineSettings {
 		this.version = version;
 	}
 	
-	public String getFolder() {
-		return folder;
+	public String getServerPath() {
+		return serverPath;
 	}
 	
-	public void setFolder(String folder) {
-		this.folder = folder;
+	public void setServerPath( String serverPath ) {
+		this.serverPath = serverPath;
 	}
 	
 	public String getDirectory() {
@@ -41,13 +41,13 @@ public class EngineSettings {
 	
 	/**
 	 * @param domain Адрес сервера (example.com)
-	 * @param folder Путь на сервере (launcher)
+	 * @param serverPath Путь на сервере (launcher)
 	 * @param directory Рабочая папка (minecraft)
 	 * @param version Версия лаунчера (1)
 	 */
-	public EngineSettings(String domain, String folder, String directory , String version){
+	public EngineSettings(String domain, String serverPath, String directory , String version){
 		setDomain(domain);
-		setFolder(folder);
+		setServerPath(serverPath);
 		setVersion(version);
 		setDirectory(directory);
 	}

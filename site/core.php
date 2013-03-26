@@ -8,7 +8,7 @@
 			return AES::base64_url_encode($encrypted);
 		}
 		
-		function decrypt( $b64_encrypted, $key ) {
+		public static function decrypt( $b64_encrypted, $key ) {
 			$data = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, md5($key, true), AES::base64_url_decode($b64_encrypted), MCRYPT_MODE_CBC, AES::getIV());	
 			return rtrim($data, $data[strlen($data) - 1]);
 		}

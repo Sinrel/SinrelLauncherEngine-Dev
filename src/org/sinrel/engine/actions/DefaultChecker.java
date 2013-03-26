@@ -63,9 +63,9 @@ public class DefaultChecker extends ClientChecker {
 
 			URL url;
 
-			if (!engine.getSettings().getFolder().equalsIgnoreCase("")) {
+			if (!engine.getSettings().getServerPath().equalsIgnoreCase("")) {
 				url = new URL(
-						"http://" + engine.getSettings().getDomain() + "/" + engine.getSettings().getFolder() + "/" + "engine.php"
+						"http://" + engine.getSettings().getDomain() + "/" + engine.getSettings().getServerPath() + "/" + "engine.php"
 						);
 			} else {
 				url = new URL(

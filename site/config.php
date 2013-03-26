@@ -30,7 +30,8 @@ $db_columnServer	    = 'server'; //Колонка с серверами поль
 $db_columnBlockUntil	= 'blockUntil'; //Колонка с временем, по которое заблокирован пользователь
 $db_columnRetriesLeft	= 'retriesLeft'; //Колонка с количеством оставшихся неудачных попыток до блокировки
 
-$version 				= '1';
+$versionCode			= 1;
+$version 				= 'beta 1';
 $protectionKey			= 'sle'; //Ключ защиты. Никому его не говорите.
 
 $pdo = new PDO("mysql:host=$db_host;port=$db_port;dbname=$db_database", $db_user, $db_pass, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));

@@ -26,9 +26,9 @@ public class DefaultDownloader extends Downloader{
 			
 			delete( OSManager.getClientFolder( e.getSettings().getDirectory() , clientName ) );
 			
-	        if( !e.getSettings().getFolder().equalsIgnoreCase("") ) {
+	        if( !e.getSettings().getServerPath().equalsIgnoreCase("") ) {
 		      	  url =	new URL( 
-		      			  "http://" + e.getSettings().getDomain() + "/" +  e.getSettings().getFolder() + "/" + "clients" + "/" + clientName + "/" 
+		      			  "http://" + e.getSettings().getDomain() + "/" +  e.getSettings().getServerPath() + "/" + "clients" + "/" + clientName + "/" 
 		      	  );
 		        }else{
 		      	  url =	new URL( 
