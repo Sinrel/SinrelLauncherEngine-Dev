@@ -7,7 +7,7 @@ require_once 'core.php';
 if(!isset($_POST['action']))
 	die('NULL');
 
-$action = $_POST['action'];
+$action = mysql_real_escape_string( $_POST['action'] );
 
 try {
 	if($action === 'check') {

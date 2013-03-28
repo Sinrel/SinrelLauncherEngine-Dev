@@ -2,8 +2,8 @@
 define('INCLUDE_CHECK', true);
 require_once 'config.php';
 
-$login = $_GET['user'];
-$serverid = $_GET['serverId'];
+$login = mysql_real_escape_string( $_GET['user'] );
+$serverid = mysql_real_escape_string( $_GET['serverId'] );
 $count = 0;
 
 try {
