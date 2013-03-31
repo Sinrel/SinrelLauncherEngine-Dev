@@ -8,7 +8,7 @@ SLE ( Sinrel Launcher Engine ) — это движок позволяющий с
 
 Текущая версия
 --------------
-0.5.5.10
+0.6.5.11
 
 Модель версии
 ----------------
@@ -32,8 +32,8 @@ SLE в данный момент находится в стадии разраб
 
 Для инициализации SLE используйте такую конструкцию:
 ```Java
-//EngineSettings settings = new EngineSettings( "домен", "путь на сервере", "рабочая папка", "версия");
-EngineSettings settings = new EngineSettings( "example.com", "launcher", "minecraft", "1" );
+//EngineSettings settings = new EngineSettings( "домен", "путь на сервере", "рабочая папка", "версия", "код версии");
+EngineSettings settings = new EngineSettings( "example.com", "launcher", "minecraft", "0.1", 1 );
 Engine engine = new Engine(settings)
 ```
 

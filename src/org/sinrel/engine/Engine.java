@@ -5,8 +5,10 @@ import org.sinrel.engine.actions.ClientChecker;
 import org.sinrel.engine.actions.DefaultAuthBehavior;
 import org.sinrel.engine.actions.DefaultChecker;
 import org.sinrel.engine.actions.DefaultDownloader;
+import org.sinrel.engine.actions.DefaultLauncherChecker;
 import org.sinrel.engine.actions.Downloader;
 import org.sinrel.engine.actions.Intent;
+import org.sinrel.engine.actions.LauncherChecker;
 import org.sinrel.engine.actions.MinecraftAppletStarter;
 import org.sinrel.engine.actions.MinecraftStarter;
 import org.sinrel.engine.exception.FatalError;
@@ -21,6 +23,7 @@ public class Engine {
 	private ClientChecker checker;
 	private AuthBehavior auth;
 	private MinecraftStarter starter; 
+	private LauncherChecker launcherChecker;
 	
 	public Engine(EngineSettings settings) {
 		try {
@@ -30,6 +33,7 @@ public class Engine {
 			checker = new DefaultChecker();
 			auth = new DefaultAuthBehavior();
 			starter = new MinecraftAppletStarter();
+			launcherChecker = new DefaultLauncherChecker();
 		}catch(Exception e) {
 			e.printStackTrace();
 			FatalError.showErrorWindow(e);
@@ -50,6 +54,10 @@ public class Engine {
 	
 	public AuthBehavior getAuth() {
 		return auth;
+	}
+	
+	public LauncherChecker getLauncherChecker() {
+		return launcherChecker;
 	}
 	
 	public Intent getIntent(){
@@ -76,12 +84,16 @@ public class Engine {
 		this.auth = auth;
 	}
 	
+	public void setLauncherChecker( LauncherChecker launcherChecker ) {
+		this.launcherChecker = launcherChecker;
+	}
+	
 	public void setMinecraftStarter(MinecraftStarter starter){
 		this.starter = starter;
 	}
 	
 	public boolean isDebug(){
-		return true;
+		return false;
 	}
 	
 }

@@ -7,7 +7,7 @@ require_once 'core.php';
 if(!isset($_POST['action']))
 	die('NULL');
 
-$action = mysql_real_escape_string( $_POST['action'] );
+$action = $_POST['action'];
 
 try {
 	if($action === 'check') {
@@ -125,7 +125,10 @@ try {
 
 				echo 'OK<:>'.AES::encrypt( $session , $protectionKey );
 			}
-		}
+		}else 
+			if( $action = 'launcher' ) {
+				die( $versionCode.'<:>'.$version );
+			}
 } catch(PDOException $e) {
 	die('PDO error: '. $e -> getMessage() . PHP_EOL);
 } catch(Exception $e) {

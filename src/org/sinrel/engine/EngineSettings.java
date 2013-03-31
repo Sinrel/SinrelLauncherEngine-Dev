@@ -3,9 +3,10 @@ package org.sinrel.engine;
 public class EngineSettings {
 	
 	protected String domain; //адрес сервера
-	protected String version;//версия лаунчера
 	protected String serverPath;//путь на сервере
 	protected String directory;//рабочая папка
+	protected String version;//версия лаунчера
+	protected int versionCode; //код версии лаунчера
 	
 	public String getDomain() {
 		return domain;
@@ -39,16 +40,25 @@ public class EngineSettings {
 		this.directory = directory;
 	}
 	
+	public void setVersionCode( int versionCode ) {
+		this.versionCode = versionCode;
+	}
+	
+	public int getVersionCode() {
+		return versionCode;
+	}
+	
 	/**
 	 * @param domain Адрес сервера (example.com)
 	 * @param serverPath Путь на сервере (launcher)
 	 * @param directory Рабочая папка (minecraft)
 	 * @param version Версия лаунчера (1)
 	 */
-	public EngineSettings(String domain, String serverPath, String directory , String version){
+	public EngineSettings(String domain, String serverPath, String directory , String version, int versionCode){
 		setDomain(domain);
 		setServerPath(serverPath);
 		setVersion(version);
 		setDirectory(directory);
+		setVersionCode( versionCode );
 	}
 }
