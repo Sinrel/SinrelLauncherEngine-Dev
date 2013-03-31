@@ -18,12 +18,10 @@ public class DefaultChecker extends ClientChecker {
 
 	private Engine engine;
 
-	public ClientStatus checkClient(String applicationName, String serverName) {
-		throw new RuntimeException("Not implemented");
-	}
-
-	public ClientStatus checkClient(Engine e, String applicationName, String clientName) {
+	public ClientStatus checkClient(Engine e, String clientName) {
 		try {
+			String applicationName = e.getSettings().getDirectory();
+			
 			this.engine = e;
 
 			this.onStartChecking();
@@ -55,39 +53,6 @@ public class DefaultChecker extends ClientChecker {
 			return ClientStatus.CLIENT_DOES_NOT_MATCH;
 		}
 	}
-	
-	public ClientStatus checkClient(Engine e, String applicationName) {
-		try {
-			this.engine = e;
-
-			this.onStartChecking();
-
-			if (!NetManager.isOnline()) {
-				return ClientStatus.BAD_CONNECTION;
-			}
-
-			if (!OSManager.getWorkingDirectory(applicationName).exists() | !OSManager.getClientFolder(applicationName).exists()) {
-				return ClientStatus.CLIENT_NOT_EXIST;
-			}
-
-			StringBuffer hash = new StringBuffer();
-			File f = null;
-
-			for (String name : files) {
-				f = new File(OSManager.getClientFolder(applicationName), name);
-				if (!f.exists()) {
-					return ClientStatus.WRONG_CLIENT;
-				}
-
-				hash.append(MD5.getMD5(f));
-			}
-
-			this.onFinishChecking();
-			return send("standart", hash.toString(), OSManager.getPlatform());
-		} catch (IOException ex) {
-			return ClientStatus.CLIENT_DOES_NOT_MATCH;
-		}
-	}
 
 	private ClientStatus send(String client, String hash, OS system) {
 		try {
@@ -98,9 +63,9 @@ public class DefaultChecker extends ClientChecker {
 
 			URL url;
 
-			if (!engine.getSettings().getFolder().equalsIgnoreCase("")) {
+			if (!engine.getSettings().getServerPath().equalsIgnoreCase("")) {
 				url = new URL(
-						"http://" + engine.getSettings().getDomain() + "/" + engine.getSettings().getFolder() + "/" + "engine.php"
+						"http://" + engine.getSettings().getDomain() + "/" + engine.getSettings().getServerPath() + "/" + "engine.php"
 						);
 			} else {
 				url = new URL(
@@ -109,9 +74,8 @@ public class DefaultChecker extends ClientChecker {
 			}
 
 			String s = NetManager.sendPostRequest(url, data);
-			System.out.println( s );
+			
 			return ClientStatus.valueOf(s.trim());
-
 		} catch (IOException e) {
 			return ClientStatus.BAD_CONNECTION;
 		} catch (IllegalArgumentException e) {

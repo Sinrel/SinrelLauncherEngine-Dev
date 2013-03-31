@@ -28,8 +28,6 @@ public abstract class ClientChecker {
 			cl.onStartChecking();
 		}
 	}
-	
-	public abstract ClientStatus checkClient( Engine engine, String applicationName );
-	
-	public abstract ClientStatus checkClient( Engine engine, String applicationName, String clientName );
+		
+	public abstract ClientStatus checkClient( Engine engine, String clientName );
 }

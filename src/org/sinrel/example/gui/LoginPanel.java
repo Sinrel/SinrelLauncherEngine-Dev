@@ -1,64 +1,35 @@
 package org.sinrel.example.gui;
 
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 
-import org.sinrel.engine.actions.AuthData;
-import org.sinrel.engine.actions.AuthResult;
-import org.sinrel.engine.actions.ClientStatus;
-import org.sinrel.engine.actions.DownloadResult;
-import org.sinrel.engine.actions.Intent;
-import org.sinrel.engine.listeners.DownloadCompleteListener;
+class LoginPanel extends JPanel {
 
-class LoginPanel extends JPanel implements ActionListener {
-	private static final long serialVersionUID = 1L;
-	private final JButton auth, pc, update;
-	private final JTextField login;
-	private final JPasswordField pass;
-
-	LoginPanel() {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setBorder(new EmptyBorder(10, 10, 10, 10));
-
-		update = new JButton();
-		update.setFocusable(false);
-
-		JLabel loginLabel = new JLabel("Логин:");
-
-		login = new JTextField(15);
-
-		JLabel passLabel = new JLabel("Пароль:");
-
-		pass = new JPasswordField(15);
-
-		// Кнопка входа
-		auth = new JButton("Войти");
-		auth.setAlignmentX(0.5f);
-		auth.addActionListener(this);
-
-		// Кнопка ЛК
-		pc = new JButton("ЛК");
-		pc.addActionListener(this);
-
-		add(SwingTools.alignLeft(loginLabel));
-		add(login);
-		add(SwingTools.alignLeft(passLabel));
-		add(pass);
-		add(SwingTools.center(SwingTools.boxHorizontal(auth, pc)));
-
+	private static final long serialVersionUID = -386355955456541316L;
+	
+	private JTextField login;
+	private JPasswordField password;
+	
+	public LoginPanel() {
+		setLayout( null );
+		
+		login = new JTextField();
+		login.setToolTipText("Ваш логин");
+		login.setBounds( getWidth() - 120 , 50 , 100, 30);
+		
+		add( login );
+		
+		password = new JPasswordField();
+		password.setToolTipText("Ваш пароль");
+		
+	
+		
 	}
 
+	/*
 	public void actionPerformed(ActionEvent e) {
+		/*
 		if (e.getSource() == pc)
 			System.out.println("Personal");
 		else {
@@ -78,7 +49,7 @@ class LoginPanel extends JPanel implements ActionListener {
 					i.downloadClientAsync("minecraft", true, new DownloadCompleteListener() {
 						public void onDownloadComplete(DownloadResult result) {
 							System.out.println("client is downloaded i'm need to launch minecraft");
-							i.startMinecraft("minecraft", data.getLogin(), data.getSession(), (Frame) getParent());
+							//i.startMinecraft("minecraft", data.getLogin(), data.getSession(), (Frame) getParent());
 						}
 					});
 				}
@@ -95,6 +66,7 @@ class LoginPanel extends JPanel implements ActionListener {
 
 			System.out.println("AuthResult action is detected!");
 		}
-	}
 
+	}
+*/
 }

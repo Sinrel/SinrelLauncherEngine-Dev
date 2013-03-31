@@ -10,15 +10,27 @@ public abstract class MD5 {
 
 	/**
 	 * @param s обрабатываемая строка
-	 * @return MD5 строки, если вызвано исключение возвращает пустую строку
+	 * @return MD5 строки в Hex
 	 */
-	public static String getMD5(String s) {
+	public static String md5Hex(String s) {
 		return DigestUtils.md5Hex(s);
 	}
 
 	/**
+	 * @param s обрабатываемая строка
+	 * @return MD5 строки
+	 */
+	public static String md5( String s ) {
+		return new String( DigestUtils.md5(s) );
+	}
+	
+	public static byte[] md5( byte[] s ) {
+		return DigestUtils.md5( s );
+	}
+	
+	/**
 	 * @param f обрабатываемый файл
-	 * @return MD5 файла, если вызвано исключение возвращает пустую строку
+	 * @return MD5 файла в hex, если вызвано исключение возвращает пустую строку
 	 * @throws IOException
 	 */
 	public static String getMD5(File f) throws IOException {

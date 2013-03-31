@@ -41,8 +41,6 @@ public class Launcher extends Applet implements AppletStub {
 		System.setProperty("org.lwjgl.librarypath", bin + "natives");
 		System.setProperty("net.java.games.input.librarypath", bin + "natives");
 		
-        // set minecraft.applet.WrapperClass to support newer FML builds
-        // FML seems to restart the whole game which causes some problems in custom launchers like this one
         System.setProperty("minecraft.applet.WrapperClass", "net.minecraft.Launcher");
 		try
 		{
