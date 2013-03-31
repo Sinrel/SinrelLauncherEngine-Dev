@@ -1,6 +1,33 @@
 <?php
 	if(!defined('INCLUDE_CHECK')) die('У вас нет прав на выполнение данного файла!');
 
+	abstract class AES {
+		
+		public static function encrypt( $text, $key ) {
+			$encrypted = mcrypt_encrypt( MCRYPT_RIJNDAEL_128, md5($key, true), $text, MCRYPT_MODE_CBC, AES::getIV() );
+			return AES::base64_url_encode($encrypted);
+		}
+		
+		public static function decrypt( $b64_encrypted, $key ) {
+			$data = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, md5($key, true), AES::base64_url_decode($b64_encrypted), MCRYPT_MODE_CBC, AES::getIV());	
+			return rtrim($data, $data[strlen($data) - 1]);
+		}
+		
+	    static function getIV() {
+			$iv = "%jUS*(Aol(-y)lC/";
+			return $iv;
+		}
+		
+		static function base64_url_encode($input) {
+			return strtr(base64_encode($input), '+/', '-_');
+		}
+	
+		static function base64_url_decode($input) {
+			return base64_decode(strtr($input, '-_', '+/'));
+		}
+			
+	}
+
 	function hash_joomla($pass) {
 		global $realPass;
 

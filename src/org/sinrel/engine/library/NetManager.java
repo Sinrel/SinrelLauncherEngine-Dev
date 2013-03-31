@@ -17,13 +17,10 @@ public abstract class NetManager {
 	 * Открывает браузером по-умолчанию принимаемою ссылку
 	 * 
 	 * @param uri
+	 * @throws IOException
 	 */
-	public static void openLink(URI uri) {
-		try {
-			Desktop.getDesktop().browse(uri);
-		} catch (IOException e) {
-			System.err.println("Не удалось открыть ссылку " + uri.toString());
-		}
+	public static void openLink(URI uri) throws IOException {
+		Desktop.getDesktop().browse(uri);
 	}
 
 	/**

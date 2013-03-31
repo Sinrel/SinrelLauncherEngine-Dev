@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+@Deprecated
 class TopPanel extends JPanel implements ActionListener {
 
 	private JButton left, right;

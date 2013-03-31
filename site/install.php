@@ -111,7 +111,7 @@ try {
 
 	}
 	echo '</div>';
-	echo '<div class="notice">Удалите этот файл (install.php), иначе придут злые хацкеры и взломают вас :O</div>';
+	echo '<div class="notice">Не забудьте удалить этот файл (install.php)</div>';
 } catch(PDOException $ex) {
 	echo '<div class="error">Не удалось создать колонки: <br/>';
 	echo $ex -> getMessage();

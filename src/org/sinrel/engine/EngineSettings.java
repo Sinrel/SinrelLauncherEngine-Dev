@@ -2,9 +2,11 @@ package org.sinrel.engine;
 
 public class EngineSettings {
 	
-	protected String domain;
-	protected String version;
-	protected String folder;
+	protected String domain; //адрес сервера
+	protected String serverPath;//путь на сервере
+	protected String directory;//рабочая папка
+	protected String version;//версия лаунчера
+	protected int versionCode; //код версии лаунчера
 	
 	public String getDomain() {
 		return domain;
@@ -22,29 +24,41 @@ public class EngineSettings {
 		this.version = version;
 	}
 	
-	public String getFolder() {
-		return folder;
+	public String getServerPath() {
+		return serverPath;
 	}
 	
-	public void setFolder(String folder) {
-		this.folder = folder;
+	public void setServerPath( String serverPath ) {
+		this.serverPath = serverPath;
 	}
 	
-	public EngineSettings() {
-		this("", "", "");
+	public String getDirectory() {
+		return directory;
 	}
 	
-	public EngineSettings(String domain){
-		this(domain, "", "");
+	public void setDirectory( String directory ) {
+		this.directory = directory;
 	}
 	
-	public EngineSettings(String domain, String folder){
-		this(domain, folder, "");
+	public void setVersionCode( int versionCode ) {
+		this.versionCode = versionCode;
 	}
 	
-	public EngineSettings(String domain, String folder, String version){
+	public int getVersionCode() {
+		return versionCode;
+	}
+	
+	/**
+	 * @param domain Адрес сервера (example.com)
+	 * @param serverPath Путь на сервере (launcher)
+	 * @param directory Рабочая папка (minecraft)
+	 * @param version Версия лаунчера (1)
+	 */
+	public EngineSettings(String domain, String serverPath, String directory , String version, int versionCode){
 		setDomain(domain);
-		setFolder(folder);
+		setServerPath(serverPath);
 		setVersion(version);
+		setDirectory(directory);
+		setVersionCode( versionCode );
 	}
 }
