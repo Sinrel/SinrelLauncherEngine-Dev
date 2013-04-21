@@ -2,11 +2,16 @@ package org.sinrel.engine;
 
 public class EngineSettings {
 	
-	protected String domain; //адрес сервера
-	protected String serverPath;//путь на сервере
-	protected String directory;//рабочая папка
-	protected String version;//версия лаунчера
-	protected int versionCode; //код версии лаунчера
+	/** Домен сервера */
+	protected String domain;
+	/** Путь на сервере */
+	protected String serverPath;
+	/** Рабочая папка */
+	protected String directory;
+	/** Версия лаунчера */
+	protected String version;
+	/** Код версии лаунчера */
+	protected int versionCode;
 	
 	public String getDomain() {
 		return domain;

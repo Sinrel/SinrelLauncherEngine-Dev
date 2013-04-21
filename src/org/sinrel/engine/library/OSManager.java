@@ -2,7 +2,9 @@ package org.sinrel.engine.library;
 
 import java.io.File;
 
-public abstract class OSManager {
+import org.sinrel.engine.Engine;
+
+public final class OSManager {
 	
 	/**
 	 * @param name Имя рабочей папки
@@ -13,15 +15,23 @@ public abstract class OSManager {
 	 *  clientName = simple
 	 *  Будет возвращена директория - C:\Users\%USERNAME%\AppData\Roaming\.sinrel\simple\bin (Для Windows)
 	 */
-	public static File getClientFolder( String workingDirectory, String clientName ) {
-		return new File( getWorkingDirectory( workingDirectory ).toPath().toString() , clientName + File.separator + "bin" + File.separator );		
+	public static final File getClientFolder( String workingDirectory, String clientName ) {
+		return new File( getWorkingDirectory( workingDirectory ).getPath() , clientName + File.separator + "bin" + File.separator );		
 	}
 	
-	public static File getClientFolder( String name ) {
-		return new File( getWorkingDirectory( name ).toPath().toString() , "bin" + File.separator );		
+	public static final File getClientFolder( Engine engine, String clientName ) {
+		return getClientFolder( engine.getSettings().getDirectory(), clientName );
 	}
 	
-	public static File getWorkingDirectory(String applicationName) {
+	public static final File getClientWorkingDirectory( Engine e, String clientName ) {
+		return  new File( getWorkingDirectory( e.getSettings().getDirectory() ).getPath(), clientName );
+	}
+	
+	public static final File getClientWorkingDirectory( String applicationName, String clientName ) {
+		return  new File( getWorkingDirectory( applicationName ).getPath(), clientName );
+	}
+	
+	public static final File getWorkingDirectory(String applicationName) {
 		String userHome = System.getProperty("user.home", ".");
 		File workingDirectory;
 		
@@ -47,12 +57,16 @@ public abstract class OSManager {
 		}
 				
 		return workingDirectory;
-   }
-
+    }
+	
+	public static final File getWorkingDirectory( Engine engine ) {
+		return getWorkingDirectory( engine.getSettings().getDirectory() );
+	}
+	
 	/**
 	 * @return Возвращает имя серии операционной системы ( Для Windows 7/XP будет возвращено значение windows )
 	 */
-    public static OS getPlatform() {
+    public static final OS getPlatform() {
 		String osName = System.getProperty("os.name").toLowerCase();
 		
 		if (osName.contains("win"))

@@ -1,3 +1,4 @@
+
 package org.sinrel.engine.actions;
 
 import java.awt.BorderLayout;
@@ -10,18 +11,22 @@ import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.swing.JFrame;
+
 import net.minecraft.Launcher;
 
 import org.sinrel.engine.library.OSManager;
 
 public class MinecraftAppletStarter implements MinecraftStarter {
 	
-	public void startMinecraft(String dir, String clientName, String login, String session, boolean useAutoConnect, String server, String port, Frame frame) {
+	private JFrame temp = new JFrame();
+
+	public void startMinecraft(String dir, String clientName, AuthData authData, String server, String port, Frame frame) {
 		if (frame == null)
 			throw new NullPointerException("frame не может быть null (frame could't be null)");
-		
-		String bin = OSManager.getClientFolder(dir, clientName) + File.separator;
 
+		String bin = OSManager.getClientFolder(dir, clientName).getAbsolutePath() + File.separator;
+		
 		URL[] urls = new URL[4];
 		try {
 			urls[0] = new File(bin, "minecraft.jar").toURI().toURL();
@@ -32,32 +37,40 @@ public class MinecraftAppletStarter implements MinecraftStarter {
 			e.printStackTrace();
 		}
 
-		final Launcher mcapplet = new Launcher(bin, urls);
-		mcapplet.customParameters.put("username", login);
-		mcapplet.customParameters.put("sessionid", session);
+		final Launcher mcapplet = new Launcher(bin, urls, authData);
+		mcapplet.customParameters.put("username", authData.getLogin());
+		mcapplet.customParameters.put("sessionid", authData.getSession());
 		mcapplet.customParameters.put("stand-alone", "true");
-		if (useAutoConnect) {
+		if (server != null) {
 			mcapplet.customParameters.put("server", server);
 			mcapplet.customParameters.put("port", port);
 		}
 
-		frame.setSize(850, 480);
+		frame.setVisible( false );
+		frame.dispose();
+		
+		temp.setSize( 800, 600 );
+		temp.setLayout( new BorderLayout() );
+		temp.setLocationRelativeTo( null );
+		temp.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+	
 		mcapplet.setForeground(Color.BLACK);
 		mcapplet.setBackground(Color.BLACK);
-		frame.setLayout(new BorderLayout());
-		frame.add(mcapplet, BorderLayout.CENTER);
-		frame.validate();
-		frame.setVisible(true);
-		
-		System.setErr( new PrintStream( new NulledStream() ) );
-		System.setOut( new PrintStream( new NulledStream() ) );
-		
+
+		temp.add( mcapplet, BorderLayout.CENTER );
+		temp.validate();
+		temp.setVisible( true );
+
+		System.setProperty("minecraft.applet.WrapperClass", "net.minecraft.Launcher");
+		//System.setErr(new PrintStream(new NulledStream()));
+		//System.setOut(new PrintStream(new NulledStream()));
+
 		mcapplet.init();
 		mcapplet.start();
 	}
-	
+
 	private class NulledStream extends OutputStream {
 		public void write(int b) throws IOException {}
 	}
-	
+
 }

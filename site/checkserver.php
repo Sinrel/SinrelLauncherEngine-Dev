@@ -2,9 +2,8 @@
 define('INCLUDE_CHECK', true);
 require_once 'config.php';
 
-$login = mysql_real_escape_string( $_GET['user'] );
-$serverid = mysql_real_escape_string( $_GET['serverId'] );
-$count = 0;
+$login = $_GET['user'];
+$serverid = $_GET['serverId'];
 
 try {
 	$stmt = $pdo -> prepare("SELECT COUNT(*) FROM `$db_table` WHERE `$db_columnUser` = :user AND `$db_columnServer` = :serverid");

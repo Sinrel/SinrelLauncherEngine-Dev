@@ -1,14 +1,14 @@
 package org.sinrel.engine;
 
 import org.sinrel.engine.actions.AuthBehavior;
-import org.sinrel.engine.actions.ClientChecker;
+import org.sinrel.engine.actions.Checker;
+import org.sinrel.engine.actions.Config;
 import org.sinrel.engine.actions.DefaultAuthBehavior;
 import org.sinrel.engine.actions.DefaultChecker;
+import org.sinrel.engine.actions.DefaultConfig;
 import org.sinrel.engine.actions.DefaultDownloader;
-import org.sinrel.engine.actions.DefaultLauncherChecker;
 import org.sinrel.engine.actions.Downloader;
 import org.sinrel.engine.actions.Intent;
-import org.sinrel.engine.actions.LauncherChecker;
 import org.sinrel.engine.actions.MinecraftAppletStarter;
 import org.sinrel.engine.actions.MinecraftStarter;
 import org.sinrel.engine.exception.FatalError;
@@ -18,22 +18,22 @@ public class Engine {
 	private EngineSettings settings;
 	
 	private Intent intent;
+	private Config config;
 	
-	private Downloader downloader;	
-	private ClientChecker checker;
+	private Downloader downloader;
+	private Checker checker;
 	private AuthBehavior auth;
-	private MinecraftStarter starter; 
-	private LauncherChecker launcherChecker;
+	private MinecraftStarter starter;
 	
-	public Engine(EngineSettings settings) {
+	public Engine( EngineSettings settings ) {
 		try {
 			intent = new Intent(this);
 			setSettings(settings);
+			config = new DefaultConfig(this);
 			downloader = new DefaultDownloader();
 			checker = new DefaultChecker();
 			auth = new DefaultAuthBehavior();
 			starter = new MinecraftAppletStarter();
-			launcherChecker = new DefaultLauncherChecker();
 		}catch(Exception e) {
 			e.printStackTrace();
 			FatalError.showErrorWindow(e);
@@ -48,20 +48,20 @@ public class Engine {
 		return downloader;
 	}
 	
-	public ClientChecker getChecker() {
+	public Checker getChecker() {
 		return checker;
 	}
 	
 	public AuthBehavior getAuth() {
 		return auth;
 	}
-	
-	public LauncherChecker getLauncherChecker() {
-		return launcherChecker;
-	}
-	
+		
 	public Intent getIntent(){
 		return intent;
+	}
+	
+	public Config getConfig() {
+		return config;
 	}
 	
 	public MinecraftStarter getStarter(){
@@ -76,19 +76,19 @@ public class Engine {
 		this.downloader = downloader;
 	}
 	
-	public void setChecker(ClientChecker checker) {
+	public void setChecker( Checker checker ) {
 		this.checker = checker;
 	}
 	
 	public void setAuth(AuthBehavior auth) {
 		this.auth = auth;
 	}
-	
-	public void setLauncherChecker( LauncherChecker launcherChecker ) {
-		this.launcherChecker = launcherChecker;
+			
+	public void setConfig( Config config ) {
+		this.config = config;
 	}
 	
-	public void setMinecraftStarter(MinecraftStarter starter){
+	public void setMinecraftStarter( MinecraftStarter starter ){
 		this.starter = starter;
 	}
 	

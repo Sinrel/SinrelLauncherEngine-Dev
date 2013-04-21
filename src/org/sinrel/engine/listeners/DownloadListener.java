@@ -1,20 +1,23 @@
 package org.sinrel.engine.listeners;
 
+import org.sinrel.engine.actions.DownloadEvent;
+
 public interface DownloadListener {
 	
 	/**
 	 * При старте загрузки
 	 */
-	public void onStartDownload();
+	public void onStartDownload( DownloadEvent e );
 	
 	/**
-	 * При смене загружаемого файла
+	 * Вызывается при смене загружаемого файла
+	 * @param e - {@link DownloadEvent}
 	 */
-	public void onFileChange( String now, String next  );
+	public void onFileChange( DownloadEvent e );
 	
 	/**
 	 * При подсчёте загруженного
 	 */
-	public void onPercentChange( long total , int count );
-	
+	public void onPercentChange( DownloadEvent e );
+		
 }

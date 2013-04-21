@@ -1,6 +1,6 @@
 package org.sinrel.engine.actions;
 
-import java.awt.Frame;
+import javax.swing.JFrame;
 
 import org.sinrel.engine.Engine;
 
@@ -46,38 +46,26 @@ public class Intent {
 	public ClientStatus checkClient( String clientName ) {
 		return engine.getChecker().checkClient( engine, clientName );
 	}
-
-	/**
-	 * Запуск клиента Minecraft
-	 * @param clientName Имя клиента
-	 * @param login Логин
-	 * @param frame Окно в котором запускать
-	 */
-	public void startMinecraft( String clientName, String login, Frame frame ) {
-		engine.getStarter().startMinecraft( engine.getSettings().getDirectory(), clientName, login, "", false, null, null, frame );
-	}
 	
 	/** Запуск клиента Minecraft
 	 * @param clientName Имя клиента
-	 * @param login Логин
-	 * @param session Сессия
+	 * @param authData Идентификационные данные
 	 * @param frame Окно в котором запускать
 	 */
-	public void startMinecraft( String clientName, String login, String session, Frame frame) {
-		engine.getStarter().startMinecraft( engine.getSettings().getDirectory(), clientName, login, session, false, null, null, frame );
+	public void startMinecraft( String clientName, AuthData authData, JFrame frame) {
+		engine.getStarter().startMinecraft( engine.getSettings().getDirectory(), clientName, authData, null, null, frame );
 	}
 	
 	/**
 	 * Запуск клиента Minecraft
 	 * @param clientName Имя клиента
-	 * @param login Логин
-	 * @param session Сессия
+	 * @param authData Идентификационные данные
 	 * @param server Адрес сервера
 	 * @param port Порт сервера
 	 * @param frame Окно в котором запускать
 	 */
-	public void startMinecraft( String clientName, String login, String session, String server, String port, Frame frame ) {
-		engine.getStarter().startMinecraft( engine.getSettings().getDirectory() , clientName, login, session, true , server, port, frame );
+	public void startMinecraft( String clientName, AuthData authData, String server, String port, JFrame frame ) {
+		engine.getStarter().startMinecraft( engine.getSettings().getDirectory() , clientName, authData, server, port, frame );
 	}
 	
 }

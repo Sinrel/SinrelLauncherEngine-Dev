@@ -19,11 +19,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 public final class AES {
 
-	private static byte[] key;
-	
-	static {
-		AES.key = MD5.md5( StringUtils.getBytesUtf8( "sle" ) ); 
-	}
+	private static byte[] key = MD5.md5( StringUtils.getBytesUtf8( "sle" ) );
 
 	/**
 	 * Превращает текст в ключ и устанавливает его для методов <br>
@@ -37,7 +33,6 @@ public final class AES {
 		if( key != null ) 
 			AES.key = DigestUtils.md5( StringUtils.getBytesUtf8( key ) );
 	}
-
 
 	/**
 	 * Шифрует строку по алгоритму AES и кодирует ее в Base64 <br>
@@ -175,4 +170,5 @@ public final class AES {
 	private static byte[] makeKey(byte[] bytes) {
 		return MD5.md5(bytes);
 	}
+	
 }
