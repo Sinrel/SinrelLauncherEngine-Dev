@@ -1,9 +1,6 @@
 package org.sinrel.engine.actions;
 
-import java.io.IOException;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.security.GeneralSecurityException;
 
 import org.sinrel.engine.Engine;
 import org.sinrel.engine.library.NetManager;
@@ -17,37 +14,25 @@ public class DefaultAuthBehavior implements AuthBehavior {
 			String data = "action=auth";
 			data += "&login=" + URLEncoder.encode( AES.encrypt( login ), "UTF-8");
 			data += "&pass=" + URLEncoder.encode( AES.encrypt( pass ), "UTF-8");
-
-			URL url;
-
-			if (!engine.getSettings().getServerPath().equalsIgnoreCase("")) {
-				url = new URL("http://" + engine.getSettings().getDomain()
-						+ "/" + engine.getSettings().getServerPath() + "/"
-						+ "engine.php");
-			} else {
-				url = new URL("http://" + engine.getSettings().getDomain()
-						+ "/" + "engine.php");
-			}
-
-			String answer = NetManager.sendPostRequest(url, data);
+			
+			String answer = NetManager.sendPostRequest( NetManager.getEngineLink( engine ), data );
 
 			if (engine.isDebug()) {
 				System.out.println(answer);
 			}
-
-			if (answer.contains("OK")) {
-				ret.setSession( AES.decrypt( answer.split("<:>")[1] ) );
-
-				ret.setResult(AuthResult.OK);
+			
+			String[] answerParts = answer.split("<:>");
+			if(answerParts.length > 3)
 				return ret;
-			}
 
-			AuthResult.valueOf(answer.trim());
-		} catch (IOException e) {
-			ret.setResult(AuthResult.BAD_CONNECTION);
-		} catch (IllegalArgumentException e) {
-			ret.setResult(AuthResult.BAD_CONNECTION);
-		} catch (GeneralSecurityException e) {
+			if ("OK".equals(answerParts[0])) {
+				ret.setSession( AES.decrypt( answerParts[1] ) );
+				ret.setToken( AES.decrypt( answerParts[2] ) );
+				ret.setResult( AuthResult.OK );
+			} else
+				ret.setResult( AuthResult.valueOf( answer.trim() ) );
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

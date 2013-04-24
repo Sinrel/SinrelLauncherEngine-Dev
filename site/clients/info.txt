@@ -1,4 +1,6 @@
 1. В папке clients должны находится только папки с именами необходимых клиентов! (classic, simple, tech)
-2. Каждая клиентская папка должна содержать файлы jinput.jar ; lwjgl_util.jar ; lwjgl.jar и папку natives. 
+2. Каждая клиентская папка должна содержать папки bin и mods. 
+3. В папке bin должны находится файлы jinput.jar ; lwjgl_util.jar ; lwjgl.jar и папка natives. 
 	Также при необходимости загрузки дополнительных файлов положите сюда архив client.zip
-3. В папке natives должны находится архивы с именами каждой ОС ( windows.zip ; linux.zip ; macos.zip ; solaris.zip ) 
+	В папке natives должны находится архивы с именами каждой ОС ( windows.zip ; linux.zip ; macos.zip ; solaris.zip )
+4. В папке mods положите файлы с модами, zip или jar (папки скачиваться не будут!)

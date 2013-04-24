@@ -13,11 +13,11 @@ public class LauncherData {
 		return versionCode;
 	}
 	
-	public void setVersion( String version ) {
+	void setVersion( String version ) {
 		this.version = version;
 	}
 	
-	public void setVersionCode( int versionCode ) {
+	void setVersionCode( int versionCode ) {
 		this.versionCode = versionCode;
 	}
 	
