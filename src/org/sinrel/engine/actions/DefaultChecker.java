@@ -121,7 +121,10 @@ public class DefaultChecker extends Checker {
 						files.add( f );
 				}
 				
-				String answer = NetManager.sendPostRequest(  NetManager.getEngineLink( engine ) , generateData( "count", Integer.toString( files.size() ) ) );				System.out.println( answer );
+				String answer = NetManager.sendPostRequest(  NetManager.getEngineLink( engine ) , generateData( "count", Integer.toString( files.size() ) ) );
+
+				if( engine.isDebug() )
+					System.out.println( answer );
 				
 				if( answer.equals( "DIRECTORY_DOES_NOT_MATCH" ) )
 					return DirectoryStatus.DIRECTORY_DOES_NOT_MATCH;
@@ -140,7 +143,7 @@ public class DefaultChecker extends Checker {
 
 	@Deprecated
 	public DirectoryStatus checkDirectory( Engine engine, String clientName, String directoryName ) {
-		//TODO
+		//TODO Реализовать метод
 		return null;
 	}
 	

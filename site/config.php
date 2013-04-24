@@ -3,10 +3,10 @@
 if(!defined('INCLUDE_CHECK')) die("У вас нет прав на выполнение данного файла!");
 
 /* Метод шифрования
- joomla        - интеграция с Joomla
- xenforo	 	  - интеграция с XenForo
- wordpress     - интеграция с WordPress
- dle 		  - интеграция с DLE
+ joomla      - интеграция с Joomla
+ xenforo     - интеграция с XenForo
+ wordpress   - интеграция с WordPress
+ dle         - интеграция с DLE
 */
 $integration = 'wordpress';
 

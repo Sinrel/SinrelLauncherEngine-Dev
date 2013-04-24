@@ -6,7 +6,6 @@ import java.awt.BorderLayout;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,15 +41,17 @@ public class Launcher extends Applet implements AppletStub {
 
 		URLClassLoader cl = new URLClassLoader(urls);
 
-		boolean hasReloader = false;
 		/*
+		boolean hasReloader = false;
+		
 		try {
 			cl.loadClass("cpw.mods.fml.relauncher.FMLRelauncher");
 			hasReloader = true;
 		} catch (ClassNotFoundException ex) {}
-*/
+
 		if (!hasReloader) // Not a FML
 			addExtra(cl, Launcher.class.getProtectionDomain());
+		 */
 
 		ClassPool pool = new ClassPool(true);
 
@@ -146,6 +147,7 @@ public class Launcher extends Applet implements AppletStub {
 		}
 	}
 
+	/*
 	public void addExtra(ClassLoader loader, ProtectionDomain pd) {
 		try {
 			ClassPool pool = new ClassPool(true);
@@ -169,6 +171,7 @@ public class Launcher extends Applet implements AppletStub {
 			ex.printStackTrace();
 		}
 	}
+	*/
 
 	public void appletResize(int w, int h) {}
 

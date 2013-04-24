@@ -25,6 +25,8 @@ public class Engine {
 	private AuthBehavior auth;
 	private MinecraftStarter starter;
 	
+	private boolean debug = false;
+	
 	public Engine( EngineSettings settings ) {
 		try {
 			intent = new Intent(this);
@@ -92,8 +94,12 @@ public class Engine {
 		this.starter = starter;
 	}
 	
+	public void useDebug( boolean debug ) {
+		this.debug = debug;
+	}
+	
 	public boolean isDebug(){
-		return false;
+		return debug;
 	}
 	
 }

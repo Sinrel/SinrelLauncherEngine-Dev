@@ -1,8 +1,8 @@
-
 package org.sinrel.engine.actions;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
@@ -20,8 +20,10 @@ import org.sinrel.engine.library.OSManager;
 public class MinecraftAppletStarter implements MinecraftStarter {
 	
 	private JFrame temp = new JFrame();
+	private boolean fullscreen = false, 
+					output = true;
 
-	public void startMinecraft(String dir, String clientName, AuthData authData, String server, String port, Frame frame) {
+	public void startMinecraft( String dir, String clientName, AuthData authData, String server, String port, Frame frame ) {
 		if (frame == null)
 			throw new NullPointerException("frame не может быть null (frame could't be null)");
 
@@ -49,10 +51,15 @@ public class MinecraftAppletStarter implements MinecraftStarter {
 		frame.setVisible( false );
 		frame.dispose();
 		
-		temp.setSize( 800, 600 );
+		if( fullscreen ) {
+			temp.setExtendedState( JFrame.MAXIMIZED_BOTH );
+			temp.setMinimumSize( new Dimension( 800, 600 ) );
+		}else
+			temp.setSize( new Dimension( 800, 600 ) );
+		
 		temp.setLayout( new BorderLayout() );
 		temp.setLocationRelativeTo( null );
-		temp.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+		temp.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 	
 		mcapplet.setForeground(Color.BLACK);
 		mcapplet.setBackground(Color.BLACK);
@@ -62,8 +69,11 @@ public class MinecraftAppletStarter implements MinecraftStarter {
 		temp.setVisible( true );
 
 		System.setProperty("minecraft.applet.WrapperClass", "net.minecraft.Launcher");
-		//System.setErr(new PrintStream(new NulledStream()));
-		//System.setOut(new PrintStream(new NulledStream()));
+		
+		if( output ) {
+			System.setErr(new PrintStream( new NulledStream()) );
+			System.setOut(new PrintStream( new NulledStream()) );
+		}
 
 		mcapplet.init();
 		mcapplet.start();
@@ -73,4 +83,20 @@ public class MinecraftAppletStarter implements MinecraftStarter {
 		public void write(int b) throws IOException {}
 	}
 
+	public void useFullScreen( boolean bool ) {
+		this.fullscreen = bool;
+	}
+	
+	public void useOutput( boolean output ) {
+		this.output = output;
+	}
+
+	public boolean isFullScreen() {
+		return fullscreen;
+	}
+
+	public boolean isOutput() {
+		return output;
+	}
+	
 }
