@@ -2,26 +2,29 @@ package org.sinrel.engine.exception;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class FatalError {
-
-	public static void showErrorWindow(Exception e) {
-		showErrorWindow(e.getClass(), e.getStackTrace(), e.getMessage());
+	
+	/**
+	 * @param e - Исключение
+	 */
+	public static void showErrorWindow( Exception e ) {
+		if( e != null )
+			showErrorWindow( e.getClass(), e.getStackTrace(), e.getMessage() );
 	}
 
 	/**
@@ -32,7 +35,12 @@ public class FatalError {
 	 * @param message
 	 *            сообщение исключения
 	 */
-	public static void showErrorWindow(Class<?> cl, StackTraceElement[] trace, String message) {
+ 	private static void showErrorWindow( Class<?> cl, StackTraceElement[] trace, String message ) {
+ 		try {
+			UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
+		} catch ( ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e ) {}
+ 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -42,9 +50,7 @@ public class FatalError {
 		} catch (IOException e1) {
 			img = null;
 		}
-		ImageIcon logo = new ImageIcon(img.getSubimage(0, 0, 53, 60));
-
-		// setIconImage(icon);
+		ImageIcon logo = new ImageIcon(img);
 
 		JLabel l = new JLabel();
 		l.setIcon(logo);
@@ -69,41 +75,20 @@ public class FatalError {
 		tp.setBounds(10, 45 + info.getHeight() + img.getHeight(), 370, 160);
 
 		for (StackTraceElement st : trace) {
-			tp.setText(tp.getText() + "at " + st.toString() + "\n");
+			tp.setText(tp.getText() + "   " + "at " + st.toString() + "\n");
 		}
+		
+		tp.setText( tp.getText().trim() );
 
 		JScrollPane sp = new JScrollPane(tp);
 
 		panel.add(sp);
 
-		final JButton b = new JButton();
-		b.setText("Подробнее");
+		JLabel aboutLabel = new JLabel("Информация о компьютере:");
+		aboutLabel.setFont(aboutLabel.getFont().deriveFont(12F));
 
-		b.addActionListener(
-				new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						// setSize(785, 300);
-						b.removeActionListener(this);
-						b.setText("Закрыть");
-						b.setBounds(671, 240, 100, 25);
-
-						b.removeActionListener(this);
-
-						b.addActionListener(new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								System.exit(0);
-							}
-
-						});
-					}
-
-				}
-				);
-
-		panel.add(b);
-
+		panel.add(aboutLabel);
+		
 		JTextArea about = new JTextArea();
 		about.setEnabled(true);
 		about.setEditable(false);
@@ -115,26 +100,27 @@ public class FatalError {
 		for (String s : keys) {
 			about.setText(about.getText() + "   " + s + ": " + System.getProperty(s) + "\n");
 		}
+		
+		String s = about.getText();
+		s = s.substring( 0, s.length()-1 );
+		about.setText( s );
 
 		JScrollPane scroll = new JScrollPane(about);
 
 		panel.add(scroll);
 
-		JLabel aboutLabel = new JLabel("Информация о компьютере:");
-		aboutLabel.setFont(aboutLabel.getFont().deriveFont(12F));
-
-		panel.add(aboutLabel);
-
 		// Make JOptionPane
 
-		JOptionPane opane = new JOptionPane(panel, JOptionPane.ERROR_MESSAGE);
-		opane.setPreferredSize(new Dimension(600, 400));
+		JOptionPane opane = new JOptionPane(panel);
+		opane.setPreferredSize(new Dimension(500, 400));
 
-		opane.setComponentOrientation(JOptionPane.getRootFrame().getComponentOrientation());
+		opane.setComponentOrientation( JOptionPane.getRootFrame().getComponentOrientation() );
 
 		JDialog dialog = opane.createDialog("SLE Fatal Error");
-
+				
+		dialog.setIconImage( img.getSubimage( 1, 4, 52, 52) );
 		dialog.setVisible(true);
 		dialog.dispose();
 	}
+	
 }

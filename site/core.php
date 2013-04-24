@@ -1,7 +1,7 @@
 <?php
 	if(!defined('INCLUDE_CHECK')) die('У вас нет прав на выполнение данного файла!');
 
-	abstract class AES {
+	class AES {
 		
 		public static function encrypt( $text, $key ) {
 			$encrypted = mcrypt_encrypt( MCRYPT_RIJNDAEL_128, md5($key, true), $text, MCRYPT_MODE_CBC, AES::getIV() );
@@ -26,6 +26,23 @@
 			return base64_decode(strtr($input, '-_', '+/'));
 		}
 			
+	}
+	
+	function filescount($dirname)  
+	{
+		$dir = opendir($dirname);
+		$count = 0;
+		while($file = readdir($dir))
+		{
+			$type = filetype($file);
+			if($file == '.' || $file == '..' || $type == 'dir' || is_dir('path/to/dir' . $file))
+			{
+				continue;
+			}
+			$count++;
+		}
+		closedir($dir);  
+		return $count;
 	}
 
 	function hash_joomla($pass) {

@@ -74,7 +74,7 @@ try {
 			"WHERE ".
 			"TABLE_SCHEMA = '$db_database' ".
 			"AND TABLE_NAME = '$db_table' ".
-			"AND COLUMN_NAME IN ('$db_columnSesId', '$db_columnServer', '$db_columnBlockUntil', '$db_columnRetriesLeft')";
+			"AND COLUMN_NAME IN ('$db_columnSesId', '$db_columnToken', '$db_columnServer', '$db_columnBlockUntil', '$db_columnRetriesLeft')";
 	$stmt = $pdo -> query($query);
 	$stmt -> execute();
 	$arr = $stmt->fetchAll(PDO::FETCH_COLUMN, 0); // Получаем массив колонок в таблице
@@ -83,11 +83,15 @@ try {
 	if(count($arr) === 4) {
 		echo 'Все требуемые колонки уже есть в таблице';
 	} else {
-		$neededCols = array($db_columnSesId, $db_columnServer, $db_columnBlockUntil, $db_columnRetriesLeft);
+		$neededCols = array($db_columnSesId, $db_columnToken, $db_columnServer, $db_columnBlockUntil, $db_columnRetriesLeft);
 		$parts = array(); // Куски запроса
 		$cols = array(); // Добавленные колонки
 
 		$col = $db_columnSesId;
+		if(!in_array($col, $arr))
+			$parts[] = "ADD `$col` varchar(255) DEFAULT NULL";
+		
+		$col = $db_columnToken;
 		if(!in_array($col, $arr))
 			$parts[] = "ADD `$col` varchar(255) DEFAULT NULL";
 

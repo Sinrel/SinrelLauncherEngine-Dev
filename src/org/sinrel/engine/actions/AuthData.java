@@ -3,7 +3,12 @@ package org.sinrel.engine.actions;
 public class AuthData {
 	private String session;
 	private String login;
+	private String token;
 	private AuthResult result;
+	
+	public String getToken() {
+		return token;
+	}
 	
 	public String getSession() {
 		return session;
@@ -17,15 +22,19 @@ public class AuthData {
 		return result;
 	}
 	
-	public void setSession(String session) {
+	void setToken( String token ) {
+		this.token = token;
+	}
+	
+	void setSession( String session ) {
 		this.session = session;
 	}
 	
-	public void setLogin(String login) {
+	void setLogin( String login ) {
 		this.login = login;
 	}
 	
-	public void setResult(AuthResult result) {
+	void setResult( AuthResult result ) {
 		this.result = result;
 	}
 	
@@ -33,7 +42,7 @@ public class AuthData {
 		this(null, null, AuthResult.BAD_CONNECTION);
 	}
 	
-	public AuthData(String login, String session, AuthResult result){
+	public AuthData( String login, String session, AuthResult result ){
 		setLogin(login);
 		setSession(session);
 		setResult(result);

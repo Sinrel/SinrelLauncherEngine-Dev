@@ -10,7 +10,7 @@ import java.util.Stack;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public abstract class ZipManager {
+public final class ZipManager {
 	
 	 private final static int BUFFER = 1024;  
 	    
