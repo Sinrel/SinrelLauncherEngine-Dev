@@ -30,8 +30,8 @@ public final class AES {
 	 *            Строка с ключом
 	 */
 	public static void setKey( String key ) {
-		if( key != null ) 
-			AES.key = DigestUtils.md5( StringUtils.getBytesUtf8( key ) );
+		if( key == null ) throw new NullPointerException( "Ключ не может быть null" );
+		AES.key = DigestUtils.md5( StringUtils.getBytesUtf8( key ) );
 	}
 
 	/**
