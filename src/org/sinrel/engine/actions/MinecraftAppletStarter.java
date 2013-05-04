@@ -24,8 +24,7 @@ public class MinecraftAppletStarter implements MinecraftStarter {
 					output = true;
 
 	public void startMinecraft( String dir, String clientName, AuthData authData, String server, String port, Frame frame ) {
-		if (frame == null)
-			throw new NullPointerException("frame не может быть null (frame could't be null)");
+		if ( dir == null || clientName == null || authData == null || frame == null ) throw new NullPointerException();
 
 		String bin = OSManager.getClientFolder(dir, clientName).getAbsolutePath() + File.separator;
 		

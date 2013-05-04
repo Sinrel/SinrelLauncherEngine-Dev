@@ -8,10 +8,8 @@ import java.net.Socket;
 
 public final class Online {
 	
-	private int MAX_PLAYERS;
-	private int AMOUNT_PLAYERS;
-	private int PORT;
-	private String ADDRESS;
+	private int max_players, amount_players, port;
+	private String address;
 	
 	/**
 	 * @param address адрес сервера
@@ -23,7 +21,6 @@ public final class Online {
 	}
 	
 	private final static String readString( DataInputStream in , int par ) throws IOException {
-		
 		int sh = in.readShort();
 
 		if (sh > par) {
@@ -68,11 +65,11 @@ public final class Online {
 			String[] ar = s.split("\u00a7");
 			s = ar[0];
 
-			this.AMOUNT_PLAYERS = Integer.parseInt( ar[1] );
-			this.MAX_PLAYERS = Integer.parseInt( ar[2] ); 
-			this.ADDRESS = address;
-			this.PORT = port;	
-		} catch (Exception e) {
+			amount_players = Integer.parseInt( ar[1] );
+			max_players = Integer.parseInt( ar[2] ); 
+			this.address = address;
+			this.port = port;
+		} catch ( Exception e ) {
 			throw new Exception("Не удалось получить онлайн сервера!");
 		}finally{
 			soc.close();
@@ -91,28 +88,28 @@ public final class Online {
 	 * @return возвращает порт по которому была получена информация о онлайне сервера
 	 */
 	public final int getPort() {
-		return this.PORT;
+		return port;
 	}
 	
 	/**
 	 * @return возвращает адрес по которому была получена информация о онлайне сервера
 	 */
 	public final String getAddress() {
-		return this.ADDRESS;
+		return address;
 	}
 	
 	/**
 	 * @return возвращает количество игроков играющих на сервере
 	 */
 	public final int getPlayersAmount() {
-		return this.AMOUNT_PLAYERS;
+		return amount_players;
 	}
 	
 	/**
 	 * @return возвращает максимальное количество игроков способных играть на сервере одновременно (=количество слотов)
 	 */
 	public final int getServerSize() {
-		return this.MAX_PLAYERS;
+		return max_players;
 	}
 	
 }

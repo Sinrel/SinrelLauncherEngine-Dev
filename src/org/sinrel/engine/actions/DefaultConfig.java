@@ -55,7 +55,7 @@ public class DefaultConfig extends Config {
 	
 	public void setPassword( String pass ) {
 		if( pass == null ) return;
-		pass = StringUtils.newStringUtf8( pass.getBytes() );
+		pass = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( pass ) );
 		try {
 			prop.setProperty("password", AES.encrypt( pass ) );
 		} catch (GeneralSecurityException e) {
@@ -76,7 +76,7 @@ public class DefaultConfig extends Config {
 
 	public void setLogin( String login ) {
 		if( login == null ) return;
-		login = StringUtils.newStringUtf8( login.getBytes() );
+		login = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( login ) );
 		prop.setProperty("login", login);
 		save();
 	}
@@ -87,16 +87,16 @@ public class DefaultConfig extends Config {
 
 	public void setProperty( String key, String value ) {
 		if( key == null || value == null ) return;
-		key = StringUtils.newStringUtf8( key.getBytes() );
-		value = StringUtils.newStringUtf8( value.getBytes() );
+		key = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( key ) );
+		value = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( value ) );
 		prop.setProperty( key , value );
 		save();
 	}
 
 	public void setSecureProperty( String key, String value ) {
 		if( key == null || value == null ) return;
-		key = StringUtils.newStringUtf8( key.getBytes() );
-		value = StringUtils.newStringUtf8( value.getBytes() );
+		key = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( key ) );
+		value = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( value ) );
 		try {
 			prop.setProperty( key, AES.encrypt( value ) );
 		} catch (GeneralSecurityException e) {
@@ -108,7 +108,7 @@ public class DefaultConfig extends Config {
 
 	public void setServer( String server ) {
 		if( server == null ) return;
-		server = StringUtils.newStringUtf8( server.getBytes() );
+		server = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( server ) );
 		prop.setProperty( "server", server );
 		save();
 	}
