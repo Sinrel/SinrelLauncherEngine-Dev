@@ -8,5 +8,5 @@ package org.sinrel.engine.actions;
 public enum DownloadResult {
 	FILE_NOT_EXIST,
 	BAD_CONNECTION,
-	OK;
+	OK
 }

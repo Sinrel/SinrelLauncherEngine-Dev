@@ -29,7 +29,7 @@ x1.x2.x3.x4
 ```Java
 //EngineSettings settings = new EngineSettings( "домен", "путь на сервере", "рабочая папка", "версия", "код версии");
 EngineSettings settings = new EngineSettings( "example.com", "launcher", "minecraft", "0.1", 1 );
-Engine engine = new Engine(settings)
+Engine engine = new Engine(settings);
 ```
 
 Для работы с SLE используйте объект класса Intent.

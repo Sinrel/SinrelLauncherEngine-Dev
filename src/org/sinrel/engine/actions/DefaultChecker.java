@@ -47,9 +47,9 @@ public class DefaultChecker extends Checker {
 				hash.append( MD5.getMD5(f) );
 			}
 			
-			return send( clientName , hash.toString(), OSManager.getPlatform());
+			return send( clientName , hash.toString(), OSManager.getPlatform() );
 			
-		} catch (IOException ex) {
+		} catch ( IOException ex ) {
 			ex.printStackTrace();
 			return ClientStatus.CLIENT_DOES_NOT_MATCH;
 		}
@@ -108,6 +108,9 @@ public class DefaultChecker extends Checker {
 				data = generateData( "not_exist" );	
 				String answer = NetManager.sendPostRequest(  NetManager.getEngineLink( engine ) , data );
 				
+				if( engine.isDebug() )
+					System.out.println( answer );	
+				
 				if ( answer.equals( "OK" ) ) 
 					return DirectoryStatus.OK;
 				else
@@ -117,8 +120,9 @@ public class DefaultChecker extends Checker {
 				ArrayList< File > files = new ArrayList< File >();
 				
 				for ( File f : directory.listFiles() ) {					
-					if( f.isFile() ) 
+					if( f.isFile() ) {
 						files.add( f );
+					}
 				}
 				
 				String answer = NetManager.sendPostRequest(  NetManager.getEngineLink( engine ) , generateData( "count", Integer.toString( files.size() ) ) );
@@ -126,7 +130,7 @@ public class DefaultChecker extends Checker {
 				if( engine.isDebug() )
 					System.out.println( answer );
 				
-				if( answer.equals( "DIRECTORY_DOES_NOT_MATCH" ) )
+				if( answer.contains( "DIRECTORY_DOES_NOT_MATCH" ) )
 					return DirectoryStatus.DIRECTORY_DOES_NOT_MATCH;
 				
 				//TODO сделать сборку хеша и сверку с сгенерированным на сервере
