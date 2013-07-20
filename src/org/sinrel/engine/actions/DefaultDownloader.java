@@ -61,7 +61,7 @@ public class DefaultDownloader extends Downloader{
 
 		for ( String s : temp ) {
 			if( !fileExist( getFileAddress( s ) ) ) {
-				System.out.println( getFileAddress( s ) );
+				System.err.println( "Файл не найден: " + getFileAddress( s ) );
 				return DownloadResult.FILE_NOT_EXIST;
 			}
 		}

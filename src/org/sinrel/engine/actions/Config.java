@@ -10,6 +10,8 @@ public abstract class Config {
 	
 	public abstract String getLogin();
 	
+	public abstract String getProperty( String name ) ;
+	
 	public abstract void setServer( String server );
 	
 	public abstract String getServer();

@@ -36,8 +36,7 @@ public class Engine {
 			checker = new DefaultChecker();
 			auth = new DefaultAuthBehavior();
 			starter = new MinecraftAppletStarter();
-		}catch(Exception e) {
-			e.printStackTrace();
+		}catch( Exception e ) {
 			FatalError.showErrorWindow(e);
 		}
 	}	
@@ -71,26 +70,32 @@ public class Engine {
 	}
 	
 	public void setSettings(EngineSettings settings){
+		if( settings == null ) throw new NullPointerException();
 		this.settings = settings;
 	}
 	
 	public void setDownloader(Downloader downloader) {
+		if( downloader == null ) throw new NullPointerException();
 		this.downloader = downloader;
 	}
 	
 	public void setChecker( Checker checker ) {
+		if( checker == null ) throw new NullPointerException();
 		this.checker = checker;
 	}
 	
 	public void setAuth(AuthBehavior auth) {
+		if( auth == null ) throw new NullPointerException();
 		this.auth = auth;
 	}
 			
 	public void setConfig( Config config ) {
+		if( config == null ) throw new NullPointerException();
 		this.config = config;
 	}
 	
 	public void setMinecraftStarter( MinecraftStarter starter ){
+		if( starter == null ) throw new NullPointerException();
 		this.starter = starter;
 	}
 	

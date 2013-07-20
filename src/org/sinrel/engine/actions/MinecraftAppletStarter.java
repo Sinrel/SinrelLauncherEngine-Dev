@@ -20,12 +20,14 @@ import org.sinrel.engine.library.OSManager;
 public class MinecraftAppletStarter implements MinecraftStarter {
 	
 	private JFrame temp = new JFrame();
-	private boolean fullscreen = false, 
-					output = true;
+	
+	private boolean fullscreen = false, output = true;
+	private int width = 800, height = 600;
 
 	public void startMinecraft( String dir, String clientName, AuthData authData, String server, String port, Frame frame ) {
-		if (frame == null)
-			throw new NullPointerException("frame не может быть null (frame could't be null)");
+		if ( dir == null || clientName == null || authData == null || frame == null ) throw new NullPointerException();
+		if( port == null ) port = "25565";
+			else if ( port.equals( "" ) ) port = "25565";
 
 		String bin = OSManager.getClientFolder(dir, clientName).getAbsolutePath() + File.separator;
 		
@@ -55,7 +57,7 @@ public class MinecraftAppletStarter implements MinecraftStarter {
 			temp.setExtendedState( JFrame.MAXIMIZED_BOTH );
 			temp.setMinimumSize( new Dimension( 800, 600 ) );
 		}else
-			temp.setSize( new Dimension( 800, 600 ) );
+			temp.setSize( new Dimension( width, height ) );
 		
 		temp.setLayout( new BorderLayout() );
 		temp.setLocationRelativeTo( null );
@@ -97,6 +99,11 @@ public class MinecraftAppletStarter implements MinecraftStarter {
 
 	public boolean isOutput() {
 		return output;
+	}
+
+	public void setSize( int width, int height ) {
+		this.width = width;
+		this.height = height;
 	}
 	
 }

@@ -54,7 +54,8 @@ public class DefaultConfig extends Config {
 	}
 	
 	public void setPassword( String pass ) {
-		pass = StringUtils.newStringUtf8( pass.getBytes() );
+		if( pass == null ) return;
+		pass = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( pass ) );
 		try {
 			prop.setProperty("password", AES.encrypt( pass ) );
 		} catch (GeneralSecurityException e) {
@@ -74,7 +75,8 @@ public class DefaultConfig extends Config {
 	}
 
 	public void setLogin( String login ) {
-		login = StringUtils.newStringUtf8( login.getBytes() );
+		if( login == null ) return;
+		login = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( login ) );
 		prop.setProperty("login", login);
 		save();
 	}
@@ -82,17 +84,23 @@ public class DefaultConfig extends Config {
 	public String getLogin() {
 		return prop.getProperty("login");
 	}
+	
+	public String getProperty( String name ) {
+		return prop.getProperty( name );
+	}
 
 	public void setProperty( String key, String value ) {
-		key = StringUtils.newStringUtf8( key.getBytes() );
-		value = StringUtils.newStringUtf8( value.getBytes() );
+		if( key == null || value == null ) return;
+		key = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( key ) );
+		value = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( value ) );
 		prop.setProperty( key , value );
 		save();
 	}
 
 	public void setSecureProperty( String key, String value ) {
-		key = StringUtils.newStringUtf8( key.getBytes() );
-		value = StringUtils.newStringUtf8( value.getBytes() );
+		if( key == null || value == null ) return;
+		key = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( key ) );
+		value = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( value ) );
 		try {
 			prop.setProperty( key, AES.encrypt( value ) );
 		} catch (GeneralSecurityException e) {
@@ -103,7 +111,8 @@ public class DefaultConfig extends Config {
 	}
 
 	public void setServer( String server ) {
-		server = StringUtils.newStringUtf8( server.getBytes() );
+		if( server == null ) return;
+		server = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( server ) );
 		prop.setProperty( "server", server );
 		save();
 	}
@@ -113,6 +122,7 @@ public class DefaultConfig extends Config {
 	}
 
 	public void setMemory( int memory ) {
+		if( memory < 0 ) memory = Math.abs( memory );
 		prop.setProperty( "memory", Integer.toString( memory ) );
 		save();
 	}

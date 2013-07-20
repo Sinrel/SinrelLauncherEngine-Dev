@@ -58,8 +58,17 @@ public class EngineSettings {
 	 * @param serverPath Путь на сервере (launcher)
 	 * @param directory Рабочая папка (minecraft)
 	 * @param version Версия лаунчера (1)
+	 * @param versionCode Код версии
+	 * 
+	 * @exception NullPointerException - Возбуждается, если одна из строк null
+	 * @exception IllegalArqumentException - Возбуждается, если код версии отрицателен
 	 */
 	public EngineSettings(String domain, String serverPath, String directory , String version, int versionCode){
+        if ( domain == null | serverPath == null | directory == null | version == null ) {
+            throw new NullPointerException();
+        }
+        if ( versionCode < 0 ) throw new IllegalArgumentException("Отрицательный код версии недопустим");
+        
 		setDomain(domain);
 		setServerPath(serverPath);
 		setVersion(version);
