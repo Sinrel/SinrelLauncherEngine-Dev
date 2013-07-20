@@ -84,6 +84,10 @@ public class DefaultConfig extends Config {
 	public String getLogin() {
 		return prop.getProperty("login");
 	}
+	
+	public String getProperty( String name ) {
+		return prop.getProperty( name );
+	}
 
 	public void setProperty( String key, String value ) {
 		if( key == null || value == null ) return;

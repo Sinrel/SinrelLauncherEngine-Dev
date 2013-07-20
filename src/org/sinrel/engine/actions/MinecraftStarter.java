@@ -31,5 +31,15 @@ public interface MinecraftStarter {
  	public boolean isFullScreen();
  
  	public boolean isOutput();
+
+ 	/**
+ 	 * Устанавливает размер окна в котором запускается клиент.
+ 	 * <br>
+ 	 * Размер окна не изменяется, если fullscreen - true
+ 	 * 
+ 	 * @param width - ширина окна
+ 	 * @param height - высота окна
+ 	 */
+ 	public void setSize( int width, int height );
  	
 }

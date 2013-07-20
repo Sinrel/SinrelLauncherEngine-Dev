@@ -1,3 +1,5 @@
+//FIXME Изменить порядок проверки клиента
+
 package org.sinrel.engine.actions;
 
 import java.io.File;
@@ -23,6 +25,7 @@ public class DefaultChecker extends Checker {
 
 	public ClientStatus checkClient( Engine e, String clientName ) {
 		try {
+			clientName = clientName.toLowerCase();
 			String applicationName = e.getSettings().getDirectory();
 			
 			this.engine = e;
