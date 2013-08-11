@@ -1,62 +1,17 @@
 package org.sinrel.engine.library;
 
-import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.UnknownHostException;
 
 import org.apache.commons.codec.binary.StringUtils;
 import org.sinrel.engine.Engine;
 
 public final class NetManager {
-
-	/**
-	 * Открывает браузером по-умолчанию принимаемою ссылку
-	 * 
-	 * @param uri обьект класса {@link URI} содержащий ссылку для перехода 
-	 * @throws IOException
-	 */
-	public static final void openLink(URI uri) throws IOException {
-		Desktop.getDesktop().browse(uri);
-	}
-	
-	/**
-	 * Открывает браузером по-умолчанию принимаемою ссылку
-	 * 
-	 * @param address строка содержащая ссылку для перехода
-	 * @throws IOException
-	 */
-	public static final void openLink( String address ) throws MalformedURLException, IOException, URISyntaxException {
-		Desktop.getDesktop().browse( new URL ( address ).toURI() );
-	}
-
-	/**
-	 * Проверяет наличие соединения с интернетом. При имеющимся таковом
-	 * возвращает true, в ином случае false
-	 * 
-	 * @return boolean
-	 */
-	public static final boolean isOnline() {
-		try {
-			InetAddress.getByName("sinrel.org");
-			return true;
-	       }catch( UnknownHostException e ) {
-	    	   try {
-	    		   InetAddress.getByName("google.com");
-	    		   return true;
-	    	   }catch( UnknownHostException ex ) {
-	    		   return false;   
-	    	   }
-		   }
-	}
 
 	/**
 	 * @param data Строка с данными

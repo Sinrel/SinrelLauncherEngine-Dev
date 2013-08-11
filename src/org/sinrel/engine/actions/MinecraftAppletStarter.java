@@ -49,9 +49,6 @@ public class MinecraftAppletStarter implements MinecraftStarter {
 			mcapplet.customParameters.put("server", server);
 			mcapplet.customParameters.put("port", port);
 		}
-
-		frame.setVisible( false );
-		frame.dispose();
 		
 		if( fullscreen ) {
 			temp.setExtendedState( JFrame.MAXIMIZED_BOTH );
@@ -60,23 +57,27 @@ public class MinecraftAppletStarter implements MinecraftStarter {
 			temp.setSize( new Dimension( width, height ) );
 		
 		temp.setLayout( new BorderLayout() );
+		temp.setIconImage( frame.getIconImage() );
 		temp.setLocationRelativeTo( null );
 		temp.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 	
 		mcapplet.setForeground(Color.BLACK);
 		mcapplet.setBackground(Color.BLACK);
-
+		
+		frame.setVisible( false );
+		frame.dispose();
+		
 		temp.add( mcapplet, BorderLayout.CENTER );
 		temp.validate();
 		temp.setVisible( true );
 
 		System.setProperty("minecraft.applet.WrapperClass", "net.minecraft.Launcher");
-		
+			
 		if( output ) {
 			System.setErr(new PrintStream( new NulledStream()) );
 			System.setOut(new PrintStream( new NulledStream()) );
 		}
-
+		
 		mcapplet.init();
 		mcapplet.start();
 	}

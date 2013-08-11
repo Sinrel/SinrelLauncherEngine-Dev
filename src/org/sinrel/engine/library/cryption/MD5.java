@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-public abstract class MD5 {
+public class MD5 {
 
 	/**
 	 * @param s обрабатываемая строка

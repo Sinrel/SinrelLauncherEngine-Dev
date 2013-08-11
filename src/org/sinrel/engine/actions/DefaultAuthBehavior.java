@@ -6,9 +6,15 @@ import org.sinrel.engine.Engine;
 import org.sinrel.engine.library.NetManager;
 import org.sinrel.engine.library.cryption.AES;
 
-public class DefaultAuthBehavior implements AuthBehavior {
+public class DefaultAuthBehavior extends AuthBehavior {
 
-	public AuthData auth(Engine engine, String login, String pass) {
+	private Engine engine;
+	
+	public DefaultAuthBehavior( Engine engine ) {
+		this.engine = engine;
+	}
+
+	public AuthData auth( String login, String pass ) {
 		AuthData ret = new AuthData(login, null, AuthResult.BAD_CONNECTION);
 		try {
 			String data = "action=auth";
@@ -27,7 +33,6 @@ public class DefaultAuthBehavior implements AuthBehavior {
 
 			if ("OK".equals(answerParts[0])) {
 				ret.setSession( AES.decrypt( answerParts[1] ) );
-				ret.setToken( AES.decrypt( answerParts[2] ) );
 				ret.setResult( AuthResult.OK );
 			} else
 				ret.setResult( AuthResult.valueOf( answer.trim() ) );

@@ -15,37 +15,6 @@ public class Intent {
 	public Intent(Engine engine) {
 		this.engine = engine;
 	}
-
-	/**
-	 * Загрузка клиента с сервера
-	 * 
-	 * @param clientName Имя клиента
-	 * @return Возвращает результат загрузки типа {@link DownloadResult}
-	 */
-	public DownloadResult downloadClient( String clientName ) {
-		return engine.getDownloader().downloadClient( engine, clientName );
-	}
-	
-	/**
-	 * Авторизация пользователя
-	 * 
-	 * @param login Логин
-	 * @param pass Пароль
-	 * @return обьект {@link AuthData } с содержимым сессии, логина и результате авторизации
-	 */
-	public AuthData auth( String login, String pass ) {
-		return engine.getAuth().auth( engine, login, pass );
-	}
-	
-	/**
-	 * Проверка клиента
-	 * 
-	 * @param clientName Имя клиента
-	 * @return Статус клиента типа {@link ClientStatus}
-	 */
-	public ClientStatus checkClient( String clientName ) {
-		return engine.getChecker().checkClient( engine, clientName );
-	}
 	
 	/** Запуск клиента Minecraft
 	 * @param clientName Имя клиента

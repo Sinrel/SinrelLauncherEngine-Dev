@@ -1,6 +1,6 @@
 package org.sinrel.engine.library.cryption;
 
-public abstract class Base64 {
+public class Base64 {
 	
 	public static byte[] decode( String string ) {
 		return org.apache.commons.codec.binary.Base64.decodeBase64( string );

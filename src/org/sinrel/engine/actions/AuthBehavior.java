@@ -1,15 +1,15 @@
 package org.sinrel.engine.actions;
 
-import org.sinrel.engine.Engine;
-
-public interface AuthBehavior {
-
+public abstract class AuthBehavior {
+	
 	/**
-	 * @param engine Экземпляр класса {@link Engine}
+	 * Авторизация пользователя
+	 * 
 	 * @param login Логин
 	 * @param pass Пароль
-	 * @return Возвращает результат авторизации с типом {@link AuthData} 
+	 * @return Возвращает результат авторизации типа {@link AuthData}.<br>
+	 * При удачной авторизации обьект будет содержать сессию.
 	 */
-	public AuthData auth(Engine engine, String login, String pass);
+	public abstract AuthData auth( String login, String pass );
 	
 }

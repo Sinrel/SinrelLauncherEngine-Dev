@@ -6,12 +6,18 @@ import org.sinrel.engine.Engine;
 import org.sinrel.engine.listeners.DownloadListener;
 
 public abstract class Downloader {
-		
+	
  	private ArrayList<DownloadListener> listeners = new ArrayList<DownloadListener>();
 	
 	protected ArrayList< String > additionalFiles = new ArrayList< String >(),
 								  additionalArchives = new ArrayList< String >();
 	
+	protected Engine engine;
+	
+	public Downloader( Engine engine ) {
+		this.engine = engine;
+	}
+		
 	public void addDownloadListener( DownloadListener listener ){
 		listeners.add( listener );
 	}
@@ -51,6 +57,12 @@ public abstract class Downloader {
 			dl.onPercentChange(e);
 	}
 	
-	public abstract DownloadResult downloadClient( Engine e , String clientName );
+	/**
+	 * Загрузка клиента с сервера
+	 * 
+	 * @param clientName Имя клиента
+	 * @return Возвращает результат загрузки типа {@link DownloadResult}
+	 */
+	public abstract DownloadResult downloadClient( String clientName );
 	
 }

@@ -1,14 +1,10 @@
 package org.sinrel.engine.actions;
 
 public class AuthData {
+	
 	private String session;
 	private String login;
-	private String token;
 	private AuthResult result;
-	
-	public String getToken() {
-		return token;
-	}
 	
 	public String getSession() {
 		return session;
@@ -20,10 +16,6 @@ public class AuthData {
 	
 	public AuthResult getResult() {
 		return result;
-	}
-	
-	void setToken( String token ) {
-		this.token = token;
 	}
 	
 	void setSession( String session ) {

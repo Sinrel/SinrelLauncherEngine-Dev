@@ -110,4 +110,5 @@ public class VirtualZipModifer {
 			output.write(buffer, 0, n);
 		return output.toByteArray();
 	}
+	
 }

@@ -4,7 +4,6 @@ package org.sinrel.engine.actions;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -19,18 +18,18 @@ public class DefaultChecker extends Checker {
 	// Проверяемые файлы. Так же проверяется наличие natives под систему клиента
 	static String[] files = { "jinput.jar", "lwjgl.jar", "lwjgl_util.jar", "minecraft.jar" };
 
-	private Engine engine;
-	
 	private String clientName, folder;
-
-	public ClientStatus checkClient( Engine e, String clientName ) {
+	
+	public DefaultChecker( Engine engine ) {
+		super( engine );
+	}
+	
+	public ClientStatus checkClient( String clientName ) {
 		try {
 			clientName = clientName.toLowerCase();
-			String applicationName = e.getSettings().getDirectory();
-			
-			this.engine = e;
+			String applicationName = engine.getSettings().getDirectory();
 
-			if (!NetManager.isOnline()) {
+			if (!engine.getManager().isOnline()) {
 				return ClientStatus.BAD_CONNECTION;
 			}
 
@@ -58,7 +57,7 @@ public class DefaultChecker extends Checker {
 		}
 	}
 
-	private ClientStatus send(String client, String hash, OS system) {
+	private ClientStatus send( String client, String hash, OS system ) {
 		try {
 			String data = "action=" + URLEncoder.encode("check", "UTF-8");
 			data += "&client=" + URLEncoder.encode(client, "UTF-8");
@@ -76,35 +75,13 @@ public class DefaultChecker extends Checker {
 			return ClientStatus.BAD_CONNECTION;
 		}
 	}
-	
-	public LauncherData getLauncherData( Engine engine ) {
-		
-		LauncherData laun = null;
-		
-		try{
-			String answer = NetManager.sendPostRequest( NetManager.getEngineLink( engine ), "action=launcher");
-			
-			if( engine.isDebug() )
-				System.out.println( answer );
-			
-			laun = new LauncherData( Integer.parseInt( answer.split("<:>")[0] ) , answer.split("<:>")[1] );
-			
-			return laun;
-		}catch( MalformedURLException e ) {
-			e.printStackTrace();
-		}catch( IOException e ) {
-			e.printStackTrace();
-		}
-		
-		return laun;
-	}
-			
-	public DirectoryStatus checkMods( Engine engine, String clientName ) {
+				
+	public DirectoryStatus checkMods( String clientName ) {
 		this.clientName = clientName;
-		this.folder = "mods";
+		folder = "mods";
 		
 		try {
-			File directory = new File( OSManager.getWorkingDirectory(engine) + File.separator + clientName, this.folder );
+			File directory = new File( OSManager.getWorkingDirectory(engine) + File.separator + clientName, folder );
 			String data;
 						
 			if( !directory.exists() ) {
@@ -149,7 +126,7 @@ public class DefaultChecker extends Checker {
 	}
 
 	@Deprecated
-	public DirectoryStatus checkDirectory( Engine engine, String clientName, String directoryName ) {
+	public DirectoryStatus checkDirectory( String clientName, String directoryName ) {
 		//TODO Реализовать метод
 		return null;
 	}

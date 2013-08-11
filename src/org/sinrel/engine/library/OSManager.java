@@ -89,13 +89,4 @@ public final class OSManager {
 		linux, solaris, windows, macos, unknown;
 	}
 	
-	/**
-	 * @return Возвращает версию Java, на которой запущен движок.
-	 */
-	public static float getJavaVersion() {
-		String version = System.getProperty( "java.version" );
-		
-		return Float.parseFloat( version.substring( 0, 3 ) );
-	}
-	
 }

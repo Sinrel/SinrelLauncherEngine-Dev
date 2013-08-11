@@ -19,8 +19,15 @@ public class DefaultDownloader extends Downloader{
 
 	private ArrayList< String > basic = new ArrayList< String >(),
 								archives = new ArrayList< String >();
+
+	private DownloadEvent event = new DownloadEvent();
+	
+	private String clientName;
+	private ArrayList< String > temp = new ArrayList< String >();
 		
-	public DefaultDownloader() {
+	public DefaultDownloader( Engine engine ) {
+		super( engine );
+		
 		basic.add( "jinput.jar" );
 		basic.add( "lwjgl.jar" );
 		basic.add( "lwjgl_util.jar" );
@@ -29,15 +36,8 @@ public class DefaultDownloader extends Downloader{
 		archives.add( "client.zip" );
 		archives.add( "natives/"+OSManager.getPlatform().toString()+".zip" );
 	}
-
-	private DownloadEvent event = new DownloadEvent();
 	
-	private Engine engine = null;
-	private String clientName = null;
-	private ArrayList< String > temp = new ArrayList< String >();
-		
-	public DownloadResult downloadClient( Engine e , String clientName ) {
-		this.engine = e;
+	public DownloadResult downloadClient( String clientName ) {
 		this.clientName = clientName;
 		
 		basic.addAll( additionalFiles );

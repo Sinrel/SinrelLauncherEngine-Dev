@@ -7,8 +7,10 @@ import org.sinrel.engine.actions.DefaultAuthBehavior;
 import org.sinrel.engine.actions.DefaultChecker;
 import org.sinrel.engine.actions.DefaultConfig;
 import org.sinrel.engine.actions.DefaultDownloader;
+import org.sinrel.engine.actions.DefaultManager;
 import org.sinrel.engine.actions.Downloader;
 import org.sinrel.engine.actions.Intent;
+import org.sinrel.engine.actions.Manager;
 import org.sinrel.engine.actions.MinecraftAppletStarter;
 import org.sinrel.engine.actions.MinecraftStarter;
 import org.sinrel.engine.exception.FatalError;
@@ -24,18 +26,22 @@ public class Engine {
 	private Checker checker;
 	private AuthBehavior auth;
 	private MinecraftStarter starter;
-	
+	private Manager manager;
+
 	private boolean debug = false;
 	
 	public Engine( EngineSettings settings ) {
 		try {
-			intent = new Intent(this);
 			setSettings(settings);
+			
+			intent = new Intent(this);
+			checker = new DefaultChecker(this);
 			config = new DefaultConfig(this);
-			downloader = new DefaultDownloader();
-			checker = new DefaultChecker();
-			auth = new DefaultAuthBehavior();
+			
+			downloader = new DefaultDownloader(this);
+			auth = new DefaultAuthBehavior(this);
 			starter = new MinecraftAppletStarter();
+			manager = new DefaultManager(this);
 		}catch( Exception e ) {
 			FatalError.showErrorWindow(e);
 		}
@@ -69,7 +75,16 @@ public class Engine {
 		return starter;
 	}
 	
-	public void setSettings(EngineSettings settings){
+	public Manager getManager() {
+		return manager;
+	}
+	
+	public void setManager( Manager manager ) {
+		if( manager == null ) throw new NullPointerException();
+		this.manager = manager;
+	}
+		
+	public void setSettings( EngineSettings settings ){
 		if( settings == null ) throw new NullPointerException();
 		this.settings = settings;
 	}

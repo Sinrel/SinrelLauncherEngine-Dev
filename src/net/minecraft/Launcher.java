@@ -9,10 +9,6 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-
 import org.sinrel.engine.actions.AuthData;
 
 public class Launcher extends Applet implements AppletStub {
@@ -25,12 +21,12 @@ public class Launcher extends Applet implements AppletStub {
 	private boolean active = false;
 	private URL[] urls;
 	private String bin;
-	private AuthData authData;
-
+	
+	private URLClassLoader cl;
+	
 	public Launcher(String bin, URL[] urls, AuthData authData) {
 		this.bin = bin;
 		this.urls = urls;
-		this.authData = authData;
 	}
 
 	public void init() {
@@ -39,32 +35,8 @@ public class Launcher extends Applet implements AppletStub {
 			return;
 		}
 
-		URLClassLoader cl = new URLClassLoader(urls);
-
-		/*
-		boolean hasReloader = false;
+		cl = new URLClassLoader(urls);
 		
-		try {
-			cl.loadClass("cpw.mods.fml.relauncher.FMLRelauncher");
-			hasReloader = true;
-		} catch (ClassNotFoundException ex) {}
-
-		if (!hasReloader) // Not a FML
-			addExtra(cl, Launcher.class.getProtectionDomain());
-		 */
-
-		ClassPool pool = new ClassPool(true);
-
-		try {
-			String token = authData.getToken().replace("\"", "\\\"");
-			CtClass dummy = pool.makeClass("sle.Dummy");
-			dummy.addMethod(CtMethod.make("public static String bob() {return \"" + token + "\";}", dummy));
-
-			dummy.toClass(cl, Launcher.class.getProtectionDomain());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
 		System.setProperty("org.lwjgl.librarypath", bin + "natives");
 		System.setProperty("net.java.games.input.librarypath", bin + "natives");
 		
@@ -147,32 +119,6 @@ public class Launcher extends Applet implements AppletStub {
 		}
 	}
 
-	/*
-	public void addExtra(ClassLoader loader, ProtectionDomain pd) {
-		try {
-			ClassPool pool = new ClassPool(true);
-			String token = authData.getToken();
-
-			try {
-				loader.loadClass("sle.Dummy");
-				return;
-			} catch (ClassNotFoundException e) {
-				System.err.println("Dummy not found");
-			}
-
-			token = token.replace("\"", "\\\"");
-
-			CtClass pussy = pool.makeClass("dick.Pussy");
-			pussy.addMethod(CtMethod.make("public static String getJoinserverToken() {return \"" + token + "\";}", pussy));
-			pussy.addMethod(CtMethod.make("public static String getCheckserverToken() {return \"" + token + "\";}", pussy));
-
-			pussy.toClass(loader, pd);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-	*/
-
 	public void appletResize(int w, int h) {}
 
 	public URL getDocumentBase() {
@@ -183,4 +129,5 @@ public class Launcher extends Applet implements AppletStub {
 		}
 		return null;
 	}
+	
 }

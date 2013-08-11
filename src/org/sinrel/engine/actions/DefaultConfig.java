@@ -54,7 +54,7 @@ public class DefaultConfig extends Config {
 	}
 	
 	public void setPassword( String pass ) {
-		if( pass == null ) return;
+		if( pass == null ) throw new NullPointerException("Записываемый пароль не может быть null");
 		pass = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( pass ) );
 		try {
 			prop.setProperty("password", AES.encrypt( pass ) );
@@ -75,7 +75,7 @@ public class DefaultConfig extends Config {
 	}
 
 	public void setLogin( String login ) {
-		if( login == null ) return;
+		if( login == null ) throw new NullPointerException("Записываемый логин не может быть null");
 		login = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( login ) );
 		prop.setProperty("login", login);
 		save();
@@ -90,7 +90,7 @@ public class DefaultConfig extends Config {
 	}
 
 	public void setProperty( String key, String value ) {
-		if( key == null || value == null ) return;
+		if( key == null || value == null ) throw new NullPointerException("Ключ и значение ключа не могут быть null");
 		key = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( key ) );
 		value = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( value ) );
 		prop.setProperty( key , value );
@@ -98,7 +98,7 @@ public class DefaultConfig extends Config {
 	}
 
 	public void setSecureProperty( String key, String value ) {
-		if( key == null || value == null ) return;
+		if( key == null || value == null ) throw new NullPointerException("Ключ и значение ключа не могут быть null");
 		key = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( key ) );
 		value = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( value ) );
 		try {
@@ -111,7 +111,7 @@ public class DefaultConfig extends Config {
 	}
 
 	public void setServer( String server ) {
-		if( server == null ) return;
+		if( server == null ) throw new NullPointerException("Сервер не может быть null");
 		server = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( server ) );
 		prop.setProperty( "server", server );
 		save();
@@ -122,7 +122,7 @@ public class DefaultConfig extends Config {
 	}
 
 	public void setMemory( int memory ) {
-		if( memory < 0 ) memory = Math.abs( memory );
+		if( memory < 0 ) throw new IllegalArgumentException("Нельзя использовать отрицательные значения памяти");
 		prop.setProperty( "memory", Integer.toString( memory ) );
 		save();
 	}

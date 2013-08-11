@@ -139,15 +139,11 @@ try {
 			$len = rand(28, 32);
 			$session = substr(str_shuffle(str_repeat("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-", 5)), 0, $len);
 			
-			// Generate joinserver token
-			$len = 16;
-			$token = substr(str_shuffle(str_repeat("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-", 5)), 0, $len);
-
 			// Update session and token
 			$stmt = $pdo -> prepare("UPDATE `$db_table` SET `$db_columnSesId` = :session, `$db_columnToken` = :token WHERE `$db_columnUser` = :login");
 			$stmt -> execute(array(':session' => $session, ':token' => $token, ':login' => $login));
 
-			echo 'OK<:>'.AES::encrypt( $session , $protectionKey ).'<:>'.AES::encrypt( $token, $protectionKey );
+			echo 'OK<:>'.AES::encrypt( $session , $protectionKey );
 		}
 	} else if( $action === 'launcher' ) {
 		die( $versionCode.'<:>'.$version );
