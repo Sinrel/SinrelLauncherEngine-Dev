@@ -1,4 +1,5 @@
 <?php
+//TODO добавить генерацию конфигов после настройки в установщике. И в конечном этапе установки - создание таблиц.
 define('INCLUDE_CHECK', true);
 echo '<html><head>';
 echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>';

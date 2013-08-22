@@ -29,7 +29,7 @@ public class DefaultChecker extends Checker {
 			clientName = clientName.toLowerCase();
 			String applicationName = engine.getSettings().getDirectory();
 
-			if (!engine.getManager().isOnline()) {
+			if (!engine.isOnline()) {
 				return ClientStatus.BAD_CONNECTION;
 			}
 

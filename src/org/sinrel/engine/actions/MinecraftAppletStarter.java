@@ -15,21 +15,29 @@ import javax.swing.JFrame;
 
 import net.minecraft.Launcher;
 
+import org.sinrel.engine.Engine;
 import org.sinrel.engine.library.OSManager;
 
+@Deprecated
 public class MinecraftAppletStarter implements MinecraftStarter {
 	
 	private JFrame temp = new JFrame();
 	
 	private boolean fullscreen = false, output = true;
 	private int width = 800, height = 600;
+	
+	private Engine engine;
+	
+	public MinecraftAppletStarter( Engine engine ) {
+		this.engine = engine;
+	}
 
-	public void startMinecraft( String dir, String clientName, AuthData authData, String server, String port, Frame frame ) {
-		if ( dir == null || clientName == null || authData == null || frame == null ) throw new NullPointerException();
+	public void startMinecraft( String clientName, AuthData authData, String server, String port, Frame frame ) {
+		if ( clientName == null || authData == null || frame == null ) throw new NullPointerException();
 		if( port == null ) port = "25565";
 			else if ( port.equals( "" ) ) port = "25565";
 
-		String bin = OSManager.getClientFolder(dir, clientName).getAbsolutePath() + File.separator;
+		String bin = OSManager.getClientFolder( engine.getSettings().getDirectory(), clientName ).getAbsolutePath() + File.separator;
 		
 		URL[] urls = new URL[4];
 		try {
@@ -41,7 +49,7 @@ public class MinecraftAppletStarter implements MinecraftStarter {
 			e.printStackTrace();
 		}
 
-		final Launcher mcapplet = new Launcher(bin, urls, authData);
+		final Launcher mcapplet = new Launcher( engine, bin, urls, authData, clientName );
 		mcapplet.customParameters.put("username", authData.getLogin());
 		mcapplet.customParameters.put("sessionid", authData.getSession());
 		mcapplet.customParameters.put("stand-alone", "true");

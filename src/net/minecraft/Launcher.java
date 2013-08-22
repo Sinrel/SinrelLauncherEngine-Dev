@@ -3,14 +3,19 @@ package net.minecraft;
 import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.sinrel.engine.Engine;
 import org.sinrel.engine.actions.AuthData;
+import org.sinrel.engine.library.OSManager;
 
+@Deprecated
 public class Launcher extends Applet implements AppletStub {
 	
 	private static final long serialVersionUID = 1L;
@@ -21,12 +26,15 @@ public class Launcher extends Applet implements AppletStub {
 	private boolean active = false;
 	private URL[] urls;
 	private String bin;
+	private String clientName;
 	
-	private URLClassLoader cl;
+	private Engine engine;
 	
-	public Launcher(String bin, URL[] urls, AuthData authData) {
+	public Launcher( Engine engine, String bin, URL[] urls, AuthData authData, String clientName ) {
 		this.bin = bin;
 		this.urls = urls;
+		this.clientName = clientName;
+		this.engine = engine;
 	}
 
 	public void init() {
@@ -35,12 +43,12 @@ public class Launcher extends Applet implements AppletStub {
 			return;
 		}
 
-		cl = new URLClassLoader(urls);
-		
+		URLClassLoader cl = new URLClassLoader(urls);
 		System.setProperty("org.lwjgl.librarypath", bin + "natives");
 		System.setProperty("net.java.games.input.librarypath", bin + "natives");
 		
 		try {
+			patchDirectory( cl );
 			Class<?> Mine = cl.loadClass("net.minecraft.client.MinecraftApplet");
 			Applet applet = (Applet) Mine.newInstance();
 			this.applet = applet;
@@ -52,6 +60,22 @@ public class Launcher extends Applet implements AppletStub {
 			active = true;
 			validate();
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void patchDirectory( URLClassLoader cl ) {
+		try {
+			Class< ? > c = cl.loadClass( "net.minecraft.client.Minecraft" );
+			
+		 	for ( Field f : c.getDeclaredFields() ) {	 		
+		 		if( f.getType().getName().equals( "java.io.File" ) & f.getName().length() == 2 
+		 				& Modifier.isPrivate( f.getModifiers() ) & Modifier.isStatic( f.getModifiers() )) {
+		 			f.setAccessible( true );
+		 			f.set( null, OSManager.getClientFolder( engine.getSettings().getDirectory(), clientName ) );
+		 		}
+		 	}
+		}catch( Exception e ) {
 			e.printStackTrace();
 		}
 	}
