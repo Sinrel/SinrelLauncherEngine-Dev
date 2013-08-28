@@ -1,3 +1,4 @@
+//TODO Добавить/Проверить поддержку Spigot
 package org.sinrel.engine.library;
 
 import java.io.DataInputStream;
@@ -6,6 +7,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+@Deprecated
 public final class Online {
 	
 	private int max_players, amount_players, port;

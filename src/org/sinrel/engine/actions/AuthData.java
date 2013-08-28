@@ -39,4 +39,5 @@ public class AuthData {
 		setSession(session);
 		setResult(result);
 	}
+	
 }

@@ -1,7 +1,6 @@
 //FIXME В строке запуска указывать абсолютный путь к Java. Для исключения работы с переменными окружения JAVA_HOME
 package org.sinrel.engine.actions;
 
-import java.awt.Frame;
 import java.util.Map;
 
 import org.sinrel.engine.Engine;
@@ -62,9 +61,9 @@ public abstract class Starter {
 
 	public abstract void startMinecraft( String clientName );	
 	
-	public abstract void startMinecraft( String clientName, AuthData authData );
+	public abstract void startMinecraft( String clientName, String login, String session );
 	
-	public abstract void startMinecraft( String clientName, AuthData authData, String server, String port );
+	public abstract void startMinecraft( String clientName, String login, String session, String server, String port );
 	
 	public int getMemory() {
 		return memory;
