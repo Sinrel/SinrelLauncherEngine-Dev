@@ -15,4 +15,7 @@ public interface MinecraftStarter {
 	 */
 	public void startMinecraft( String clientName, AuthData authData, String server, String port, Frame frame );
 	 	
+	public void useFullScreen( boolean bool );
+	
+	public void setSize( int width, int height );
 }
