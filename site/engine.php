@@ -4,13 +4,61 @@ define('INCLUDE_CHECK', true);
 require_once 'config.php';
 require_once 'core.php';
 
-if(!isset($_POST['action']))
+switch ( $integration ) {
+	case 'wordpress': 
+		define( 'DB_TABLE', $prefix.'_users' );
+		define( 'DB_COLUMN_ID', 'id' );
+		define( 'DB_COLUMN_USER', 'user_login' );
+		define( 'DB_COLUMN_PASS', 'user_pass' );
+		
+		break;
+	case 'dle': 
+		define( 'DB_TABLE', $prefix.'_users' );
+		define( 'DB_COLUMN_ID', 'user_id' );
+		define( 'DB_COLUMN_USER', 'username' );
+		define( 'DB_COLUMN_PASS', 'data' );
+		
+		break;
+	case 'xenforo':
+		define( 'DB_TABLE', $prefix.'_user' );
+		define( 'DB_COLUMN_ID', 'user_id' );
+		define( 'DB_COLUMN_USER', 'username' );
+		define( 'DB_COLUMN_PASS', 'data' );
+		
+		define( 'DB_TABLE_OTHER', 'xf_user_authenticate' );
+		break;
+	case 'joomla': 
+		define( 'DB_TABLE', $prefix.'_users' );
+		define( 'DB_COLUMN_ID', 'id' );
+		define( 'DB_COLUMN_USER', 'name' );
+		define( 'DB_COLUMN_PASS', 'password' );
+
+		break;
+	default:
+		define( 'DB_TABLE', $prefix.$db_table );
+		define( 'DB_COLUMN_ID', $db_columnId );
+		define( 'DB_COLUMN_USER', $db_columnUser );
+		define( 'DB_COLUMN_PASS', $db_columnPass );
+		
+		break;
+}
+
+if(!isset($_POST['command']))
 	die('NULL');
 
-$action = $_POST['action'];
+$command = $_POST['command'];
 
 try {
-	if($action === 'check') {
+	switch ( $command ) {
+		case 'launcher': 
+			die( $versionCode.'<:>'.$version );
+			break;
+		case 'key': 
+			die( strrev( base64_encode( $protectionKey ) ) );	
+		
+	}
+	
+	if($command  === 'check') {
 		if(!isset($_POST['system'], $_POST['client']))
 			die('NULL');
 
@@ -18,9 +66,10 @@ try {
 		$client = $_POST['client'];
 
 		$files = array(
-				'jinput.jar',
-				'lwjgl_util.jar',
+				'forge.jar',
+				'libraries.jar',
 				'minecraft.jar',
+				'extra.jar',
 				'natives/'. $os .'.zip');
 
 		foreach($files as $file) {
@@ -29,10 +78,10 @@ try {
 			}
 		}
 
-		$md5jinput		= md5_file("clients/".$client."/bin/jinput.jar");
-		$md5lwjql		= md5_file("clients/".$client."/bin/lwjgl.jar");
-		$md5lwjql_util	= md5_file("clients/".$client."/bin/lwjgl_util.jar");
-		$md5jar			= md5_file("clients/".$client."/bin/minecraft.jar");
+		$md5jinput		= md5_file("clients/".$client."/bin/forge.jar");
+		$md5lwjql		= md5_file("clients/".$client."/bin/libraries.jar");
+		$md5lwjql_util	= md5_file("clients/".$client."/bin/minecraft.jar");
+		$md5jar			= md5_file("clients/".$client."/bin/extra.jar");
 			
 		$result = $md5jinput;
 		$result .= $md5lwjql;
@@ -44,7 +93,7 @@ try {
 		}else{
 			die('CLIENT_DOES_NOT_MATCH');
 		}
-	} elseif( $action === "directory" ) {
+	} elseif( $command === "directory" ) {
 		$client = $_POST['client'];
 		$data = $_POST['data'];
 		$folder = $_POST['folder'];
@@ -66,7 +115,7 @@ try {
 		if( $data === "checksum" ) {
 			
 		}
-	} elseif($action === 'auth') {
+	} elseif($command  === 'auth') {
 		if(!isset($_POST['login'], $_POST['pass'])) {
 			die('LOGIN_OR_PASS_NOT_EXIST');
 		}
@@ -145,7 +194,7 @@ try {
 
 			echo 'OK<:>'.AES::encrypt( $session , $protectionKey );
 		}
-	} else if( $action === 'launcher' ) {
+	} else if( $command  === 'launcher' ) {
 		die( $versionCode.'<:>'.$version );
 	}
 } catch(PDOException $e) {
