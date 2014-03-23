@@ -65,6 +65,11 @@ public class DefaultStarter extends Starter {
 			parameters.add(root);
 			parameters.add("--assetsDir");
 			parameters.add(assets);
+			
+			/*
+			 * arams.add("--assetIndex");
+                          params.add(Settings.servers[Frame.main.servers.getSelectedIndex()].split(", ")[3]);
+			 */
 
 			if (autoconnect) {
 				parameters.add("--server");
@@ -80,16 +85,18 @@ public class DefaultStarter extends Starter {
 			parameters.add("--userProperties");
 			parameters.add("{}");
 			
-			// FIXME организовать твики
-			/*
-			 * params.add("--tweakClass");
-			 * params.add("cpw.mods.fml.common.launcher.FMLTweaker");
-			 * params.add("--tweakClass");
-			 * params.add("com.mumfrey.liteloader.launch.LiteLoaderTweaker");
-			 */
+			parameters.add("--tweakClass");
+			parameters.add("cpw.mods.fml.common.launcher.FMLTweaker");
+			parameters.add("--tweakClass");
+			parameters.add("com.mumfrey.liteloader.launch.LiteLoaderTweaker");
+            
+			parameters.add("--cascadedTweaks");
+			parameters.add("cpw.mods.fml.common.launcher.FMLTweaker");
 			
-			for( String s : parameters ) {
-				System.out.print( s  + " " );
+			if( engine.isDebug() ) {
+				for( String s : parameters ) {
+					System.out.print( s  + " " );
+				}
 			}
 
 			ProcessBuilder pb = new ProcessBuilder( parameters );

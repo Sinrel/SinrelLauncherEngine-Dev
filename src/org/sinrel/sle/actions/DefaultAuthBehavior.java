@@ -20,7 +20,7 @@ public class DefaultAuthBehavior extends AuthBehavior {
 			data += "&login=" + URLEncoder.encode( engine.getCryptor().encrypt( login ), "UTF-8");
 			data += "&pass=" + URLEncoder.encode( engine.getCryptor().encrypt( pass ), "UTF-8");
 			
-			String answer = NetworkManager.sendPostRequest( NetworkManager.getEngineLink( engine ), data );
+			String answer = NetworkManager.sendPostRequest( NetworkManager.getEngineLink( engine ), data ).trim();
 
 			if (engine.isDebug()) {
 				System.out.println(answer);
@@ -29,8 +29,8 @@ public class DefaultAuthBehavior extends AuthBehavior {
 			String[] answerParts = answer.split("<:>");
 			if(answerParts.length > 3)
 				return ret;
-
-			if ("OK".equals(answerParts[0])) {
+			
+			if ("OK".equals( answerParts[0] ) ) {
 				ret.setSession( engine.getCryptor().decrypt( answerParts[1] ) );
 				ret.setResult( AuthResult.OK );
 			} else

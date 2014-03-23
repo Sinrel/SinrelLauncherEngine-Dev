@@ -27,6 +27,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
+import org.apache.commons.lang3.Validate;
 import org.sinrel.sle.actions.AuthBehavior;
 import org.sinrel.sle.actions.Checker;
 import org.sinrel.sle.actions.Config;
@@ -108,32 +109,32 @@ public class Engine {
 	}
 		
 	public void setSettings( EngineSettings settings ){
-		if( settings == null ) throw new NullPointerException();
+		Validate.notNull( settings, "Settings for engine cannot be null" );
 		this.settings = settings;
 	}
 	
 	public void setDownloader(Downloader downloader) {
-		if( downloader == null ) throw new NullPointerException();
+		Validate.notNull( downloader, "Implementation of module to engine cannot be null" );
 		this.downloader = downloader;
 	}
 	
 	public void setStarter( Starter starter ) {
-		if( starter == null ) throw new NullPointerException();
+		Validate.notNull( starter, "Implementation of module to engine cannot be null" );
 		this.starter = starter;
 	}
 	
 	public void setChecker( Checker checker ) {
-		if( checker == null ) throw new NullPointerException();
+		Validate.notNull( starter, "Implementation of module to engine cannot be null" );
 		this.checker = checker;
 	}
 	
 	public void setAuth(AuthBehavior auth) {
-		if( auth == null ) throw new NullPointerException();
+		Validate.notNull( starter, "Implementation of module to engine cannot be null" );
 		this.auth = auth;
 	}
 			
 	public void setConfig( Config config ) {
-		if( config == null ) throw new NullPointerException();
+		Validate.notNull( starter, "Implementation of module to engine cannot be null" );
 		this.config = config;
 	}
 		
