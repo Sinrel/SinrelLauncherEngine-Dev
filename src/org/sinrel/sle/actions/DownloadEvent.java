@@ -17,6 +17,8 @@ public class DownloadEvent {
 	private int filesAmount;
 	private int totalSize;
 	
+	private double downloadSpeed;
+	
 	public DownloadEvent() {}
 	
 	public DownloadEvent( String currentFileName, 
@@ -113,6 +115,13 @@ public class DownloadEvent {
 		return nextFileAddress;
 	}
 	
+	/**
+	 * @return Возвращает скорость загрузки файла (KiB/s)
+	 */
+	public final double getDownloadSpeed() {
+		return downloadSpeed;
+	}
+	
 	final void setCurrentFileName( String filename ) {
 		this.currentFileName = filename;
 	}
@@ -151,6 +160,10 @@ public class DownloadEvent {
 	
 	final void setNextFileSize( int nextFileSize ) {
 		this.nextFileSize = nextFileSize;
+	}
+
+	final void setDownloadSpeed(double downloadSpeed) {
+		this.downloadSpeed = downloadSpeed;
 	}
 	
 }
