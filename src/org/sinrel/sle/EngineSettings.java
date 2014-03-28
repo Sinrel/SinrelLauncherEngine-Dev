@@ -2,6 +2,8 @@ package org.sinrel.sle;
 
 import java.io.File;
 
+import org.apache.commons.lang3.Validate;
+
 public class EngineSettings {
 	
 	/** Домен сервера */
@@ -86,9 +88,11 @@ public class EngineSettings {
 	 * @exception IllegalArqumentException Возбуждается, если код версии отрицателен
 	 */
 	public EngineSettings( String domain, String serverPath, String directory , String version, int versionCode ){
-        if ( domain == null | serverPath == null | directory == null | version == null ) {
-            throw new NullPointerException();
-        }
+		Validate.notNull( domain );
+		Validate.notNull( serverPath );
+		Validate.notNull( directory );
+		Validate.notNull( version );
+		
         if ( versionCode < 0 ) throw new IllegalArgumentException("Отрицательный код версии недопустим");
         
 		setDomain( domain );

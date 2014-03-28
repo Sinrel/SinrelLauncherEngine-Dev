@@ -11,6 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.sinrel.sle.Engine;
+import org.sinrel.sle.network.Command;
 import org.sinrel.sle.network.NetworkManager;
 import org.apache.commons.codec.binary.Base64;
 
@@ -40,7 +41,8 @@ public class Cryptor {
 	}
 	
 	private String getKey() throws IOException {
-		return NetworkManager.sendPostRequest( NetworkManager.getEngineLink( engine ), "command=key" );
+		return NetworkManager.sendRequest(NetworkManager.getEngineLink( engine ), Command.KEY);
+		//return NetworkManager.sendPostRequest( NetworkManager.getEngineLink( engine ), "command=key" );
 	}
 	
 	private String decodeKey( String encryptedKey) {

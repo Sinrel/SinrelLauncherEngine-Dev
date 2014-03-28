@@ -2,7 +2,7 @@ package org.sinrel.sle.actions;
 
 public abstract class Config {
 	
-	public abstract void setPassword( String pass );
+	public abstract void setPassword( String password );
 	
 	public abstract String getPassword();
 	

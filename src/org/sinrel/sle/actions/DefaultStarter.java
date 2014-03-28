@@ -1,3 +1,4 @@
+//TODO New version is coming.
 package org.sinrel.sle.actions;
 
 import java.io.File;
@@ -7,14 +8,19 @@ import org.sinrel.sle.Engine;
 import org.sinrel.sle.Engine.OS;
 import org.sinrel.sle.exception.FatalError;
 
+/**
+ * @since 2.0.0 build 2
+ */
 public class DefaultStarter extends Starter {
 
 	private String cps = engine.getPlatform() == OS.windows ? ";" : ":";
 	private String java = engine.getPlatform() == OS.windows ? "javaw" : "java";
 	
 	private String libraries =  "libraries.jar";
+	/*
 	private String forge =  "forge.jar";
 	private String extra =  "extra.jar";
+	*/
 	private String minecraft =  "minecraft.jar";
 	
 	private ArrayList<String> parameters = new ArrayList<>();

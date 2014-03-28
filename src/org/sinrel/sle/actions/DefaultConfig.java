@@ -23,9 +23,12 @@ public class DefaultConfig extends Config {
 	private JsonProperties prop;
 	private File config;
 	
-	/** Engine instance */
+	/** Instance of {@link Engine} */
 	private Engine engine;
 
+	/**
+	 * @param engine Instance of {@link Engine}
+	 */
 	public DefaultConfig( Engine engine ) {
 		this.engine = engine;
 		
@@ -61,32 +64,24 @@ public class DefaultConfig extends Config {
 	}
 	
 	/**
-	 * @param pass string with password
+	 * @param password string with password
+	 * @throws NullPointerException if password is null
 	 */
-	public void setPassword( String pass ) {
-		Validate.notNull( pass, "Password cannot be null" );
-		
-		pass = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( pass ) );
-		try {
-			prop.setProperty("password", engine.getCryptor().encrypt( pass ) );
-		} catch (GeneralSecurityException e) {
-			e.printStackTrace();
-			prop.setProperty("password", pass);
-		}
-		save();
+	public void setPassword( String password ) {
+		Validate.notNull( password, "Password cannot be null" );
+		setCryptedProperty( "password", password );
 	}
-
+	
+	/**
+	 * @return saved password from config (key is "password").
+	 */
 	public String getPassword() {
-		try {
-			return engine.getCryptor().decrypt( prop.getProperty("password") );
-		} catch (GeneralSecurityException e) {
-			e.printStackTrace();
-			return prop.getProperty("password");
-		}
+		return getCryptedProperty("password");
 	}
 	
 	/**
 	 * @param login string with login
+	 * @throws NullPointerException if string with login is {@code null}
 	 */
 	public void setLogin( String login ) {
 		Validate.notNull( login, "Login cannot be null" );
@@ -97,40 +92,34 @@ public class DefaultConfig extends Config {
 		save();
 	}
 
+	/**
+	 * @return saved login value from config (key in config file is "login") 
+	 */
 	public String getLogin() {
 		return prop.getProperty("login");
 	}
-	
-	@Deprecated
-	public void setServer( String server ) {
-		Validate.notNull( server, "Server cannot be null" );
-		
-		server = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( server ) );
-		prop.setProperty( "server", server );
-		
-		save();
-	}
-	
-	@Deprecated
-	public String getServer() {
-		return prop.getProperty( "server" ) ;
-	}
 
+	/**
+	 * @param memory
+	 * @throws IllegalArqumentException if memory value is negative
+	 */
 	public void setMemory( int memory ) {
 		if( memory < 0 ) throw new IllegalArgumentException("Can't use a negative values of memory");
-		prop.setProperty( "memory", Integer.toString( memory ) );
-		save();
+		setPropertyInt( "memory", memory );
 	}
 
+	/**
+	 * @return the value of memory (key is "memory") . If value not found returns {@code 0}.
+	 */
 	public int getMemory() {
-		return Integer.parseInt( prop.getProperty("memory") ); // Epmty if not defined
+		return getPropertyInt( "memory" ); // Epmty if not defined
 	}
 	
 	//TODO Root methods
 	
 	private void setProperty( String key, String value ) {
 		Validate.notNull( key, "Key cannot be null" );
-		Validate.notNull( key, "The key value cannot be null" );
+		Validate.notNull( key, "The key value cannot `be null" );
 		
 		key = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( key ) );
 		value = StringUtils.newStringUtf8( StringUtils.getBytesUtf8( value ) );
@@ -140,7 +129,7 @@ public class DefaultConfig extends Config {
 		save();
 	}
 	
-	private void setSecureProperty( String key, String value ) {
+	private void setCryptedProperty( String key, String value ) {
 		Validate.notNull( key, "Key cannot be null" );
 		Validate.notNull( key, "The key value cannot be null" );
 		
@@ -195,7 +184,7 @@ public class DefaultConfig extends Config {
 	//TODO setters
 	
 	/**
-	 * @param key
+	 * @param key property name
 	 * @param value
 	 */
 	public void setPropertyString( String key, String value ) {
@@ -203,7 +192,7 @@ public class DefaultConfig extends Config {
 	}
 	
 	/**
-	 * @param key
+	 * @param key property name
 	 * @param value
 	 */
 	public void setPropertyBoolean( String key, boolean value ) {
@@ -211,7 +200,7 @@ public class DefaultConfig extends Config {
 	}
 
 	/**
-	 * @param key
+	 * @param key property name
 	 * @param value
 	 */
 	public void setPropertyInt(String key, int value) {
@@ -219,7 +208,7 @@ public class DefaultConfig extends Config {
 	}
 
 	/**
-	 * @param key
+	 * @param key property name
 	 * @param value
 	 */
 	public void setPropertyDouble(String key, double value) {
@@ -229,35 +218,35 @@ public class DefaultConfig extends Config {
 	//TODO setters for crypted values
 	
 	/**
-	 * @param key
+	 * @param key property name
 	 * @param value
 	 */
 	public void setCryptedPropertyString( String key, String value ) {
-		setSecureProperty( key, value );
+		setCryptedProperty( key, value );
 	}
 
 	/**
-	 * @param key
+	 * @param key property name
 	 * @param value
 	 */
 	public void setCryptedPropertyBoolean(String key, boolean value) {
-		setSecureProperty( key, Boolean.toString( value ) );
+		setCryptedProperty( key, Boolean.toString( value ) );
 	}
 
 	/**
-	 * @param key
+	 * @param key property name
 	 * @param value
 	 */
 	public void setCryptedPropertyInt(String key, int value) {
-		setSecureProperty( key, Integer.toString( value ) );
+		setCryptedProperty( key, Integer.toString( value ) );
 	}
 
 	/**
-	 * @param key
+	 * @param key property name
 	 * @param value
 	 */
 	public void setCryptedPropertyDouble(String key, double value) {
-		setSecureProperty( key, Double.toString( value ) );
+		setCryptedProperty( key, Double.toString( value ) );
 	}
 
 	//TODO getters

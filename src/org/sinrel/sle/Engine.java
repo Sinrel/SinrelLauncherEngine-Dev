@@ -26,6 +26,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import org.apache.commons.lang3.Validate;
 import org.sinrel.sle.actions.AuthBehavior;
@@ -41,6 +42,7 @@ import org.sinrel.sle.actions.LauncherData;
 import org.sinrel.sle.actions.Starter;
 import org.sinrel.sle.exception.FatalError;
 import org.sinrel.sle.library.cryption.Cryptor;
+import org.sinrel.sle.network.MirrorServer;
 import org.sinrel.sle.network.NetworkManager;
 
 /**
@@ -60,6 +62,9 @@ public class Engine {
 
 	private boolean debug = false;
 	private File path;
+	
+	/** Адреса зеркальных серверов */
+	protected ArrayList<MirrorServer> mirrors = new ArrayList<MirrorServer>();
 	
 	public Engine( EngineSettings settings ) {
 		try {
@@ -171,6 +176,21 @@ public class Engine {
 	    }catch( UnknownHostException e ) {
 	    	return false;
 		}
+	}
+
+	/**
+	 * @return all mirror servers
+	 */
+	public ArrayList<MirrorServer> getMirrorsServers() {
+		return mirrors;
+	}
+	
+	/**
+	 * @param domain domain or IP of mirror server. 
+	 * @param serverPath
+	 */
+	public void addMirrorServer( String domain, String serverPath ) {
+		mirrors.add( new MirrorServer( domain, serverPath ) );
 	}
 	
 	/**
