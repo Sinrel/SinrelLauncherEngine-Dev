@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.Validate;
 import org.sinrel.sle.Engine;
 import org.sinrel.sle.Engine.OS;
 import org.sinrel.sle.network.Command;
@@ -90,7 +91,7 @@ public class DefaultChecker extends Checker {
 			File directory = new File(engine.getDirectory() + File.separator
 					+ clientName, folder);
 			Map<String, String> data;
-
+			
 			if (!directory.exists()) {
 				data = generateData("not_exist");
 				String answer = NetworkManager.sendRequest(

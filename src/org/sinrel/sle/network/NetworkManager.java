@@ -85,10 +85,10 @@ public final class NetworkManager {
 	public static String sendRequest(String requestUrl, Command command,
 			Map<String, String> args) throws IOException {
 		StringBuilder sb = new StringBuilder();
-		sb.append("command=" + command.getValue() + "&");
+		sb.append("command=" + command.getValue());
 		if (args != null) {
 			for (String key : args.keySet()) {
-				sb.append(key + "=" + args.get(key) + "&");
+				sb.append("&" + key + "=" + args.get(key));
 			}
 		}
 		return sendPostRequest(requestUrl, sb.toString());

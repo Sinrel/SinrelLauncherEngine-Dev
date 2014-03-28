@@ -42,6 +42,7 @@ import org.sinrel.sle.actions.LauncherData;
 import org.sinrel.sle.actions.Starter;
 import org.sinrel.sle.exception.FatalError;
 import org.sinrel.sle.library.cryption.Cryptor;
+import org.sinrel.sle.network.Command;
 import org.sinrel.sle.network.MirrorServer;
 import org.sinrel.sle.network.NetworkManager;
 
@@ -242,7 +243,7 @@ public class Engine {
 		LauncherData laun = null;
 
 		try{
-			String answer = NetworkManager.sendPostRequest( NetworkManager.getEngineLink( this ), "command=launcher");
+			String answer = NetworkManager.sendRequest( NetworkManager.getEngineLink( this ), Command.LAUNCHER);
 			
 			if( isDebug() )
 				System.out.println( answer );
