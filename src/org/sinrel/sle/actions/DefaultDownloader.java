@@ -1,4 +1,4 @@
-package org.sinrel.sle.actions;
+package org.sinrel.sle.actions;   
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -9,14 +9,27 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import org.sinrel.sle.Engine;
 import org.sinrel.sle.library.ArchiveManager;
 import org.sinrel.sle.network.NetworkManager;
 
-public class DefaultDownloader extends Downloader {
+import com.google.gson.JsonElement;
 
+/**
+ * 
+ * @author Sinrel Group
+ * @since SLE 2.0
+ * @version 2.5
+ */
+public class DefaultDownloader extends Downloader {
+	
+	private Path root; //root folder of client hierarchy
+		
+	//TODO Old code below.
+		
 	private ArrayList<String> basic = new ArrayList<String>(),
 			archives = new ArrayList<String>();
 
@@ -26,7 +39,9 @@ public class DefaultDownloader extends Downloader {
 	private ArrayList<String> temp = new ArrayList<String>();
 
 	private static final int BUFFER_SIZE = 1024;
-
+	
+	private CurrentFile currentFile = event.getCurrentFile();
+	
 	public DefaultDownloader(Engine engine) {
 		super(engine);
 
@@ -65,11 +80,11 @@ public class DefaultDownloader extends Downloader {
 		for (int num = 0; num < temp.size(); num++) {
 			String filename = temp.get(num);
 
-			event.setCurrentFileAddress(getFileAddress(filename));
-			event.setCurrentFileName(filename);
-			event.setCurrentFileNumber(num);
-			event.setCurrentFileSize(getFileSizeKB(filename));
-
+			currentFile.setAddress( getFileAddress(filename) );
+			currentFile.setFilename( filename );
+			currentFile.setNumber( num );
+			currentFile.setSize( getFileSizeKB(filename) );
+			
 			if (num != temp.size() - 1) {
 				event.setNextFileAddress(getFileAddress(temp.get(num + 1)));
 				event.setNextFileName(temp.get(num + 1));
@@ -81,9 +96,9 @@ public class DefaultDownloader extends Downloader {
 			}
 
 			try {
-				download(event.getCurrentFileAddress(),
+				download( currentFile.getAddress(),
 						new File(engine.getClientBinaryFolder(clientName),
-								event.getCurrentFileName()));
+								currentFile.getFilename() ) );
 			} catch (IOException ex) {
 				return DownloadResult.FILE_NOT_EXIST;
 			}
@@ -126,14 +141,16 @@ public class DefaultDownloader extends Downloader {
 
 	private void initEvent() {
 		event = new DownloadEvent();
-		event.setCurrentFileAddress(getFileAddress(basic.get(0)));
-		event.setCurrentFileName(basic.get(0));
-		event.setCurrentFileNumber(0);
-		event.setCurrentFilePercents(0);
-		event.setCurrentFileSize(getFileSizeKB(basic.get(0)));
-
+		
+		currentFile.setAddress( getFileAddress(basic.get(0)) );
+		currentFile.setFilename( basic.get(0) );
+		currentFile.setNumber( 0 );
+		currentFile.setSize( getFileSizeKB(basic.get(0)) );
+		currentFile.setPercents(0);
+		
 		event.setFilesAmount(temp.size() - 1);
 		event.setTotalSize(getTotalSize());
+		event.setDownloadSpeed(0);
 
 		event.setNextFileAddress(getFileAddress(basic.get(1)));
 		event.setNextFileName(basic.get(1));
@@ -141,8 +158,7 @@ public class DefaultDownloader extends Downloader {
 
 	private boolean fileExist(URL address) {
 		try {
-			HttpURLConnection con = (HttpURLConnection) address
-					.openConnection();
+			HttpURLConnection con = (HttpURLConnection) address.openConnection();
 			if (con.getResponseCode() != 200) {
 				return false;
 			}
@@ -168,10 +184,8 @@ public class DefaultDownloader extends Downloader {
 
 	private int getFileSizeKB(String filename) {
 		try {
-			URLConnection connection = getFileAddress(filename)
-					.openConnection();
-			connection.setDefaultUseCaches(false);
-
+			URLConnection connection = getFileAddress(filename).openConnection();
+			
 			return connection.getContentLength() / 1024;
 		} catch (IOException e) {
 			return 0;
@@ -189,7 +203,7 @@ public class DefaultDownloader extends Downloader {
 	}
 
 	private void download(URL url, File f) throws IOException {
-		int size = getFileSizeKB(event.getCurrentFileName());
+		int size = getFileSizeKB( event.getCurrentFile().getFilename() );
 
 		f.mkdirs();
 
@@ -227,8 +241,7 @@ public class DefaultDownloader extends Downloader {
 					System.out.println(speed + " " + count + " " + taked);
 					event.setDownloadSpeed(speed);
 				}
-				event.setCurrentFilePercents((int) (total * 100)
-						/ (size * 1024));
+				currentFile.setPercents( (total * 100) / (size * 1024) );
 				this.onPercentChange(event);
 			} while (true);
 
@@ -249,6 +262,24 @@ public class DefaultDownloader extends Downloader {
 		} else {
 			file.delete();
 		}
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void restart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stop() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

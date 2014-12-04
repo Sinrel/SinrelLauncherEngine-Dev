@@ -4,49 +4,47 @@ import java.net.URL;
 
 public class DownloadEvent {
 
-	private String currentFileName;
-	private URL currentFileAddress;
-	private int currentFilePercents;
-	private int currentFileSize;
-
+	private CurrentFile currentFile = new CurrentFile();
+	
 	private String nextFileName;
 	private URL nextFileAddress;
 	private int nextFileSize;
 
-	private int currentFileNumber;
 	private int filesAmount;
 	private int totalSize;
 
 	private double downloadSpeed;
 
-	public DownloadEvent() {
-	}
+	public DownloadEvent() {}
 
 	public DownloadEvent(String currentFileName, URL currentFileAddress,
 			String nextFileName, URL nextFileAddress, int currentFileNumber,
 			int filesAmount, int currentFileSize, int currentFilePercents,
 			int nextFileSize, int totalSize) {
-		this.currentFileName = currentFileName;
-		this.currentFileAddress = currentFileAddress;
-		this.currentFilePercents = currentFilePercents;
-		this.currentFileSize = currentFileSize;
-
+		
+		currentFile.setFilename( currentFileName );
+		currentFile.setAddress( currentFileAddress );
+		currentFile.setPercents( currentFilePercents );
+		currentFile.setSize( currentFileSize );
+		currentFile.setNumber( currentFileNumber );
+		
 		this.nextFileName = nextFileName;
 		this.nextFileAddress = nextFileAddress;
 		this.nextFileSize = nextFileSize;
-
-		this.currentFileNumber = currentFileNumber;
+		
 		this.filesAmount = filesAmount;
 		this.totalSize = totalSize;
 	}
 
 	/**
-	 * @return Возращает имя текущего скачиваемого файла
+	 * 
+	 * @return Возвращает объект, описывающий текущий скачиваемый файл.
+	 * 
 	 */
-	public final String getCurrentFileName() {
-		return currentFileName;
+	public final CurrentFile getCurrentFile() {
+		return currentFile;
 	}
-
+	
 	/**
 	 * @return Возвращает имя файла, который будет загружаться следующим<br>
 	 *         Если следующего файла нет, возвращается null !
@@ -56,35 +54,10 @@ public class DownloadEvent {
 	}
 
 	/**
-	 * @return Возвращает количество загруженого текущего файла в процентах
-	 */
-	public final int getCurrentFilePercents() {
-		return currentFilePercents;
-	}
-
-	public final int getCurrentFileSize() {
-		return currentFileSize;
-	}
-
-	/**
 	 * @return Возращает количество скачиваемых файлов
 	 */
 	public final int getFilesAmount() {
 		return filesAmount;
-	}
-
-	/**
-	 * @return Возвращает порядковый номер скачиваемого файла
-	 */
-	public final int getCurrentFileNumber() {
-		return currentFileNumber;
-	}
-
-	/**
-	 * @return Возвращает адрес с которого скачивается текущий файл
-	 */
-	public final URL getCurrentFileAddress() {
-		return currentFileAddress;
 	}
 
 	/**
@@ -118,14 +91,6 @@ public class DownloadEvent {
 		return downloadSpeed;
 	}
 
-	final void setCurrentFileName(String filename) {
-		this.currentFileName = filename;
-	}
-
-	final void setCurrentFileAddress(URL address) {
-		this.currentFileAddress = address;
-	}
-
 	final void setNextFileName(String filename) {
 		this.nextFileName = filename;
 	}
@@ -134,24 +99,12 @@ public class DownloadEvent {
 		this.nextFileAddress = address;
 	}
 
-	final void setCurrentFileNumber(int number) {
-		this.currentFileNumber = number;
-	}
-
 	final void setFilesAmount(int amount) {
 		this.filesAmount = amount;
 	}
 
 	final void setTotalSize(int amount) {
 		this.totalSize = amount;
-	}
-
-	final void setCurrentFileSize(int currentFileSize) {
-		this.currentFileSize = currentFileSize;
-	}
-
-	final void setCurrentFilePercents(int percents) {
-		this.currentFilePercents = percents;
 	}
 
 	final void setNextFileSize(int nextFileSize) {

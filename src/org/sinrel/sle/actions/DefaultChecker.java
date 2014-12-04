@@ -9,10 +9,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.Validate;
 import org.sinrel.sle.Engine;
 import org.sinrel.sle.Engine.OS;
 import org.sinrel.sle.network.Command;

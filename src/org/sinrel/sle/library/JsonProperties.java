@@ -27,7 +27,7 @@ public class JsonProperties extends Properties {
 	}
 
 	public synchronized void load( InputStream inStream ) throws IOException {
-		this.load(new InputStreamReader(inStream));
+		load(new InputStreamReader(inStream));
 	}
 
 	public synchronized void load(Reader reader) throws IOException {

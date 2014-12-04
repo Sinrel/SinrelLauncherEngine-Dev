@@ -1,0 +1,7 @@
+{
+	usersTable: "{prefix}_users",
+	userIDColumn: "user_id",
+	usernameColumn: "name",
+	passwordColumn: "password"
+	
+}

@@ -1,0 +1,51 @@
+{
+	"id": 1,
+	"name": "Sandbox",
+	"version": "1.6.4",
+	"type": "release",
+	"minecraftArguments": "--username ${auth_player_name} --session ${auth_session} --version ${version_name} --gameDir ${game_directory} --assetsDir ${game_assets} --tweakClass cpw.mods.fml.common.launcher.FMLTweaker",
+	"assets": "1.6.4",
+	"libraries": [
+	],
+	"mainClass": "net.minecraft.launchwrapper.Launch",
+	"files": [
+		"windows.zip": {
+			"system": "windows",
+			"target": "bin/natives",
+			"unpack": true
+		},
+		"linux.zip": {
+			"system": "linux",
+			"target": "bin/natives",
+			"unpack": true
+		},
+		"macosx.zip": {
+			"system": "macosx",
+			"target": "bin/natives",
+			"unpack": true
+		},
+		"other.zip": {
+			"system": "other",
+			"target": "bin/natives",
+			"unpack": true
+		}, 		                          
+		"assets.zip": {
+			"unpack": true
+		},
+		"client.zip": {
+			"unpack": true
+		},
+		"libraries.jar": {
+			"target": "bin"
+		},
+		"extra.jar": {
+			"target": "bin"
+		},
+		"forge.jar": {
+			"target": "bin"
+		},
+		"minecraft.jar": {
+			"target": "bin"
+		}
+	]
+}

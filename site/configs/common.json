@@ -1,0 +1,10 @@
+{
+    /* Колонка сессии - Session column */
+	sessionIDColumn: "session",
+	/* Колонка ключа - Token column */
+	tokenIDColumn: "token",
+	/* Колонка сервера - Server column */
+	serverColumn: "server",
+	blockUntilColumn: "blockUntil",
+	retriesLeftColumn: "retriesLeft"
+}

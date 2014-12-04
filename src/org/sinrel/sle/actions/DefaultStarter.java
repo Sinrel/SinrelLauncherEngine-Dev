@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import org.sinrel.sle.Engine;
 import org.sinrel.sle.Engine.OS;
 import org.sinrel.sle.exception.FatalError;
+import org.sinrel.sle.library.java.ExternalURLClassLoader;
 
 /**
+ * @version 0.2
  * @since 2.0.0 build 2
  */
 public class DefaultStarter extends Starter {
@@ -24,6 +26,7 @@ public class DefaultStarter extends Starter {
 	private String minecraft =  "minecraft.jar";
 	
 	private ArrayList<String> parameters = new ArrayList<>();
+	private ExternalURLClassLoader cl;
 	
 	public DefaultStarter( Engine engine ) {
 		super( engine );
@@ -39,6 +42,7 @@ public class DefaultStarter extends Starter {
 			parameters.add("-Xmx" + memory + "m");
 			parameters.add("-Dfml.ignoreInvalidMinecraftCertificates=true");
 			parameters.add("-Dfml.ignorePatchDiscrepancies=true");
+			System.setProperty("net.java.games.input.librarypath", bin+"natives");
 			parameters.add("-Djava.library.path=" + bin + "natives");
 			parameters.add("-cp");
 			

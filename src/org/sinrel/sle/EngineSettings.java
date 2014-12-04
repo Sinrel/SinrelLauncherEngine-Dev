@@ -7,7 +7,7 @@ import org.apache.commons.lang3.Validate;
 public class EngineSettings {
 	
 	/** Домен сервера */
-	protected String domain = "example.com";
+	protected String domain = "localhost";
 	/** Путь на сервере */
 	protected String serverPath = "launcher";
 	/** Рабочая папка */

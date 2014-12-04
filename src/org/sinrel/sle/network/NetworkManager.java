@@ -8,15 +8,33 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.StringUtils;
 import org.sinrel.sle.Engine;
+import org.sinrel.sle.library.cryption.Cryptor;
+
+import com.google.gson.Gson;
 
 //TODO need in refactor
 public final class NetworkManager {
+	
+	public static Response sendRequest( Engine engine, Request req, boolean encrypt ) throws Exception {
+		Cryptor cryptor = engine.getCryptor();
+		String response = sendPostRequest( new URL( getEngineLink( engine ) ), "?query=".concat( cryptor.encrypt( req.toJson() ) ) );
+		
+		return new Gson().fromJson( cryptor.decrypt( response ), Response.class );
+	}
+	
+	public static Response sendRequest( Engine engine, Request req ) throws Exception {
+		Cryptor cryptor = engine.getCryptor();
+		String response = sendPostRequest( new URL( getEngineLink( engine ) ), "?query=".concat( cryptor.encrypt( req.toJson() ) ) );
+		
+		return new Gson().fromJson( cryptor.decrypt( response ), Response.class );
+	}
+	
+	//TODO old code below
 
 	public static String sendGetRequest(URL requestURL, String data)
 			throws IOException {
@@ -25,10 +43,8 @@ public final class NetworkManager {
 				.openConnection();
 
 		conn.setRequestMethod("GET");
-		conn.setRequestProperty("Content-Type",
-				"application/x-www-form-urlencoded");
-		conn.setRequestProperty("Content-Length",
-				Integer.toString(bytes.length));
+		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		conn.setRequestProperty("Content-Length", Integer.toString(bytes.length));
 
 		conn.setUseCaches(false);
 		conn.setDoInput(true);
@@ -181,8 +197,7 @@ public final class NetworkManager {
 	 * @return Возвращает ссылку на engine.php
 	 * @throws MalformedURLException
 	 */
-	public static String getEngineLink(Engine engine)
-			throws MalformedURLException {
+	public static String getEngineLink(Engine engine) throws MalformedURLException {
 		return new MirrorServer(engine.getSettings().getDomain(), engine
 				.getSettings().getServerPath()).getEngineLink();
 	}
@@ -193,7 +208,6 @@ public final class NetworkManager {
 	 * @return Возвращает ссылку на директорию с engine.php
 	 * @throws MalformedURLException
 	 */
-	@Deprecated
 	public static String getServerLink(Engine engine)
 			throws MalformedURLException {
 		return new MirrorServer(engine.getSettings().getDomain(), engine
@@ -207,11 +221,8 @@ public final class NetworkManager {
 	 *            Название клиента
 	 * @throws MalformedURLException
 	 */
-	@Deprecated
-	public static URL getClientBinaryLink(Engine engine, String clientName)
-			throws MalformedURLException {
-		return new MirrorServer(engine.getSettings().getDomain(), engine
-				.getSettings().getServerPath()).getClientBinaryLink(clientName);
+	public static URL getClientBinaryLink(Engine engine, String clientName) throws MalformedURLException {
+		return new MirrorServer(engine.getSettings().getDomain(), engine.getSettings().getServerPath()).getClientBinaryLink(clientName);
 	}
 
 }

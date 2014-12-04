@@ -2,7 +2,7 @@ package org.sinrel.sle.network;
 
 public enum Command {
 	LAUNCHER("launcher"), KEY("key"), CHECK("check"), DIRECTORY("directory"),
-	AUTH("auth");
+	AUTH("auth"), EMPTY("empty");
 	
 	private String value;
 	
@@ -13,4 +13,10 @@ public enum Command {
 	public String getValue() {
 		return value;
 	}
+	
+	@Override
+	public String toString() {
+		return value;
+	}
+	
 }
